@@ -1,0 +1,3 @@
+$ vvp /home/luixf/eda/uniccass-icdesign-tools/shared_xserver/cmos-riscv/build/tb_address_decoder
+PASS address_decoder: 768 boundary/request/mask combinations
+/home/luixf/eda/uniccass-icdesign-tools/shared_xserver/cmos-riscv/tb/unit/tb_address_decoder.sv:27: $finish called at 768000 (1ps)
