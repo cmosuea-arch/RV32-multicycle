@@ -1,0 +1,42 @@
+`timescale 1ns/1ps
+module riscv_core(
+    input logic clk_i,rst_i,
+    input logic [31:0] data_i,
+    input logic bus_fault_i,
+    output wire [31:0] address_o,data_o,
+    output wire oe_o,we_o,
+    output wire [3:0] bw_o,
+    output wire fault_o,commit_valid_o,
+    output wire [31:0] commit_pc_o,commit_instr_o,commit_data_o,
+    output wire [4:0] commit_rd_o
+);
+    localparam [2:0] FETCH=0,EXECUTE=2,WRITEBACK=3,FAULT=5;
+    wire [2:0] state;
+    wire [31:0] current_pc,plus4,instruction,immediate,a,b,alu_result;
+    reg [31:0] result_q;
+    wire [3:0] alu_op;
+    wire a_pc,b_imm,reg_we,branch,jal,jalr,load,store_op,mul,illegal;
+    wire retire=(state==WRITEBACK)&&!rst_i;
+    wire local_fault=(state==FETCH)&&(bus_fault_i || current_pc[1:0]!=0);
+    control_unit control(clk_i,rst_i,illegal,load,store_op,local_fault,state);
+    decoder decode(instruction,alu_op,a_pc,b_imm,reg_we,branch,jal,jalr,load,store_op,mul,illegal);
+    pc program_counter(clk_i,rst_i,retire,plus4,current_pc,plus4);
+    ir instruction_register(clk_i,rst_i,state==FETCH&&!local_fault&&!rst_i,data_i,instruction);
+    imm_ext immediate_ext(instruction,immediate);
+    regfile register_file(clk_i,rst_i,retire&&reg_we,instruction[19:15],instruction[24:20],instruction[11:7],result_q,a,b);
+    alu arithmetic(a_pc?current_pc:a,b_imm?immediate:b,alu_op,alu_result);
+    always @(posedge clk_i)
+        if(rst_i) result_q<=0;
+        else if(state==EXECUTE) result_q<=alu_result;
+    assign address_o=current_pc;
+    assign data_o=0;
+    assign oe_o=state==FETCH&&!rst_i;
+    assign we_o=0;
+    assign bw_o=0;
+    assign fault_o=state==FAULT;
+    assign commit_valid_o=retire;
+    assign commit_pc_o=current_pc;
+    assign commit_instr_o=instruction;
+    assign commit_rd_o=reg_we?instruction[11:7]:5'b0;
+    assign commit_data_o=(commit_rd_o==0)?32'b0:result_q;
+endmodule
