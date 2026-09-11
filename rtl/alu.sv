@@ -4,7 +4,7 @@ module alu (
     input  logic [3:0]  op_i,
     output logic [31:0] result_o
 );
-    always @* begin
+    always_comb begin
         case (op_i)
             4'h0: result_o = b_i;
             4'h1: result_o = a_i + b_i;

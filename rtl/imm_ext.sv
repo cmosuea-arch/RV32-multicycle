@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 module imm_ext(input logic [31:0] instr_i, output logic [31:0] imm_o);
-    always @* begin
+    always_comb begin
         case (instr_i[6:0])
             7'h03,7'h13,7'h67: imm_o={{20{instr_i[31]}},instr_i[31:20]};
             7'h23: imm_o={{20{instr_i[31]}},instr_i[31:25],instr_i[11:7]};

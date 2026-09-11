@@ -1,1 +1,2 @@
-$ iverilog -g2012 -Wall -s tb_datapath -o /home/luixf/eda/uniccass-icdesign-tools/shared_xserver/cmos-riscv/build/tb_datapath rtl/alu.sv rtl/imm_ext.sv rtl/regfile.sv /home/luixf/eda/uniccass-icdesign-tools/shared_xserver/cmos-riscv/tb/integration/tb_datapath.sv
+$ iverilog -g2012 -Wall -s tb_datapath -o /home/luixf/eda/uniccass-icdesign-tools/shared_xserver/cmos-riscv/build/tb_datapath rtl/alu.sv rtl/imm_ext.sv rtl/pc.sv rtl/regfile.sv /home/luixf/eda/uniccass-icdesign-tools/shared_xserver/cmos-riscv/tb/integration/tb_datapath.sv
+rtl/alu.sv:7: sorry: constant selects in always_* processes are not currently supported (all bits will be included).

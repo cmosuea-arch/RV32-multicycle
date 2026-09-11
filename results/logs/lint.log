@@ -1,1 +1,1 @@
-$ verilator --lint-only -Wall -Wno-DECLFILENAME -Wno-UNUSEDSIGNAL -Wno-UNUSEDPARAM -Wno-MULTITOP rtl/alu.sv rtl/imm_ext.sv rtl/regfile.sv
+$ verilator --lint-only -Wall -Wno-DECLFILENAME -Wno-UNUSEDSIGNAL -Wno-UNUSEDPARAM -Wno-MULTITOP rtl/alu.sv rtl/imm_ext.sv rtl/pc.sv rtl/regfile.sv

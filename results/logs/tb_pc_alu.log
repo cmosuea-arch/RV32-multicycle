@@ -1,0 +1,3 @@
+$ vvp /home/luixf/eda/uniccass-icdesign-tools/shared_xserver/cmos-riscv/build/tb_pc_alu
+PASS pc_alu: PC plus immediate redirect
+/home/luixf/eda/uniccass-icdesign-tools/shared_xserver/cmos-riscv/tb/integration/tb_pc_alu.sv:16: $finish called at 26000 (1ps)
