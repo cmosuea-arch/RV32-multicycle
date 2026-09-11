@@ -1,0 +1,3 @@
+$ vvp /home/luixf/eda/uniccass-icdesign-tools/shared_xserver/cmos-riscv/build/tb_fetch
+PASS fetch: PC BASE..BASE+28, ROM, IR and immediate
+/home/luixf/eda/uniccass-icdesign-tools/shared_xserver/cmos-riscv/tb/integration/tb_fetch.sv:23: $finish called at 96000 (1ps)
