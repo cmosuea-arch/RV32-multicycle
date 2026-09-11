@@ -37,6 +37,9 @@ def main():
     generator = ROOT / 'scripts/sim/vectors.py'
     if generator.exists():
         run([sys.executable, str(generator)], logs / 'vectors.log')
+    programs = ROOT / 'scripts/sim/programs.py'
+    if programs.exists():
+        run([sys.executable, str(programs)], logs / 'programs.log')
     benches = sorted((ROOT / 'tb').glob('**/tb_*.sv'))
     if not benches:
         raise RuntimeError('no tests discovered')
@@ -52,6 +55,9 @@ def main():
             raise RuntimeError(f'{name}: missing PASS marker')
         print('\n'.join(line for line in output.splitlines() if 'PASS' in line))
     print(f'PASS regression: {len(benches)} testbenches')
+    if (ROOT / 'scripts/regression/coverage.py').exists():
+        from coverage import write_coverage
+        write_coverage()
 
 
 if __name__ == '__main__':
