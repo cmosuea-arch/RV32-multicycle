@@ -1,14 +1,1 @@
 $ iverilog -g2012 -Wall -s tb_pc_alu -o /home/luixf/eda/uniccass-icdesign-tools/shared_xserver/cmos-riscv/build/tb_pc_alu rtl/alu.sv rtl/imm_ext.sv rtl/ir.sv rtl/pc.sv rtl/regfile.sv /home/luixf/eda/uniccass-icdesign-tools/shared_xserver/cmos-riscv/tb/integration/tb_pc_alu.sv
-rtl/imm_ext.sv:3: sorry: constant selects in always_* processes are not currently supported (all bits will be included).
-rtl/imm_ext.sv:3: sorry: constant selects in always_* processes are not currently supported (all bits will be included).
-rtl/imm_ext.sv:3: sorry: constant selects in always_* processes are not currently supported (all bits will be included).
-rtl/imm_ext.sv:3: sorry: constant selects in always_* processes are not currently supported (all bits will be included).
-rtl/imm_ext.sv:3: sorry: constant selects in always_* processes are not currently supported (all bits will be included).
-rtl/imm_ext.sv:3: sorry: constant selects in always_* processes are not currently supported (all bits will be included).
-rtl/imm_ext.sv:3: sorry: constant selects in always_* processes are not currently supported (all bits will be included).
-rtl/imm_ext.sv:3: sorry: constant selects in always_* processes are not currently supported (all bits will be included).
-rtl/imm_ext.sv:3: sorry: constant selects in always_* processes are not currently supported (all bits will be included).
-rtl/imm_ext.sv:3: sorry: constant selects in always_* processes are not currently supported (all bits will be included).
-rtl/imm_ext.sv:3: sorry: constant selects in always_* processes are not currently supported (all bits will be included).
-rtl/imm_ext.sv:3: sorry: constant selects in always_* processes are not currently supported (all bits will be included).
-rtl/alu.sv:7: sorry: constant selects in always_* processes are not currently supported (all bits will be included).

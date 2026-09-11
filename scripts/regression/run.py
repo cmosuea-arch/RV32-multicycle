@@ -43,12 +43,14 @@ def main():
     for tb in benches:
         name = tb.stem
         exe = build / name
-        run(['iverilog', '-g2012', '-Wall', '-s', name, '-o', str(exe),
-             *rtl, str(tb)], logs / f'{name}.compile.log')
+        diagnostics = run(['iverilog', '-g2012', '-Wall', '-s', name, '-o', str(exe),
+                           *rtl, str(tb)], logs / f'{name}.compile.log')
+        if diagnostics.strip():
+            raise RuntimeError(f'{name}: compilation diagnostics: {diagnostics}')
         output = run(['vvp', str(exe)], logs / f'{name}.log')
         if 'PASS' not in output:
             raise RuntimeError(f'{name}: missing PASS marker')
-        print(output.strip())
+        print('\n'.join(line for line in output.splitlines() if 'PASS' in line))
     print(f'PASS regression: {len(benches)} testbenches')
 
 
