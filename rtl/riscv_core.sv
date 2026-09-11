@@ -15,11 +15,13 @@ module riscv_core(
     wire [31:0] current_pc,plus4,instruction,immediate,a,b,alu_result;
     reg [31:0] result_q,next_pc_q;
     wire branch_taken;
+    wire [31:0] redirect_target=jalr?{alu_result[31:1],1'b0}:alu_result;
+    wire redirect=(branch&&branch_taken)||jal||jalr;
     wire [3:0] alu_op;
     wire a_pc,b_imm,reg_we,branch,jal,jalr,load,store_op,mul,illegal;
     wire retire=(state==WRITEBACK)&&!rst_i;
     wire local_fault=((state==FETCH)&&(bus_fault_i || current_pc[1:0]!=0)) ||
-                     ((state==EXECUTE)&&branch&&branch_taken&&alu_result[1:0]!=0);
+                     ((state==EXECUTE)&&redirect&&redirect_target[1:0]!=0);
     control_unit control(clk_i,rst_i,illegal,load,store_op,local_fault,state);
     decoder decode(instruction,alu_op,a_pc,b_imm,reg_we,branch,jal,jalr,load,store_op,mul,illegal);
     pc program_counter(clk_i,rst_i,retire,next_pc_q,current_pc,plus4);
@@ -31,8 +33,8 @@ module riscv_core(
     always @(posedge clk_i) begin
         if(rst_i) begin result_q<=0; next_pc_q<=0; end
         else if(state==EXECUTE) begin
-            result_q<=alu_result;
-            next_pc_q<=(branch&&branch_taken)?alu_result:plus4;
+            result_q<=(jal||jalr)?plus4:alu_result;
+            next_pc_q<=redirect?redirect_target:plus4;
         end
     end
     assign address_o=current_pc;

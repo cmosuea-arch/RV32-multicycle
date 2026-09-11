@@ -45,6 +45,8 @@ class Program:
                        'BGE':signed(a)>=signed(b),'BLTU':a<b,'BGEU':a>=b}[name]
                 if taken: next_pc=pc+imm
                 rd=0; value=0
+            elif name=='JAL': value=pc+4; next_pc=pc+imm
+            elif name=='JALR': value=pc+4; next_pc=((a+signed(imm,12))&MASK)&~1
             else: raise ValueError(name)
             if rd: self.regs[rd]=value
             self.trace.append((pc,self.words[index],rd,self.regs[rd]))
@@ -102,6 +104,27 @@ def main():
             else:
                 p.constant(1,2); p.constant(2,1); p.emit('ADDI',1,1,imm=-1)
             p.emit(name,0,1,2,imm=-4)
+        elif name=='JAL':
+            p.emit('JAL',5,imm=12)
+            p.emit('ADDI',3,0,imm=123)
+            p.emit('JAL',0,imm=8)
+            p.emit('JAL',6,imm=-8)
+        elif name=='JALR':
+            # rs1=rd overlap; odd target bit is cleared; positive/negative immediates.
+            for offset in [12,-12]:
+                target=BASE+4*(len(p.words)+28+2)
+                p.constant(1,target-offset+1)
+                p.emit('JALR',1,1,imm=offset)
+                p.emit('ADDI',3,0,imm=999) # must be skipped
+                p.emit('ADDI',4,1,imm=0) # consume link
+            # Backward jump via a small call/return-shaped sequence.
+            origin=BASE+4*(len(p.words)+56)
+            p.constant(1,origin+12)
+            p.constant(2,origin+4)
+            p.emit('JALR',5,1,imm=0)
+            p.emit('ADDI',3,0,imm=77)
+            p.emit('JAL',0,imm=8)
+            p.emit('JALR',6,2,imm=0)
     p.save()
     with (OUT/'decoder.vec').open('w') as f:
         for opcode in range(128):
@@ -114,8 +137,8 @@ def main():
                     if matches:
                         name=matches[0]
                         op=R[name][2] if name in R else I[name][1] if name in I else 1 if name=='AUIPC' else 0
-                        if name in BRANCH: op=1
-                        ctrl=(op<<10)|(int(name=='AUIPC' or name in BRANCH)<<9)|(int(name in I or name in ('LUI','AUIPC') or name in BRANCH)<<8)|(int(name not in BRANCH)<<7)|(int(name in BRANCH)<<6)
+                        if name in BRANCH or name in ('JAL','JALR'): op=1
+                        ctrl=(op<<10)|(int(name in ('AUIPC','JAL') or name in BRANCH)<<9)|(int(name not in R)<<8)|(int(name not in BRANCH)<<7)|(int(name in BRANCH)<<6)|(int(name=='JAL')<<5)|(int(name=='JALR')<<4)
                     f.write(f'{inst:08x} {ctrl:04x}\n')
     print(f'PASS generated {len(p.words)} instructions; targets={len(enabled)}')
 

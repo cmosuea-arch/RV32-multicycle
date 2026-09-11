@@ -25,5 +25,7 @@
   "BLT",
   "BGE",
   "BLTU",
-  "BGEU"
+  "BGEU",
+  "JAL",
+  "JALR"
 ]

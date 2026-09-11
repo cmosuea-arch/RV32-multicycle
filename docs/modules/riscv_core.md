@@ -14,10 +14,13 @@ FAULT diagnóstico CMOS persistente; x0 sempre zero, inclusive na observação.
 ## Diagrama
 Ver architecture/block_diagram.md; CRC/memória ainda não implementados neste marco.
 ## Testbench
-tb_core_smoke e tb_isa (trace arquitetural Python por aposentadoria).
+tb_core_smoke, tb_isa (trace arquitetural Python por aposentadoria), tb_core_faults.
 ## Casos testados
 Operações habilitadas em docs/isa/enabled.json; PC, dados aposentados, escrita
 física no RF, dependências, limites e branches tomados/não tomados para frente/trás.
+JAL/JALR: link PC+4, offsets positivos/negativos, rd=rs1, bit 0 removido.
+Erros: instruções inválidas/não suportadas, alvos desalinhados e erro de fetch,
+sem efeitos colaterais; branch não tomado não valida o alvo.
 ## Resultado
 results/logs/tb_core_smoke.log e regressão PASS.
 ## Integração
