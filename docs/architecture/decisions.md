@@ -1,0 +1,38 @@
+# Decisões arquiteturais
+
+Data: 2026-09-11. Baseline inicial: `baseline-v1`.
+
+1. Clock de subida, reset síncrono ativo alto. Guia nomeia clk_i/rst_i mas não
+   define polaridade/tipo. Reset limpa RF, IR e registradores internos e reinicia
+   PC em IMEM_BASE. DMEM não é apagada. Reset suprime escrita de memória.
+2. PC retido durante a instrução; atualização somente em WRITEBACK. A frase do
+   guia sobre incremento a cada clock não pode ser literal numa FSM multiciclo.
+3. IMEM combinacional, DMEM síncrona conforme §4.3. Um estado MEMORY acomoda a
+   latência; não há pipeline, stalls externos, CSRs, debug ou arquitetura Ibex.
+4. Acessos desalinhados, endereços não mapeados, escrita na ROM e instruções não
+   suportadas produzem FAULT persistente sem writeback/escrita. É diagnóstico
+   interno CMOS, NÃO implementação de traps privilegiados ou ECALL/EBREAK.
+   Branch não tomado não falha pelo alinhamento de um alvo não utilizado.
+5. Sinais commit_* expõem aposentadoria para TB; não são interface oficial de
+   pinos. Top de integração é provisório. UART/GPIO do desenho do guia carecem
+   de contratos; não adicionar periféricos por suposição.
+6. Blocos iniciais são integrados em bancadas progressivas até existir o core.
+   Depois todas essas ligações são verificadas no processador. Não contabilizar
+   instruções por teste isolado de ALU. Usar tags por marco para rastreabilidade.
+7. Não usar uma instrução de sistema fictícia para terminar os testes. Firmware
+   próprio escreve uma assinatura na DMEM e permanece em loop; TB detecta a
+   assinatura. Testes por instrução observam commit_valid e timeout.
+8. Não iniciar OpenLane antes de ISA e firmware oficial validados, conforme
+   AGENTS.md §33. Lint não equivale a síntese física nem a GDSII.
+
+## Pendências oficiais
+
+| ID | Lacuna | Evidência | Impacto |
+|---|---|---|---|
+| P01 | CRC: polinômio, reflexão/ordem de bits, seed, papel de rs1/rs2, xor final, bits altos de rd | PDF pp.12,14–15: somente CRC8/16/32 e resultado [15:0] | bloqueia 3 Xicrc |
+| P02 | nomes e comportamento das 3 instruções sistema/sincronização | PDF p.2: apenas quantidade | bloqueia categoria; não presumir nomes pela contagem |
+| P03 | firmware oficial e critérios de término | PDF p.4: distribuição pela plataforma | bloqueia M9+ |
+| P04 | pinos UART/GPIO e interface final de submissão | PDF pp.9–10: figura 12 pinos, tabela apenas clk/rst | top físico pendente |
+
+A especificação RISC-V oficial complementa semântica e codificação das instruções
+padronizadas; não resolve decisões exclusivas da competição.
