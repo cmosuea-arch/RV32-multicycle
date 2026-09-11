@@ -1,5 +1,5 @@
 Categoria,Instrução,Opcode,Funct3,Funct7,Módulo principal,Teste unitário,Teste integrado,Regressão,Firmware oficial,Commit,Evidência,Observação
-Register,ADD,0110011,000,0000000,alu,PASS,PASS,PASS,PENDENTE,ver git log -- rtl/decoder.sv,results/logs/tb_decoder.log; results/logs/tb_isa.log,50186 aposentadorias no teste próprio
+Register,ADD,0110011,000,0000000,alu,PASS,PASS,PASS,PENDENTE,ver git log -- rtl/decoder.sv,results/logs/tb_decoder.log; results/logs/tb_isa.log,64010 aposentadorias no teste próprio
 Register,SUB,0110011,000,0100000,alu,PASS,PASS,PASS,PENDENTE,ver git log -- rtl/decoder.sv,results/logs/tb_decoder.log; results/logs/tb_isa.log,74 aposentadorias no teste próprio
 Register,SLL,0110011,001,0000000,alu,PASS,PASS,PASS,PENDENTE,ver git log -- rtl/decoder.sv,results/logs/tb_decoder.log; results/logs/tb_isa.log,74 aposentadorias no teste próprio
 Register,SLT,0110011,010,0000000,alu,PASS,PASS,PASS,PENDENTE,ver git log -- rtl/decoder.sv,results/logs/tb_decoder.log; results/logs/tb_isa.log,74 aposentadorias no teste próprio
@@ -9,7 +9,7 @@ Register,SRL,0110011,101,0000000,alu,PASS,PASS,PASS,PENDENTE,ver git log -- rtl/
 Register,SRA,0110011,101,0100000,alu,PASS,PASS,PASS,PENDENTE,ver git log -- rtl/decoder.sv,results/logs/tb_decoder.log; results/logs/tb_isa.log,74 aposentadorias no teste próprio
 Register,OR,0110011,110,0000000,alu,PASS,PASS,PASS,PENDENTE,ver git log -- rtl/decoder.sv,results/logs/tb_decoder.log; results/logs/tb_isa.log,74 aposentadorias no teste próprio
 Register,AND,0110011,111,0000000,alu,PASS,PASS,PASS,PENDENTE,ver git log -- rtl/decoder.sv,results/logs/tb_decoder.log; results/logs/tb_isa.log,74 aposentadorias no teste próprio
-Immediate,ADDI,0010011,000,,alu/imm_ext,PASS,PASS,PASS,PENDENTE,ver git log -- rtl/decoder.sv,results/logs/tb_decoder.log; results/logs/tb_isa.log,8475 aposentadorias no teste próprio
+Immediate,ADDI,0010011,000,,alu/imm_ext,PASS,PASS,PASS,PENDENTE,ver git log -- rtl/decoder.sv,results/logs/tb_decoder.log; results/logs/tb_isa.log,10779 aposentadorias no teste próprio
 Immediate,SLTI,0010011,010,,alu/imm_ext,PASS,PASS,PASS,PENDENTE,ver git log -- rtl/decoder.sv,results/logs/tb_decoder.log; results/logs/tb_isa.log,62 aposentadorias no teste próprio
 Immediate,SLTIU,0010011,011,,alu/imm_ext,PASS,PASS,PASS,PENDENTE,ver git log -- rtl/decoder.sv,results/logs/tb_decoder.log; results/logs/tb_isa.log,62 aposentadorias no teste próprio
 Immediate,XORI,0010011,100,,alu/imm_ext,PASS,PASS,PASS,PENDENTE,ver git log -- rtl/decoder.sv,results/logs/tb_decoder.log; results/logs/tb_isa.log,62 aposentadorias no teste próprio
@@ -36,10 +36,10 @@ Load,LHU,0000011,101,,lsu/dmem,PASS,PASS,PASS,PENDENTE,ver git log -- rtl/decode
 Store,SB,0100011,000,,lsu/dmem,PASS,PASS,PASS,PENDENTE,ver git log -- rtl/decoder.sv,results/logs/tb_decoder.log; results/logs/tb_isa.log,6 aposentadorias no teste próprio
 Store,SH,0100011,001,,lsu/dmem,PASS,PASS,PASS,PENDENTE,ver git log -- rtl/decoder.sv,results/logs/tb_decoder.log; results/logs/tb_isa.log,4 aposentadorias no teste próprio
 Store,SW,0100011,010,,lsu/dmem,PASS,PASS,PASS,PENDENTE,ver git log -- rtl/decoder.sv,results/logs/tb_decoder.log; results/logs/tb_isa.log,35 aposentadorias no teste próprio
-Multiplication,MUL,0110011,000,0000001,multiplier,PENDENTE,PENDENTE,PENDENTE,PENDENTE,,,Definição oficial pendente
-Multiplication,MULH,0110011,001,0000001,multiplier,PENDENTE,PENDENTE,PENDENTE,PENDENTE,,,Definição oficial pendente
-Multiplication,MULHSU,0110011,010,0000001,multiplier,PENDENTE,PENDENTE,PENDENTE,PENDENTE,,,Definição oficial pendente
-Multiplication,MULHU,0110011,011,0000001,multiplier,PENDENTE,PENDENTE,PENDENTE,PENDENTE,,,Definição oficial pendente
+Multiplication,MUL,0110011,000,0000001,multiplier,PASS,PASS,PASS,PENDENTE,ver git log -- rtl/decoder.sv,results/logs/tb_decoder.log; results/logs/tb_isa.log,74 aposentadorias no teste próprio
+Multiplication,MULH,0110011,001,0000001,multiplier,PASS,PASS,PASS,PENDENTE,ver git log -- rtl/decoder.sv,results/logs/tb_decoder.log; results/logs/tb_isa.log,74 aposentadorias no teste próprio
+Multiplication,MULHSU,0110011,010,0000001,multiplier,PASS,PASS,PASS,PENDENTE,ver git log -- rtl/decoder.sv,results/logs/tb_decoder.log; results/logs/tb_isa.log,74 aposentadorias no teste próprio
+Multiplication,MULHU,0110011,011,0000001,multiplier,PASS,PASS,PASS,PENDENTE,ver git log -- rtl/decoder.sv,results/logs/tb_decoder.log; results/logs/tb_isa.log,74 aposentadorias no teste próprio
 CRC,CRCB,0110011,000,1000000,PENDENTE,PENDENTE,PENDENTE,PENDENTE,PENDENTE,,,Definição oficial pendente
 CRC,CRCH,0110011,001,1000000,PENDENTE,PENDENTE,PENDENTE,PENDENTE,PENDENTE,,,Definição oficial pendente
 CRC,CRCW,0110011,010,1000000,PENDENTE,PENDENTE,PENDENTE,PENDENTE,PENDENTE,,,Definição oficial pendente

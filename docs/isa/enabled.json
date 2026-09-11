@@ -35,5 +35,9 @@
   "LHU",
   "SB",
   "SH",
-  "SW"
+  "SW",
+  "MUL",
+  "MULH",
+  "MULHSU",
+  "MULHU"
 ]

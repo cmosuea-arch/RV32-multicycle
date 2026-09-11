@@ -20,6 +20,7 @@ module riscv_core(
     wire [3:0] alu_op;
     wire a_pc,b_imm,reg_we,branch,jal,jalr,load,store_op,mul,illegal;
     wire [31:0] load_data,store_data;
+    wire [31:0] product;
     wire [3:0] store_bw;
     wire misaligned,lsu_invalid;
     wire [31:0] writeback_data=load?load_data:result_q;
@@ -36,10 +37,11 @@ module riscv_core(
     alu arithmetic(a_pc?current_pc:a,b_imm?immediate:b,alu_op,alu_result);
     branch_comp branch_compare(a,b,instruction[14:12],branch_taken);
     lsu load_store(result_q,b,data_i,instruction[14:12],store_op,load_data,store_data,store_bw,misaligned,lsu_invalid);
+    multiplier multiply(a,b,{1'b0,instruction[14:12]},product);
     always @(posedge clk_i) begin
         if(rst_i) begin result_q<=0; next_pc_q<=0; end
         else if(state==EXECUTE) begin
-            result_q<=(jal||jalr)?plus4:alu_result;
+            result_q<=(jal||jalr)?plus4:mul?product:alu_result;
             next_pc_q<=redirect?redirect_target:plus4;
         end
     end

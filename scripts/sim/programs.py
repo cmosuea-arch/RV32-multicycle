@@ -3,7 +3,7 @@
 from pathlib import Path
 import json
 import random
-from isa import R,I,BRANCH,LOAD,STORE,CATEGORIES,fields,encode
+from isa import R,I,BRANCH,LOAD,STORE,MULT,CATEGORIES,fields,encode
 from vectors import signed,MASK,EDGES,alu_model
 
 ROOT=Path(__file__).resolve().parents[2]
@@ -63,6 +63,10 @@ class Program:
                 if addr%size: raise ValueError('model store alignment')
                 for i in range(size): self.memory[addr+i]=(b>>(8*i))&255
                 rd=0; value=0
+            elif name in MULT:
+                aa=signed(a) if name in ('MUL','MULH','MULHSU') else a
+                bb=signed(b) if name in ('MUL','MULH') else b
+                value=((aa*bb)>>(0 if name=='MUL' else 32))&MASK
             else: raise ValueError(name)
             if rd: self.regs[rd]=value
             self.trace.append((pc,self.words[index],rd,self.regs[rd]))
@@ -91,7 +95,7 @@ def main():
     rng=random.Random(4711)
     p=Program()
     for name in enabled:
-        if name in R:
+        if name in R or name in MULT:
             pairs=[(a,b) for a in EDGES[:10] for b in [0,1,31,32,0xffffffff,0x80000000]]
             pairs += [(rng.getrandbits(32),rng.getrandbits(32)) for _ in range(12)]
             for a,b in pairs:
@@ -170,7 +174,7 @@ def main():
                         name=matches[0]
                         op=R[name][2] if name in R else I[name][1] if name in I else 1 if name=='AUIPC' else 0
                         if name in BRANCH or name in ('JAL','JALR') or name in LOAD or name in STORE: op=1
-                        ctrl=(op<<10)|(int(name in ('AUIPC','JAL') or name in BRANCH)<<9)|(int(name not in R)<<8)|(int(name not in BRANCH and name not in STORE)<<7)|(int(name in BRANCH)<<6)|(int(name=='JAL')<<5)|(int(name=='JALR')<<4)|(int(name in LOAD)<<3)|(int(name in STORE)<<2)
+                        ctrl=(op<<10)|(int(name in ('AUIPC','JAL') or name in BRANCH)<<9)|(int(name not in R and name not in MULT)<<8)|(int(name not in BRANCH and name not in STORE)<<7)|(int(name in BRANCH)<<6)|(int(name=='JAL')<<5)|(int(name=='JALR')<<4)|(int(name in LOAD)<<3)|(int(name in STORE)<<2)|(int(name in MULT)<<1)
                     f.write(f'{inst:08x} {ctrl:04x}\n')
     print(f'PASS generated {len(p.words)} instructions; targets={len(enabled)}')
 

@@ -35,4 +35,4 @@ tb_mult_rf verifica seleção do produto e escrita no banco.
 ## Commit validado
 Tag block-multiplier-v1; integração ISA em marco seguinte.
 ## Pendências
-Integração de decode/core; ChipInventor.
+Integrado no core em isa-41-v1; ChipInventor para submissão pendente.

@@ -18,6 +18,7 @@ module decoder(
                     endcase
                 end else if(instr_i[31:25]==7'h20 && instr_i[14:12]==0) alu_op_o=2;
                 else if(instr_i[31:25]==7'h20 && instr_i[14:12]==5) alu_op_o=8;
+                else if(instr_i[31:25]==7'h01 && instr_i[14:12]<=3) begin mul_o=1; alu_op_o=0; end
                 else illegal_o=1;
             end
             7'h13: begin
