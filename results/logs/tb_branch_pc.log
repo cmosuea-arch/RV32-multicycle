@@ -1,0 +1,3 @@
+$ vvp /home/luixf/eda/uniccass-icdesign-tools/shared_xserver/cmos-riscv/build/tb_branch_pc
+PASS branch_pc: taken/not-taken and forward/backward redirects
+/home/luixf/eda/uniccass-icdesign-tools/shared_xserver/cmos-riscv/tb/integration/tb_branch_pc.sv:19: $finish called at 36000 (1ps)

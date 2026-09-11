@@ -43,6 +43,11 @@ def main():
                 inst = encode_imm(fmt, value)
                 f.write(f'{inst:08x} {value & MASK:08x}\n')
         f.write('ffffffff 00000000\n')
+    with (OUT/'branch.vec').open('w') as f:
+        for code in range(8):
+            for a,b in pairs:
+                expected={0:a==b,1:a!=b,4:signed(a)<signed(b),5:signed(a)>=signed(b),6:a<b,7:a>=b}.get(code,False)
+                f.write(f'{a:08x} {b:08x} {code:x} {int(expected):x}\n')
     print('PASS deterministic vectors generated')
 
 
