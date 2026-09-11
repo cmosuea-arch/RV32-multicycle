@@ -33,7 +33,27 @@ def main():
             for a, b in pairs:
                 expected = alu_model(a, b, op) if op < 11 else 0
                 f.write(f'{a:08x} {b:08x} {op:x} {expected:08x}\n')
+    with (OUT / 'imm.vec').open('w') as f:
+        for fmt, bits, step in [('I',12,1),('S',12,1),('B',13,2),('U',32,4096),('J',21,2)]:
+            vals = [0, step, -step, -(1 << (bits-1)), (1 << (bits-1))-step]
+            vals += [signed(rng.getrandbits(bits), bits)//step*step for _ in range(1000)]
+            # Walk each independent payload bit as well as sign and limits.
+            vals += [signed(1 << bit, bits) for bit in range(bits) if (1 << bit) >= step]
+            for value in vals:
+                inst = encode_imm(fmt, value)
+                f.write(f'{inst:08x} {value & MASK:08x}\n')
+        f.write('ffffffff 00000000\n')
     print('PASS deterministic vectors generated')
+
+
+def encode_imm(fmt, value, rd=3, rs1=1, rs2=2, funct3=0):
+    v = value & MASK
+    if fmt == 'I': return ((v & 4095)<<20)|(rs1<<15)|(funct3<<12)|(rd<<7)|0x13
+    if fmt == 'S': return ((v>>5 & 127)<<25)|(rs2<<20)|(rs1<<15)|(funct3<<12)|((v&31)<<7)|0x23
+    if fmt == 'B': return ((v>>12 & 1)<<31)|((v>>5 & 63)<<25)|(rs2<<20)|(rs1<<15)|(funct3<<12)|((v>>1 & 15)<<8)|((v>>11 & 1)<<7)|0x63
+    if fmt == 'U': return (v & 0xfffff000)|(rd<<7)|0x37
+    if fmt == 'J': return ((v>>20 & 1)<<31)|((v>>1 & 1023)<<21)|((v>>11 & 1)<<20)|((v>>12 & 255)<<12)|(rd<<7)|0x6f
+    raise ValueError(fmt)
 
 
 if __name__ == '__main__':
