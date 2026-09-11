@@ -66,6 +66,13 @@ def main():
                             else:
                                 ld=int.from_bytes(mem.to_bytes(4,'little')[offset:offset+size], 'little', signed=code in (0,1))&MASK
                         f.write(f'{0x10010000+offset:08x} {data:08x} {mem:08x} {code:x} {store:x} {ld:08x} {sd:08x} {bw:x} {int(bad):x} {int(not valid):x}\n')
+    with (OUT/'multiplier.vec').open('w') as f:
+        for op in range(16):
+            for a,b in pairs:
+                aa=signed(a) if op<3 else a
+                bb=signed(b) if op<2 else b
+                expected=((aa*bb)>>(0 if op==0 else 32))&MASK if op<4 else 0
+                f.write(f'{a:08x} {b:08x} {op:x} {expected:08x}\n')
     print('PASS deterministic vectors generated')
 
 
