@@ -33,4 +33,4 @@ IMEM + DMEM + Address Decoder; leitura síncrona e escrita parcial verificadas.
 ## Commit validado
 Tag block-address-decoder-v1.
 ## Pendências
-Load/store no core; ChipInventor.
+Load/store integrado em isa-37-v1; ChipInventor para submissão pendente.

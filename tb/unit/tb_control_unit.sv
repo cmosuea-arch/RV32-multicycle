@@ -10,6 +10,11 @@ module tb_control_unit;
     initial begin
         next_state(0); @(negedge clk); rst=0;
         next_state(1); next_state(2); next_state(3); next_state(0);
+        @(negedge clk); load=1;
+        next_state(1); next_state(2); next_state(4); next_state(3); next_state(0);
+        @(negedge clk); load=0; store_op=1;
+        next_state(1); next_state(2); next_state(4); next_state(3); next_state(0);
+        @(negedge clk); store_op=0;
         next_state(1); @(negedge clk); illegal=1;
         next_state(5); @(negedge clk); illegal=0; next_state(5);
         @(negedge clk); rst=1; next_state(0);

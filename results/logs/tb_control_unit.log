@@ -1,3 +1,3 @@
 $ vvp /home/luixf/eda/uniccass-icdesign-tools/shared_xserver/cmos-riscv/build/tb_control_unit
 PASS control_unit: four stages, illegal, fault and reset
-/home/luixf/eda/uniccass-icdesign-tools/shared_xserver/cmos-riscv/tb/unit/tb_control_unit.sv:17: $finish called at 96000 (1ps)
+/home/luixf/eda/uniccass-icdesign-tools/shared_xserver/cmos-riscv/tb/unit/tb_control_unit.sv:22: $finish called at 196000 (1ps)

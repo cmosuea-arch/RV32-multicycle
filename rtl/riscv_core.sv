@@ -10,7 +10,7 @@ module riscv_core(
     output wire [31:0] commit_pc_o,commit_instr_o,commit_data_o,
     output wire [4:0] commit_rd_o
 );
-    localparam [2:0] FETCH=0,EXECUTE=2,WRITEBACK=3,FAULT=5;
+    localparam [2:0] FETCH=0,EXECUTE=2,WRITEBACK=3,MEMORY=4,FAULT=5;
     wire [2:0] state;
     wire [31:0] current_pc,plus4,instruction,immediate,a,b,alu_result;
     reg [31:0] result_q,next_pc_q;
@@ -19,17 +19,23 @@ module riscv_core(
     wire redirect=(branch&&branch_taken)||jal||jalr;
     wire [3:0] alu_op;
     wire a_pc,b_imm,reg_we,branch,jal,jalr,load,store_op,mul,illegal;
+    wire [31:0] load_data,store_data;
+    wire [3:0] store_bw;
+    wire misaligned,lsu_invalid;
+    wire [31:0] writeback_data=load?load_data:result_q;
     wire retire=(state==WRITEBACK)&&!rst_i;
     wire local_fault=((state==FETCH)&&(bus_fault_i || current_pc[1:0]!=0)) ||
-                     ((state==EXECUTE)&&redirect&&redirect_target[1:0]!=0);
+                     ((state==EXECUTE)&&redirect&&redirect_target[1:0]!=0) ||
+                     ((state==MEMORY)&&(bus_fault_i||misaligned||lsu_invalid));
     control_unit control(clk_i,rst_i,illegal,load,store_op,local_fault,state);
     decoder decode(instruction,alu_op,a_pc,b_imm,reg_we,branch,jal,jalr,load,store_op,mul,illegal);
     pc program_counter(clk_i,rst_i,retire,next_pc_q,current_pc,plus4);
     ir instruction_register(clk_i,rst_i,state==FETCH&&!local_fault&&!rst_i,data_i,instruction);
     imm_ext immediate_ext(instruction,immediate);
-    regfile register_file(clk_i,rst_i,retire&&reg_we,instruction[19:15],instruction[24:20],instruction[11:7],result_q,a,b);
+    regfile register_file(clk_i,rst_i,retire&&reg_we,instruction[19:15],instruction[24:20],instruction[11:7],writeback_data,a,b);
     alu arithmetic(a_pc?current_pc:a,b_imm?immediate:b,alu_op,alu_result);
     branch_comp branch_compare(a,b,instruction[14:12],branch_taken);
+    lsu load_store(result_q,b,data_i,instruction[14:12],store_op,load_data,store_data,store_bw,misaligned,lsu_invalid);
     always @(posedge clk_i) begin
         if(rst_i) begin result_q<=0; next_pc_q<=0; end
         else if(state==EXECUTE) begin
@@ -37,15 +43,15 @@ module riscv_core(
             next_pc_q<=redirect?redirect_target:plus4;
         end
     end
-    assign address_o=current_pc;
-    assign data_o=0;
-    assign oe_o=state==FETCH&&!rst_i;
-    assign we_o=0;
-    assign bw_o=0;
+    assign address_o=(state==MEMORY||(state==WRITEBACK&&(load||store_op)))?result_q:current_pc;
+    assign data_o=store_data;
+    assign oe_o=!rst_i&&((state==FETCH)||((state==MEMORY||state==WRITEBACK)&&load&&!misaligned&&!lsu_invalid));
+    assign we_o=!rst_i&&state==MEMORY&&store_op&&!misaligned&&!lsu_invalid;
+    assign bw_o=we_o?store_bw:4'b0;
     assign fault_o=state==FAULT;
     assign commit_valid_o=retire;
     assign commit_pc_o=current_pc;
     assign commit_instr_o=instruction;
     assign commit_rd_o=reg_we?instruction[11:7]:5'b0;
-    assign commit_data_o=(commit_rd_o==0)?32'b0:result_q;
+    assign commit_data_o=(commit_rd_o==0)?32'b0:writeback_data;
 endmodule

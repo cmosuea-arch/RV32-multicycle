@@ -33,4 +33,4 @@ LSU ↔ DMEM com latência de leitura real.
 ## Commit validado
 Tag block-dmem-v1.
 ## Pendências
-Core/decoder de endereços; macro SRAM física e ChipInventor na fase apropriada.
+Integrada no top em isa-37-v1; macro SRAM física e ChipInventor na fase apropriada.

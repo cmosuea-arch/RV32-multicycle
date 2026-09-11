@@ -48,6 +48,14 @@ module decoder(
                 jalr_o=1; reg_we_o=1; b_imm_o=1; alu_op_o=1;
                 if(instr_i[14:12]!=0) illegal_o=1;
             end
+            7'h03: begin
+                load_o=1; reg_we_o=1; b_imm_o=1; alu_op_o=1;
+                if(!(instr_i[14:12]==0||instr_i[14:12]==1||instr_i[14:12]==2||instr_i[14:12]==4||instr_i[14:12]==5)) illegal_o=1;
+            end
+            7'h23: begin
+                store_o=1; b_imm_o=1; alu_op_o=1;
+                if(instr_i[14:12]>2) illegal_o=1;
+            end
             default: illegal_o=1;
         endcase
         if(illegal_o) begin

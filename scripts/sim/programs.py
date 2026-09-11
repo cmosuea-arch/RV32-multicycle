@@ -3,7 +3,7 @@
 from pathlib import Path
 import json
 import random
-from isa import R,I,BRANCH,CATEGORIES,fields,encode
+from isa import R,I,BRANCH,LOAD,STORE,CATEGORIES,fields,encode
 from vectors import signed,MASK,EDGES,alu_model
 
 ROOT=Path(__file__).resolve().parents[2]
@@ -18,6 +18,7 @@ class Program:
         self.regs=[0]*32
         self.counts={}
         self.ops=[]
+        self.memory={}
 
     def emit(self,name,rd=3,rs1=1,rs2=2,imm=0):
         pc=BASE+4*len(self.words)
@@ -47,6 +48,21 @@ class Program:
                 rd=0; value=0
             elif name=='JAL': value=pc+4; next_pc=pc+imm
             elif name=='JALR': value=pc+4; next_pc=((a+signed(imm,12))&MASK)&~1
+            elif name in LOAD:
+                addr=(a+signed(imm,12))&MASK
+                size={'LB':1,'LBU':1,'LH':2,'LHU':2,'LW':4}[name]
+                if addr%size: raise ValueError('model load alignment')
+                if BASE<=addr<BASE+len(self.words)*4:
+                    raw=b''.join(w.to_bytes(4,'little') for w in self.words[(addr-BASE)//4:(addr-BASE)//4+2])
+                    raw=raw[addr%4:addr%4+size]
+                else: raw=bytes(self.memory[addr+i] for i in range(size))
+                value=int.from_bytes(raw,'little',signed=name in ('LB','LH'))&MASK
+            elif name in STORE:
+                addr=(a+signed(imm,12))&MASK
+                size={'SB':1,'SH':2,'SW':4}[name]
+                if addr%size: raise ValueError('model store alignment')
+                for i in range(size): self.memory[addr+i]=(b>>(8*i))&255
+                rd=0; value=0
             else: raise ValueError(name)
             if rd: self.regs[rd]=value
             self.trace.append((pc,self.words[index],rd,self.regs[rd]))
@@ -62,10 +78,11 @@ class Program:
 
     def save(self):
         self.evaluate()
-        if len(self.words)>65536: raise ValueError('program exceeds test ROM')
-        (OUT/'isa.hex').write_text(''.join(f'{w:08x}\n' for w in self.words+[0]*(65536-len(self.words))))
+        if len(self.words)>131072: raise ValueError('program exceeds test ROM')
+        (OUT/'isa.hex').write_text(''.join(f'{w:08x}\n' for w in self.words+[0]*(131072-len(self.words))))
         (OUT/'isa.trace').write_text(''.join(f'{pc:08x} {ins:08x} {rd:02x} {value:08x}\n' for pc,ins,rd,value in self.trace))
         (OUT/'isa_counts.json').write_text(json.dumps(self.counts,indent=2)+'\n')
+        (OUT/'isa_memory.vec').write_text(''.join(f'{a:08x} {v:02x}\n' for a,v in sorted(self.memory.items())))
 
 
 def main():
@@ -125,6 +142,21 @@ def main():
             p.emit('ADDI',3,0,imm=77)
             p.emit('JAL',0,imm=8)
             p.emit('JALR',6,2,imm=0)
+        elif name in LOAD:
+            size={'LB':1,'LBU':1,'LH':2,'LHU':2,'LW':4}[name]
+            for word in [0,0x7f0180ff,0xf4f3f2f1,0x80007fff,0xffffffff]:
+                p.constant(1,0x10010000); p.constant(2,word); p.emit('SW',0,1,2)
+                for offset in range(0,4,size): p.emit(name,3,1,imm=offset)
+                p.emit(name,0,1) # load to x0 still performs access
+                p.constant(1,0x10010004); p.emit(name,3,1,imm=-4)
+            p.constant(1,BASE)
+            p.emit(name,3,1) # constant load from ROM
+        elif name in STORE:
+            size={'SB':1,'SH':2,'SW':4}[name]
+            for offset in range(0,4,size):
+                p.constant(1,0x10010000); p.constant(2,0xa5a5a5a5); p.emit('SW',0,1,2)
+                p.constant(2,0x87654321); p.emit(name,0,1,2,imm=offset); p.emit('LW',3,1)
+            p.constant(1,0x10011ffc); p.emit(name,0,1,2); p.emit(name,0,1,2,imm=-4)
     p.save()
     with (OUT/'decoder.vec').open('w') as f:
         for opcode in range(128):
@@ -137,8 +169,8 @@ def main():
                     if matches:
                         name=matches[0]
                         op=R[name][2] if name in R else I[name][1] if name in I else 1 if name=='AUIPC' else 0
-                        if name in BRANCH or name in ('JAL','JALR'): op=1
-                        ctrl=(op<<10)|(int(name in ('AUIPC','JAL') or name in BRANCH)<<9)|(int(name not in R)<<8)|(int(name not in BRANCH)<<7)|(int(name in BRANCH)<<6)|(int(name=='JAL')<<5)|(int(name=='JALR')<<4)
+                        if name in BRANCH or name in ('JAL','JALR') or name in LOAD or name in STORE: op=1
+                        ctrl=(op<<10)|(int(name in ('AUIPC','JAL') or name in BRANCH)<<9)|(int(name not in R)<<8)|(int(name not in BRANCH and name not in STORE)<<7)|(int(name in BRANCH)<<6)|(int(name=='JAL')<<5)|(int(name=='JALR')<<4)|(int(name in LOAD)<<3)|(int(name in STORE)<<2)
                     f.write(f'{inst:08x} {ctrl:04x}\n')
     print(f'PASS generated {len(p.words)} instructions; targets={len(enabled)}')
 

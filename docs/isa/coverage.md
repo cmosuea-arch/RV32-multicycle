@@ -1,6 +1,6 @@
 # Cobertura ISA
 
-**29/47 (61.70%)** com testes unitários e execução no core.
+**37/47 (78.72%)** com testes unitários e execução no core.
 
 | Categoria | Implementadas | Cobertura |
 |---|---:|---:|
@@ -9,8 +9,8 @@
 | Upper | 2/2 | 100.00% |
 | Branch | 6/6 | 100.00% |
 | Jump | 2/2 | 100.00% |
-| Load | 0/5 | 0.00% |
-| Store | 0/3 | 0.00% |
+| Load | 5/5 | 100.00% |
+| Store | 3/3 | 100.00% |
 | Multiplication | 0/4 | 0.00% |
 | CRC | 0/3 | 0.00% |
 | Sistema/Sincronização | 0/3 | 0.00% |

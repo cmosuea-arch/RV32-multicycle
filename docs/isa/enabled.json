@@ -27,5 +27,13 @@
   "BLTU",
   "BGEU",
   "JAL",
-  "JALR"
+  "JALR",
+  "LB",
+  "LH",
+  "LW",
+  "LBU",
+  "LHU",
+  "SB",
+  "SH",
+  "SW"
 ]

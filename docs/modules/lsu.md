@@ -34,4 +34,4 @@ tb_lsu_rf: ALU → LSU → RF; store lane verificado antes da DMEM.
 ## Commit validado
 Tag block-lsu-v1.
 ## Pendências
-Integração com DMEM e core no próximo marco; ChipInventor.
+Integrada no core em isa-37-v1; ChipInventor para submissão pendente.

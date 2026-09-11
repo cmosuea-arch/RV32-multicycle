@@ -6,7 +6,8 @@ clk_i/rst_i, illegal_i, load_i/store_i e fault_i.
 ## Saídas
 state_o[2:0], códigos em architecture/interfaces.md e RTL.
 ## Comportamento
-FETCH → DECODE → EXECUTE → WRITEBACK. Erro entra em FAULT até reset.
+FETCH → DECODE → EXECUTE → WRITEBACK. Loads/stores passam por MEMORY entre
+EXECUTE e WRITEBACK. Erro entra em FAULT até reset.
 ## Dependências
 Decoder informa legalidade; core informa erros de endereço.
 ## Casos especiais
@@ -33,4 +34,4 @@ Core instancia PC, IR, RF, Immediate e ALU. Primeira aposentadoria real.
 ## Commit validado
 Tag core-smoke-v1.
 ## Pendências
-Estados de memória, famílias adicionais e ChipInventor.
+CRC/sistema aguardam definição oficial; ChipInventor.
