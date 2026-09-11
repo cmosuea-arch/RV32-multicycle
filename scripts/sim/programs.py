@@ -80,8 +80,8 @@ def main():
                     ctrl=1
                     if matches:
                         name=matches[0]
-                        op=R[name][2] if name in R else I[name][1] if name in I else 0
-                        ctrl=(op<<10)|(int(name in I)<<8)|(1<<7)
+                        op=R[name][2] if name in R else I[name][1] if name in I else 1 if name=='AUIPC' else 0
+                        ctrl=(op<<10)|(int(name=='AUIPC')<<9)|(int(name in I or name in ('LUI','AUIPC'))<<8)|(1<<7)
                     f.write(f'{inst:08x} {ctrl:04x}\n')
     print(f'PASS generated {len(p.words)} instructions; targets={len(enabled)}')
 

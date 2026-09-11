@@ -37,6 +37,8 @@ module decoder(
                     7: alu_op_o=3;
                 endcase
             end
+            7'h37: begin reg_we_o=1; b_imm_o=1; alu_op_o=0; end
+            7'h17: begin reg_we_o=1; b_imm_o=1; a_pc_o=1; alu_op_o=1; end
             default: illegal_o=1;
         endcase
         if(illegal_o) begin
