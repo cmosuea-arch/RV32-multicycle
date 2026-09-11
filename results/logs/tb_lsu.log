@@ -1,0 +1,3 @@
+$ vvp /home/luixf/eda/uniccass-icdesign-tools/shared_xserver/cmos-riscv/build/tb_lsu
+PASS lsu: 8960 byte/half/word, signed/unsigned, masks and invalid vectors
+/home/luixf/eda/uniccass-icdesign-tools/shared_xserver/cmos-riscv/tb/unit/tb_lsu.sv:23: $finish called at 8960000 (1ps)

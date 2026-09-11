@@ -48,6 +48,24 @@ def main():
             for a,b in pairs:
                 expected={0:a==b,1:a!=b,4:signed(a)<signed(b),5:signed(a)>=signed(b),6:a<b,7:a>=b}.get(code,False)
                 f.write(f'{a:08x} {b:08x} {code:x} {int(expected):x}\n')
+    with (OUT/'lsu.vec').open('w') as f:
+        for store in (0,1):
+            for code in range(8):
+                for offset in range(4):
+                    for mem in EDGES+[rng.getrandbits(32) for _ in range(128)]:
+                        data=rng.getrandbits(32)
+                        size={0:1,1:2,2:4,4:1,5:2}.get(code,1)
+                        valid=code in ([0,1,2] if store else [0,1,2,4,5])
+                        bad=valid and offset%size!=0
+                        ld=sd=bw=0
+                        if valid and not bad:
+                            mask=(1<<(8*size))-1
+                            if store:
+                                sd=((data&mask)<<(8*offset))&MASK
+                                bw=((1<<size)-1)<<offset
+                            else:
+                                ld=int.from_bytes(mem.to_bytes(4,'little')[offset:offset+size], 'little', signed=code in (0,1))&MASK
+                        f.write(f'{0x10010000+offset:08x} {data:08x} {mem:08x} {code:x} {store:x} {ld:08x} {sd:08x} {bw:x} {int(bad):x} {int(not valid):x}\n')
     print('PASS deterministic vectors generated')
 
 
