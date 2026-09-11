@@ -1,0 +1,3 @@
+$ vvp /home/luixf/eda/uniccass-icdesign-tools/shared_xserver/cmos-riscv/build/tb_datapath
+PASS datapath: ALU operand mux and writeback
+/home/luixf/eda/uniccass-icdesign-tools/shared_xserver/cmos-riscv/tb/integration/tb_datapath.sv:24: $finish called at 26000 (1ps)
