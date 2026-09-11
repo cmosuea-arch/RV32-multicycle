@@ -1,3 +1,3 @@
 $ vvp /home/luixf/eda/uniccass-icdesign-tools/shared_xserver/cmos-riscv/build/tb_isa
-PASS isa: 54662 retirements match Python architectural expectations
-/home/luixf/eda/uniccass-icdesign-tools/shared_xserver/cmos-riscv/tb/integration/tb_isa.sv:39: $finish called at 2186486000 (1ps)
+PASS isa: 56777 retirements match Python architectural expectations
+/home/luixf/eda/uniccass-icdesign-tools/shared_xserver/cmos-riscv/tb/integration/tb_isa.sv:39: $finish called at 2271086000 (1ps)

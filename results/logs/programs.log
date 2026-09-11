@@ -1,2 +1,2 @@
 $ /usr/bin/python3 /home/luixf/eda/uniccass-icdesign-tools/shared_xserver/cmos-riscv/scripts/sim/programs.py
-PASS generated 54662 instructions; targets=21
+PASS generated 56780 instructions; targets=27

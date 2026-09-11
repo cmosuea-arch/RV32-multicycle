@@ -13,21 +13,28 @@ module riscv_core(
     localparam [2:0] FETCH=0,EXECUTE=2,WRITEBACK=3,FAULT=5;
     wire [2:0] state;
     wire [31:0] current_pc,plus4,instruction,immediate,a,b,alu_result;
-    reg [31:0] result_q;
+    reg [31:0] result_q,next_pc_q;
+    wire branch_taken;
     wire [3:0] alu_op;
     wire a_pc,b_imm,reg_we,branch,jal,jalr,load,store_op,mul,illegal;
     wire retire=(state==WRITEBACK)&&!rst_i;
-    wire local_fault=(state==FETCH)&&(bus_fault_i || current_pc[1:0]!=0);
+    wire local_fault=((state==FETCH)&&(bus_fault_i || current_pc[1:0]!=0)) ||
+                     ((state==EXECUTE)&&branch&&branch_taken&&alu_result[1:0]!=0);
     control_unit control(clk_i,rst_i,illegal,load,store_op,local_fault,state);
     decoder decode(instruction,alu_op,a_pc,b_imm,reg_we,branch,jal,jalr,load,store_op,mul,illegal);
-    pc program_counter(clk_i,rst_i,retire,plus4,current_pc,plus4);
+    pc program_counter(clk_i,rst_i,retire,next_pc_q,current_pc,plus4);
     ir instruction_register(clk_i,rst_i,state==FETCH&&!local_fault&&!rst_i,data_i,instruction);
     imm_ext immediate_ext(instruction,immediate);
     regfile register_file(clk_i,rst_i,retire&&reg_we,instruction[19:15],instruction[24:20],instruction[11:7],result_q,a,b);
     alu arithmetic(a_pc?current_pc:a,b_imm?immediate:b,alu_op,alu_result);
-    always @(posedge clk_i)
-        if(rst_i) result_q<=0;
-        else if(state==EXECUTE) result_q<=alu_result;
+    branch_comp branch_compare(a,b,instruction[14:12],branch_taken);
+    always @(posedge clk_i) begin
+        if(rst_i) begin result_q<=0; next_pc_q<=0; end
+        else if(state==EXECUTE) begin
+            result_q<=alu_result;
+            next_pc_q<=(branch&&branch_taken)?alu_result:plus4;
+        end
+    end
     assign address_o=current_pc;
     assign data_o=0;
     assign oe_o=state==FETCH&&!rst_i;

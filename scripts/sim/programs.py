@@ -3,7 +3,7 @@
 from pathlib import Path
 import json
 import random
-from isa import R,I,CATEGORIES,fields,encode
+from isa import R,I,BRANCH,CATEGORIES,fields,encode
 from vectors import signed,MASK,EDGES,alu_model
 
 ROOT=Path(__file__).resolve().parents[2]
@@ -17,22 +17,39 @@ class Program:
         self.trace=[]
         self.regs=[0]*32
         self.counts={}
+        self.ops=[]
 
     def emit(self,name,rd=3,rs1=1,rs2=2,imm=0):
         pc=BASE+4*len(self.words)
         inst=encode(name,rd,rs1,rs2,imm)
-        a,b=self.regs[rs1],self.regs[rs2]
-        if name in R: value=alu_model(a,b,R[name][2])
-        elif name in I:
-            operand=imm&31 if name in ('SLLI','SRLI','SRAI') else signed(imm,12)&MASK
-            value=alu_model(a,operand,I[name][1])
-        elif name=='LUI': value=imm&0xfffff000
-        elif name=='AUIPC': value=(pc+(imm&0xfffff000))&MASK
-        else: raise ValueError(name)
-        if rd: self.regs[rd]=value
         self.words.append(inst)
-        self.trace.append((pc,inst,rd,self.regs[rd]))
-        self.counts[name]=self.counts.get(name,0)+1
+        self.ops.append((name,rd,rs1,rs2,imm))
+
+    def evaluate(self):
+        pc=BASE
+        while pc != BASE+4*len(self.words):
+            if pc<BASE or pc>=BASE+4*len(self.words) or pc%4: raise ValueError(f'bad model PC {pc:x}')
+            if len(self.trace)>250000: raise ValueError('model loop')
+            index=(pc-BASE)//4
+            name,rd,rs1,rs2,imm=self.ops[index]
+            a,b=self.regs[rs1],self.regs[rs2]
+            next_pc=pc+4
+            if name in R: value=alu_model(a,b,R[name][2])
+            elif name in I:
+                operand=imm&31 if name in ('SLLI','SRLI','SRAI') else signed(imm,12)&MASK
+                value=alu_model(a,operand,I[name][1])
+            elif name=='LUI': value=imm&0xfffff000
+            elif name=='AUIPC': value=(pc+(imm&0xfffff000))&MASK
+            elif name in BRANCH:
+                taken={'BEQ':a==b,'BNE':a!=b,'BLT':signed(a)<signed(b),
+                       'BGE':signed(a)>=signed(b),'BLTU':a<b,'BGEU':a>=b}[name]
+                if taken: next_pc=pc+imm
+                rd=0; value=0
+            else: raise ValueError(name)
+            if rd: self.regs[rd]=value
+            self.trace.append((pc,self.words[index],rd,self.regs[rd]))
+            self.counts[name]=self.counts.get(name,0)+1
+            pc=next_pc&MASK
 
     def constant(self,rd,value):
         value &= MASK
@@ -42,6 +59,7 @@ class Program:
             self.emit('ADDI',rd,rd,imm=(value>>shift)&255)
 
     def save(self):
+        self.evaluate()
         if len(self.words)>65536: raise ValueError('program exceeds test ROM')
         (OUT/'isa.hex').write_text(''.join(f'{w:08x}\n' for w in self.words+[0]*(65536-len(self.words))))
         (OUT/'isa.trace').write_text(''.join(f'{pc:08x} {ins:08x} {rd:02x} {value:08x}\n' for pc,ins,rd,value in self.trace))
@@ -69,6 +87,21 @@ def main():
             for v in [0,0x1000,0x7ffff000,0x80000000,0xfffff000]:
                 p.emit(name,imm=v)
             p.emit(name,0,imm=0xfffff000)
+        elif name in BRANCH:
+            for a,b in [(0,0),(1,2),(2,1),(0xffffffff,1),(0x80000000,0x7fffffff)]:
+                p.constant(1,a); p.constant(2,b)
+                p.emit(name,0,1,2,imm=8)
+                p.emit('ADDI',3,0,imm=17)
+                p.emit('ADDI',4,0,imm=34)
+            if name=='BEQ':
+                p.constant(1,1); p.constant(2,0); p.emit('ADDI',2,2,imm=1)
+            elif name=='BNE':
+                p.constant(1,2); p.constant(2,0); p.emit('ADDI',2,2,imm=1)
+            elif name in ('BLT','BLTU'):
+                p.constant(1,0); p.constant(2,2); p.emit('ADDI',1,1,imm=1)
+            else:
+                p.constant(1,2); p.constant(2,1); p.emit('ADDI',1,1,imm=-1)
+            p.emit(name,0,1,2,imm=-4)
     p.save()
     with (OUT/'decoder.vec').open('w') as f:
         for opcode in range(128):
@@ -81,7 +114,8 @@ def main():
                     if matches:
                         name=matches[0]
                         op=R[name][2] if name in R else I[name][1] if name in I else 1 if name=='AUIPC' else 0
-                        ctrl=(op<<10)|(int(name=='AUIPC')<<9)|(int(name in I or name in ('LUI','AUIPC'))<<8)|(1<<7)
+                        if name in BRANCH: op=1
+                        ctrl=(op<<10)|(int(name=='AUIPC' or name in BRANCH)<<9)|(int(name in I or name in ('LUI','AUIPC') or name in BRANCH)<<8)|(int(name not in BRANCH)<<7)|(int(name in BRANCH)<<6)
                     f.write(f'{inst:08x} {ctrl:04x}\n')
     print(f'PASS generated {len(p.words)} instructions; targets={len(enabled)}')
 

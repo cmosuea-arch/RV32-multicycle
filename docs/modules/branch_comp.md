@@ -31,7 +31,8 @@ Iguais, positivos, negativos, limites e aleatórios, todas as condições.
 results/logs/tb_branch_comp.log e regressão PASS.
 ## Integração
 tb_branch_pc: Comparator + Immediate + ALU + PC, tomado/não tomado e alvo negativo.
+tb_isa executa seis branches no core, incluindo loops para trás e ambas as decisões.
 ## Commit validado
 Tag block-branch-comp-v1.
 ## Pendências
-Decode e integração de instruções de branch no core; ChipInventor.
+ChipInventor para submissão.

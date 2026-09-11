@@ -8,15 +8,16 @@ Barramento address/data/oe/we/bw e sinais de aposentadoria commit_*.
 ## Comportamento
 Uma instrução por vez; PC e RF escrevem em WRITEBACK, IR em FETCH.
 ## Dependências
-PC, IR, RF, Immediate, ALU, decoder e control_unit.
+PC, IR, RF, Immediate, ALU, branch_comp, decoder e control_unit.
 ## Casos especiais
 FAULT diagnóstico CMOS persistente; x0 sempre zero, inclusive na observação.
 ## Diagrama
 Ver architecture/block_diagram.md; CRC/memória ainda não implementados neste marco.
 ## Testbench
-tb_core_smoke.
+tb_core_smoke e tb_isa (trace arquitetural Python por aposentadoria).
 ## Casos testados
-ADD/SUB/ADDI em programa encadeado, PC, dados aposentados e escrita física no RF.
+Operações habilitadas em docs/isa/enabled.json; PC, dados aposentados, escrita
+física no RF, dependências, limites e branches tomados/não tomados para frente/trás.
 ## Resultado
 results/logs/tb_core_smoke.log e regressão PASS.
 ## Integração

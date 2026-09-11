@@ -1,5 +1,5 @@
 Categoria,Instrução,Opcode,Funct3,Funct7,Módulo principal,Teste unitário,Teste integrado,Regressão,Firmware oficial,Commit,Evidência,Observação
-Register,ADD,0110011,000,0000000,alu,PASS,PASS,PASS,PENDENTE,ver git log -- rtl/decoder.sv,results/logs/tb_decoder.log; results/logs/tb_isa.log,45866 aposentadorias no teste próprio
+Register,ADD,0110011,000,0000000,alu,PASS,PASS,PASS,PENDENTE,ver git log -- rtl/decoder.sv,results/logs/tb_decoder.log; results/logs/tb_isa.log,47594 aposentadorias no teste próprio
 Register,SUB,0110011,000,0100000,alu,PASS,PASS,PASS,PENDENTE,ver git log -- rtl/decoder.sv,results/logs/tb_decoder.log; results/logs/tb_isa.log,74 aposentadorias no teste próprio
 Register,SLL,0110011,001,0000000,alu,PASS,PASS,PASS,PENDENTE,ver git log -- rtl/decoder.sv,results/logs/tb_decoder.log; results/logs/tb_isa.log,74 aposentadorias no teste próprio
 Register,SLT,0110011,010,0000000,alu,PASS,PASS,PASS,PENDENTE,ver git log -- rtl/decoder.sv,results/logs/tb_decoder.log; results/logs/tb_isa.log,74 aposentadorias no teste próprio
@@ -9,7 +9,7 @@ Register,SRL,0110011,101,0000000,alu,PASS,PASS,PASS,PENDENTE,ver git log -- rtl/
 Register,SRA,0110011,101,0100000,alu,PASS,PASS,PASS,PENDENTE,ver git log -- rtl/decoder.sv,results/logs/tb_decoder.log; results/logs/tb_isa.log,74 aposentadorias no teste próprio
 Register,OR,0110011,110,0000000,alu,PASS,PASS,PASS,PENDENTE,ver git log -- rtl/decoder.sv,results/logs/tb_decoder.log; results/logs/tb_isa.log,74 aposentadorias no teste próprio
 Register,AND,0110011,111,0000000,alu,PASS,PASS,PASS,PENDENTE,ver git log -- rtl/decoder.sv,results/logs/tb_decoder.log; results/logs/tb_isa.log,74 aposentadorias no teste próprio
-Immediate,ADDI,0010011,000,,alu/imm_ext,PASS,PASS,PASS,PENDENTE,ver git log -- rtl/decoder.sv,results/logs/tb_decoder.log; results/logs/tb_isa.log,7694 aposentadorias no teste próprio
+Immediate,ADDI,0010011,000,,alu/imm_ext,PASS,PASS,PASS,PENDENTE,ver git log -- rtl/decoder.sv,results/logs/tb_decoder.log; results/logs/tb_isa.log,8039 aposentadorias no teste próprio
 Immediate,SLTI,0010011,010,,alu/imm_ext,PASS,PASS,PASS,PENDENTE,ver git log -- rtl/decoder.sv,results/logs/tb_decoder.log; results/logs/tb_isa.log,62 aposentadorias no teste próprio
 Immediate,SLTIU,0010011,011,,alu/imm_ext,PASS,PASS,PASS,PENDENTE,ver git log -- rtl/decoder.sv,results/logs/tb_decoder.log; results/logs/tb_isa.log,62 aposentadorias no teste próprio
 Immediate,XORI,0010011,100,,alu/imm_ext,PASS,PASS,PASS,PENDENTE,ver git log -- rtl/decoder.sv,results/logs/tb_decoder.log; results/logs/tb_isa.log,62 aposentadorias no teste próprio
@@ -20,12 +20,12 @@ Immediate,SRLI,0010011,101,0000000,alu/imm_ext,PASS,PASS,PASS,PENDENTE,ver git l
 Immediate,SRAI,0010011,101,0100000,alu/imm_ext,PASS,PASS,PASS,PENDENTE,ver git log -- rtl/decoder.sv,results/logs/tb_decoder.log; results/logs/tb_isa.log,38 aposentadorias no teste próprio
 Upper,LUI,0110111,,,alu/pc/imm_ext,PASS,PASS,PASS,PENDENTE,ver git log -- rtl/decoder.sv,results/logs/tb_decoder.log; results/logs/tb_isa.log,6 aposentadorias no teste próprio
 Upper,AUIPC,0010111,,,alu/pc/imm_ext,PASS,PASS,PASS,PENDENTE,ver git log -- rtl/decoder.sv,results/logs/tb_decoder.log; results/logs/tb_isa.log,6 aposentadorias no teste próprio
-Branch,BEQ,1100011,000,,branch_comp,PENDENTE,PENDENTE,PENDENTE,PENDENTE,,,Definição oficial pendente
-Branch,BNE,1100011,001,,branch_comp,PENDENTE,PENDENTE,PENDENTE,PENDENTE,,,Definição oficial pendente
-Branch,BLT,1100011,100,,branch_comp,PENDENTE,PENDENTE,PENDENTE,PENDENTE,,,Definição oficial pendente
-Branch,BGE,1100011,101,,branch_comp,PENDENTE,PENDENTE,PENDENTE,PENDENTE,,,Definição oficial pendente
-Branch,BLTU,1100011,110,,branch_comp,PENDENTE,PENDENTE,PENDENTE,PENDENTE,,,Definição oficial pendente
-Branch,BGEU,1100011,111,,branch_comp,PENDENTE,PENDENTE,PENDENTE,PENDENTE,,,Definição oficial pendente
+Branch,BEQ,1100011,000,,branch_comp,PASS,PASS,PASS,PENDENTE,ver git log -- rtl/decoder.sv,results/logs/tb_decoder.log; results/logs/tb_isa.log,7 aposentadorias no teste próprio
+Branch,BNE,1100011,001,,branch_comp,PASS,PASS,PASS,PENDENTE,ver git log -- rtl/decoder.sv,results/logs/tb_decoder.log; results/logs/tb_isa.log,7 aposentadorias no teste próprio
+Branch,BLT,1100011,100,,branch_comp,PASS,PASS,PASS,PENDENTE,ver git log -- rtl/decoder.sv,results/logs/tb_decoder.log; results/logs/tb_isa.log,7 aposentadorias no teste próprio
+Branch,BGE,1100011,101,,branch_comp,PASS,PASS,PASS,PENDENTE,ver git log -- rtl/decoder.sv,results/logs/tb_decoder.log; results/logs/tb_isa.log,7 aposentadorias no teste próprio
+Branch,BLTU,1100011,110,,branch_comp,PASS,PASS,PASS,PENDENTE,ver git log -- rtl/decoder.sv,results/logs/tb_decoder.log; results/logs/tb_isa.log,7 aposentadorias no teste próprio
+Branch,BGEU,1100011,111,,branch_comp,PASS,PASS,PASS,PENDENTE,ver git log -- rtl/decoder.sv,results/logs/tb_decoder.log; results/logs/tb_isa.log,7 aposentadorias no teste próprio
 Jump,JAL,1101111,,,pc/alu,PENDENTE,PENDENTE,PENDENTE,PENDENTE,,,Definição oficial pendente
 Jump,JALR,1100111,000,,pc/alu,PENDENTE,PENDENTE,PENDENTE,PENDENTE,,,Definição oficial pendente
 Load,LB,0000011,000,,lsu/dmem,PENDENTE,PENDENTE,PENDENTE,PENDENTE,,,Definição oficial pendente
