@@ -19,6 +19,8 @@ stateDiagram-v2
  FETCH --> DECODE
  DECODE --> EXECUTE
  EXECUTE --> WRITEBACK
+ EXECUTE --> MEMORY: load/store
+ MEMORY --> WRITEBACK
  WRITEBACK --> FETCH
  DECODE --> FAULT: ilegal
  FAULT --> FETCH: reset
@@ -26,12 +28,13 @@ stateDiagram-v2
 ## Testbench
 tb_control_unit e tb_core_smoke.
 ## Casos testados
-Sequência, erro de decode, erro externo, retenção de erro e reset.
+Sequência básica, load/store de cinco ciclos, erro de decode, erro externo,
+retenção de erro e reset. tb_memory_faults verifica cancelamento de store no reset.
 ## Resultado
 results/logs/tb_control_unit.log, tb_core_smoke.log e regressão PASS.
 ## Integração
 Core instancia PC, IR, RF, Immediate e ALU. Primeira aposentadoria real.
 ## Commit validado
-Tag core-smoke-v1.
+Tags core-smoke-v1 e isa-41-v1; evidências finais em rtl-subset-v0.1.
 ## Pendências
 CRC/sistema aguardam definição oficial; ChipInventor.

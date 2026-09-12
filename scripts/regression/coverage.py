@@ -21,8 +21,11 @@ def write_coverage():
     modules={'Register':'alu','Immediate':'alu/imm_ext','Upper':'alu/pc/imm_ext',
              'Branch':'branch_comp','Jump':'pc/alu','Load':'lsu/dmem','Store':'lsu/dmem',
              'Multiplication':'multiplier','CRC':'PENDENTE','Sistema/Sincronização':'PENDENTE'}
+    unit_logs={'Register':'tb_alu','Immediate':'tb_imm_ext; tb_alu','Upper':'tb_imm_ext; tb_pc',
+               'Branch':'tb_branch_comp','Jump':'tb_pc; tb_imm_ext','Load':'tb_lsu; tb_dmem',
+               'Store':'tb_lsu; tb_dmem','Multiplication':'tb_multiplier'}
     with (ROOT/'docs/isa/coverage.csv').open('w',newline='') as f:
-        writer=csv.writer(f); writer.writerow(headers)
+        writer=csv.writer(f,lineterminator='\n'); writer.writerow(headers)
         for category,names in CATEGORIES.items():
             for name in names:
                 op,f3,f7=fields(name)
@@ -31,8 +34,9 @@ def write_coverage():
                 writer.writerow([category,name,f'{op:07b}' if op is not None else '',
                                  f'{f3:03b}' if f3 is not None else '',f'{f7:07b}' if f7 is not None else '',
                                  modules[category],state,state,state,'PENDENTE',
-                                 'ver git log -- rtl/decoder.sv' if passed else '',
-                                 'results/logs/tb_decoder.log; results/logs/tb_isa.log' if passed else '',
+                                 'isa-41-v1' if passed else '',
+                                 ('; '.join('results/logs/'+test+'.log' for test in
+                                            ['tb_decoder',*unit_logs[category].split('; '),'tb_isa'])) if passed else '',
                                  f'{counts.get(name,0)} aposentadorias no teste próprio' if passed else 'Definição oficial pendente'])
     lines=['# Cobertura ISA','',f'**{len(enabled)}/47 ({len(enabled)/47:.2%})** com testes unitários e execução no core.','',
            '| Categoria | Implementadas | Cobertura |','|---|---:|---:|']
@@ -42,6 +46,7 @@ def write_coverage():
     lines += ['', 'Detalhes e codificações: [coverage.csv](coverage.csv).',
               'PASS representa os testes disponíveis, não prova formal nem certificação da competição.',
               'Firmware oficial ainda PENDENTE. Slots de sistema não são nomes de instruções.',
+              'A coluna Commit identifica a tag do RTL verificado; regression.json contém hashes dos arquivos testados.',
               'Cada tag incremental conserva os logs da respectiva regressão.']
     (ROOT/'docs/isa/coverage.md').write_text('\n'.join(lines)+'\n')
 

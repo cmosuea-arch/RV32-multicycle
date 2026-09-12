@@ -30,4 +30,4 @@ PC → ALU com imediato J → PC; seleção sequencial/redirect.
 ## Commit validado
 Tag block-pc-v1.
 ## Pendências
-ChipInventor para submissão; branch/jump arquitetural depende do core.
+Branches/jumps integrados e verificados em isa-29-v1 e isa-41-v1; ChipInventor pendente.

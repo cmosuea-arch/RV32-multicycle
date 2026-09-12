@@ -34,5 +34,5 @@ tb/integration/tb_datapath.sv: mux de operandos e registro com write enable.
 ## Commit validado
 Tag block-alu-v1.
 ## Pendências
-Cobertura de instrução integrada depende do core; 0/47 neste marco.
+Marco inicial 0/47; integração no core concluída em isa-41-v1. Ver matriz ISA atual.
 Diagrama ChipInventor de submissão pendente.

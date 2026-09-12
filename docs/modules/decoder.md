@@ -30,4 +30,4 @@ Decoder → muxes de operandos / RF / FSM.
 ## Commit validado
 Tags core-smoke-v1, isa-rtype-v1 e marcos seguintes em git log.
 ## Pendências
-Expansão por família, testes negativos de codificações e ChipInventor.
+CRC/sistema aguardam definição oficial; ChipInventor para submissão.

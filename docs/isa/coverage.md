@@ -18,4 +18,5 @@
 Detalhes e codificações: [coverage.csv](coverage.csv).
 PASS representa os testes disponíveis, não prova formal nem certificação da competição.
 Firmware oficial ainda PENDENTE. Slots de sistema não são nomes de instruções.
+A coluna Commit identifica a tag do RTL verificado; regression.json contém hashes dos arquivos testados.
 Cada tag incremental conserva os logs da respectiva regressão.

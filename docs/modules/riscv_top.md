@@ -22,7 +22,7 @@ flowchart LR
  AD --> CORE
 ```
 ## Testbench
-tb_isa e tb_memory_faults; testbench de firmware próprio previsto.
+tb_isa, tb_memory_faults e tb_firmware (C/assembly compilados).
 ## Casos testados
 Instruções habilitadas, memória por byte, stores únicos, limites, loads de ROM,
 erros sem efeitos colaterais e reset durante store.
@@ -31,6 +31,6 @@ results/logs/tb_isa.log e tb_memory_faults.log; regressão PASS.
 ## Integração
 Top executável de simulação; sem dependência Ibex.
 ## Commit validado
-Tag isa-37-v1.
+Tag isa-41-v1; firmware e documentação finais em rtl-subset-v0.1.
 ## Pendências
 CRC, sistema, firmware oficial, pinagem UART/GPIO, ChipInventor e fluxo físico.

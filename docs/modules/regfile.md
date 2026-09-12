@@ -31,4 +31,4 @@ tb/integration/tb_rf_alu.sv conecta RF → ALU → RF com operações dependente
 ## Commit validado
 Tag block-regfile-v1.
 ## Pendências
-Instruções aguardam core; diagrama ChipInventor de submissão pendente.
+Integração no core concluída em isa-41-v1; diagrama ChipInventor de submissão pendente.

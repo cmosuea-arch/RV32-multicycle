@@ -1,0 +1,4 @@
+$ vvp /home/luixf/eda/uniccass-icdesign-tools/shared_xserver/cmos-riscv/build/tb_firmware +WAVE
+VCD info: dumpfile results/waveforms/smoke.vcd opened for output.
+PASS firmware: signature 600dc0de, 598 retirements, 2579 cycles
+/home/luixf/eda/uniccass-icdesign-tools/shared_xserver/cmos-riscv/tb/integration/tb_firmware.sv:25: $finish called at 25796000 (1ps)
