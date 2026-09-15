@@ -17,6 +17,8 @@ make lint         # lint dos módulos sintetizáveis
 make regression   # todos os testes, firmware e lint
 make smoke        # quatro bancadas rápidas, sem compilador RISC-V
 make wave         # executa firmware próprio e gera waveform VCD
+make openlane-env-check # valida LibreLane, ferramentas e PDKs no Docker
+make openlane-env-smoke # executa o smoke test físico até GDSII
 ```
 
 Logs ficam em `results/logs/`; artefatos temporários em `build/`.
@@ -41,6 +43,8 @@ uma ROM menor. Interfaces externas ainda não representam a pinagem física fina
 
 CRC, sistema/sincronização, firmware oficial e pinagem final têm pendências
 documentadas em [docs/architecture/official_questions.md](docs/architecture/official_questions.md).
-OpenLane/GDSII não foram iniciados, conforme os pré-requisitos do `AGENTS.md`.
+O ambiente LibreLane/OpenLane está instalado e validado até GDSII; consulte
+[docs/openlane/environment.md](docs/openlane/environment.md). O fluxo físico do
+processador não foi iniciado, conforme os pré-requisitos do `AGENTS.md`.
 Diagramas Mermaid estão versionados; os desenhos ChipInventor da submissão
 ainda precisam ser produzidos. Esta versão não recebe a tag de RTL final da competição.

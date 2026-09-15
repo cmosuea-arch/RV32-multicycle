@@ -22,8 +22,10 @@ Data: 2026-09-11. Baseline inicial: `baseline-v1`.
 7. Não usar uma instrução de sistema fictícia para terminar os testes. Firmware
    próprio escreve uma assinatura na DMEM e permanece em loop; TB detecta a
    assinatura. Testes por instrução observam commit_valid e timeout.
-8. Não iniciar OpenLane antes de ISA e firmware oficial validados, conforme
-   AGENTS.md §33. Lint não equivale a síntese física nem a GDSII.
+8. Não iniciar o fluxo físico do processador antes de ISA e firmware oficial
+   validados, conforme AGENTS.md §33. A instalação e o smoke test do ambiente
+   LibreLane são preparação de infraestrutura e não alteram esse marco. Lint
+   não equivale a síntese física nem a GDSII.
 
 ## Pendências oficiais
 

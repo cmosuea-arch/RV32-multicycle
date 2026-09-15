@@ -19,6 +19,7 @@ firmware, automação, documentação e evidências finais.
 | M9 — firmware oficial | NOT DONE | Arquivo/protocolo de validação oficial ausentes |
 | M10 — RTL final | NOT DONE | Faltam M7–M9 e interface final |
 | M11/M12 — OpenLane/GDSII | Não iniciados | Pré-requisitos AGENTS.md §33 não atendidos |
+| Ambiente físico | PASS | LibreLane/OpenROAD/SKY130A e smoke test 80/80 até GDSII |
 
 Blocos ALU, Register File, Immediate, PC, IR, IMEM, Branch Comparator, LSU, DMEM,
 Address Decoder e Multiplicador têm RTL, TB unitário, integração, diagrama Mermaid,
