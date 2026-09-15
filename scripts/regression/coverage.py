@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Write coverage only after a successful regression; official firmware separate."""
 import csv
+import argparse
 import json
 from pathlib import Path
 import sys
@@ -8,6 +9,7 @@ import sys
 ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/'scripts/sim'))
 from isa import CATEGORIES,fields
+from coverage_xlsx import generate_xlsx
 
 
 def write_coverage():
@@ -38,17 +40,82 @@ def write_coverage():
                                  ('; '.join('results/logs/'+test+'.log' for test in
                                             ['tb_decoder',*unit_logs[category].split('; '),'tb_isa'])) if passed else '',
                                  f'{counts.get(name,0)} aposentadorias no teste próprio' if passed else 'Definição oficial pendente'])
-    lines=['# Cobertura ISA','',f'**{len(enabled)}/47 ({len(enabled)/47:.2%})** com testes unitários e execução no core.','',
+    render_coverage()
+
+
+def render_coverage():
+    """Render the recorded CSV without rerunning tests or changing their results."""
+    with (ROOT/'docs/isa/coverage.csv').open(newline='') as f:
+        rows=list(csv.DictReader(f))
+    groups={}
+    for row in rows:
+        groups.setdefault(row['Categoria'],[]).append(row)
+    labels={'Register':'Aritmética e lógica — registradores',
+            'Immediate':'Aritmética e lógica — imediatos',
+            'Upper':'Imediatos superiores','Branch':'Desvios condicionais',
+            'Jump':'Saltos','Load':'Leitura de memória','Store':'Escrita de memória',
+            'Multiplication':'Multiplicação — Zmmul','CRC':'CRC — Xicrc'}
+
+    def passed(row):
+        return all(row[field]=='PASS' for field in ('Teste unitário','Teste integrado','Regressão'))
+
+    def percent(n,total):
+        return f'{100*n/total:.2f}%'.replace('.',',') if total else '—'
+
+    def code(value):
+        return f'`{value}`' if value else '—'
+
+    total=len(rows)
+    n=sum(passed(row) for row in rows)
+    lines=['# Cobertura ISA','',f'**{n}/{total} instruções ({percent(n,total)})** com testes unitários, integração e regressão PASS.','',
+           'Abra a [planilha Excel](coverage.xlsx) para filtrar, ordenar e consultar todos os campos.',
+           'Esta página apresenta os mesmos resultados registrados em [coverage.csv](coverage.csv).',
+           'As codificações abaixo estão em binário; **—** indica campo não aplicável ou ainda não definido.','',
+           '## Resumo por categoria','',
            '| Categoria | Implementadas | Cobertura |','|---|---:|---:|']
-    for category,names in CATEGORIES.items():
-        n=len(enabled.intersection(names))
-        lines.append(f'| {category} | {n}/{len(names)} | {n/len(names):.2%} |')
-    lines += ['', 'Detalhes e codificações: [coverage.csv](coverage.csv).',
+    for category,items in groups.items():
+        count=sum(passed(row) for row in items)
+        lines.append(f'| {labels.get(category,category)} | {count}/{len(items)} | {percent(count,len(items))} |')
+    lines.append(f'| **Total** | **{n}/{total}** | **{percent(n,total)}** |')
+    firmware=', '.join(dict.fromkeys(row['Firmware oficial'] for row in rows))
+    lines += ['',f'**Firmware oficial:** {firmware}. O firmware próprio não substitui essa validação.',
+              'Slots de sistema são pendências, não nomes oficiais de instruções.']
+    for category,items in groups.items():
+        lines += ['',f'## {labels.get(category,category)}','']
+        modules=list(dict.fromkeys(part for row in items for part in row['Módulo principal'].split('/')))
+        module_links=[f'[{m}](../modules/{m}.md)' if m!='PENDENTE' else 'PENDENTE' for m in modules]
+        commits=list(dict.fromkeys(row['Commit'] for row in items if row['Commit']))
+        lines += ['**Módulos:** '+', '.join(module_links)+'.',
+                  '**Commit/tag validado:** '+(', '.join(code(c) for c in commits) if commits else 'PENDENTE')+'.','',
+                  '| Instrução | Opcode | Funct3 | Funct7 | Unitário | Integrado | Regressão | Execuções¹ |',
+                  '|---|---|---|---|---|---|---|---:|']
+        for row in items:
+            count=row['Observação'].split()[0] if row['Observação'] else ''
+            executions=f'{int(count):,}'.replace(',','.') if count.isdigit() else '—'
+            cells=[code(row['Instrução']),code(row['Opcode']),code(row['Funct3']),code(row['Funct7']),
+                   row['Teste unitário'],row['Teste integrado'],row['Regressão'],executions]
+            lines.append('| '+' | '.join(cells)+' |')
+        evidence=list(dict.fromkeys(path for row in items for path in row['Evidência'].split('; ') if path))
+        if evidence:
+            lines += ['','**Evidências:** '+', '.join(f'[{Path(path).stem}](../../{path})' for path in evidence)+'.']
+        notes=list(dict.fromkeys(row['Observação'] for row in items if row['Observação'] and not row['Observação'].split()[0].isdigit()))
+        if notes:
+            lines += ['','**Pendência:** '+'; '.join(notes)+'. Ver [definições oficiais necessárias](../architecture/official_questions.md).']
+    lines += ['', '## Como interpretar','',
+              '¹ Execuções são aposentadorias verificadas no teste próprio por instrução, incluindo instruções auxiliares que preparam operandos.',
               'PASS representa os testes disponíveis, não prova formal nem certificação da competição.',
-              'Firmware oficial ainda PENDENTE. Slots de sistema não são nomes de instruções.',
-              'A coluna Commit identifica a tag do RTL verificado; regression.json contém hashes dos arquivos testados.',
-              'Cada tag incremental conserva os logs da respectiva regressão.']
+              'A tag identifica o RTL verificado; [regression.json](../../results/logs/regression.json) contém hashes dos arquivos testados.',
+              'Cada tag incremental conserva os logs da respectiva regressão. Esta tabela é atualizada automaticamente pela regressão.',
+              'Para apenas reformatar os resultados existentes: `python3 scripts/regression/coverage.py --render-only`.']
     (ROOT/'docs/isa/coverage.md').write_text('\n'.join(lines)+'\n')
+    generate_xlsx(ROOT/'docs/isa/coverage.csv', ROOT/'docs/isa/coverage.xlsx')
 
 
-if __name__=='__main__': write_coverage()
+if __name__=='__main__':
+    parser=argparse.ArgumentParser()
+    parser.add_argument('--render-only',action='store_true',help='format existing CSV without changing recorded results')
+    args=parser.parse_args()
+    if args.render_only:
+        render_coverage()
+    else:
+        write_coverage()

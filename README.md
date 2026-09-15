@@ -3,7 +3,8 @@
 Implementação incremental multiciclo conforme `Champion-chip-guia-fase-2.pdf`.
 **41/47 instruções (87,23%)**, com RTL integrado, testes autoverificáveis e
 firmware próprio validado. Estado: [docs/status.md](docs/status.md).
-Matriz por instrução: [docs/isa/coverage.md](docs/isa/coverage.md).
+Matriz por instrução: [docs/isa/coverage.md](docs/isa/coverage.md). A versão para
+Excel está em [docs/isa/coverage.xlsx](docs/isa/coverage.xlsx).
 
 ## Executar
 
