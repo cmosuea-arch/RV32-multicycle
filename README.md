@@ -13,6 +13,9 @@ Firmware próprio usa `riscv64-unknown-elf-gcc` com alvo RV32.
 
 ```sh
 make test          # testes unitários e de integração existentes
+make unit          # somente os 13 testbenches isolados
+make integration   # somente os 15 testbenches de integração
+make tb TB=tb_alu  # seleciona um testbench pelo nome
 make lint         # lint dos módulos sintetizáveis
 make regression   # todos os testes, firmware e lint
 make smoke        # quatro bancadas rápidas, sem compilador RISC-V
@@ -20,6 +23,8 @@ make wave         # executa firmware próprio e gera waveform VCD
 make openlane-env-check # valida LibreLane, ferramentas e PDKs no Docker
 make openlane-env-smoke # executa o smoke test físico até GDSII
 ```
+
+Ordem detalhada dos testes: [docs/testing_roadmap.md](docs/testing_roadmap.md).
 
 Logs ficam em `results/logs/`; artefatos temporários em `build/`.
 Nenhuma instrução CRC ou de sistema é contabilizada sem definição confirmada.

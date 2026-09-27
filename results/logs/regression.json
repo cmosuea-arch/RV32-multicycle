@@ -1,6 +1,6 @@
 {
   "status": "PASS",
-  "utc": "2026-09-12T15:02:43.520700+00:00",
+  "utc": "2026-09-27T14:37:52.737964+00:00",
   "testbenches": [
     "tb_branch_pc",
     "tb_core_faults",
@@ -35,7 +35,7 @@
   "coverage": "41/47",
   "official_firmware": "PENDING",
   "sha256": {
-    "Makefile": "f72efd56fdf16f1157c16e711acf87f5a822ca6cb3f69178d54f79e92340b82d",
+    "Makefile": "8cb2b9a8994e555d9878eafbe0ab89d1e44a8beebdc3fd6d6d889aff6536d452",
     "docs/isa/enabled.json": "5c51d6b9d32dbae21c816afcf5e5424741b3cbcd8f8878832dcc72a7c31666cc",
     "firmware/official/README.md": "61cbffbcf56b9dbf66dda1dcf939975b374c09649054ce8d6a3f4b963facbf39",
     "firmware/smoke/README.md": "ec2fdf4eab83861ee6b1367e6983e75f9a2d0576f2929be21bab54a37fa81c3c",
@@ -57,8 +57,10 @@
     "rtl/regfile.sv": "57fdad0b6881800f6e7fd76429ffc27f1d9a8fd6f1e15efb70cd0c2bd6378622",
     "rtl/riscv_core.sv": "b21805aa217dca4c9b4efe452930867ae65e73344aca37076101ea899ee2a4ad",
     "rtl/riscv_top.sv": "9cb754a88d738db8b141432cc2158e1f4977813c4ac8f5946f36e5d3489ce224",
-    "scripts/regression/coverage.py": "61d14148516ef02f8ace462c46297eaecec81f9d179867a5a43e4764a640e196",
-    "scripts/regression/run.py": "38b4dd18127103b24bfd97f056a4b2011d3da676f689fdb3f407fc10a0809273",
+    "scripts/openlane/environment.sh": "ff76043fc5298b63dcd1ca776259e7d11fcb4b5a90e81685871bdb61f79ac4a9",
+    "scripts/regression/coverage.py": "ea9fce232cd792a07d1fc8fc059281fd08be75dbb421c09e92759c1718aa5ddd",
+    "scripts/regression/coverage_xlsx.py": "095734e9b48312335bcd2124655f0e9aa51cf23ee08079feee3616c7c2424115",
+    "scripts/regression/run.py": "9d79b88234ec00f444aaa52265d27b52d6589993bc1febc0ddc46989bd7530b0",
     "scripts/sim/build_firmware.py": "770e90a3feeebf1eb252d27dfbc180949b0a7de4bd6287b62dd7921a46f6bfd5",
     "scripts/sim/isa.py": "bc62039344fbbed16ab56ae44c198e3630ca0f18208de13973a56e6bdd61008b",
     "scripts/sim/programs.py": "ef8472b2c9fb3047b8ea8a6a4d83d144588d82fe967bd6b9188dfb71d1fc4027",

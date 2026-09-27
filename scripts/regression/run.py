@@ -42,8 +42,11 @@ def main():
     mode.add_argument('--lint-only', action='store_true')
     mode.add_argument('--smoke', action='store_true')
     mode.add_argument('--wave', action='store_true')
+    mode.add_argument('--suite', choices=('unit', 'integration'))
+    mode.add_argument('--test', metavar='TB_NAME')
     parser.add_argument('--with-lint', action='store_true')
     args = parser.parse_args()
+    selected_test = args.test.removesuffix('.sv') if args.test else None
     build, logs = ROOT / 'build', ROOT / 'results/logs'
     build.mkdir(exist_ok=True)
     logs.mkdir(parents=True, exist_ok=True)
@@ -51,17 +54,18 @@ def main():
     if args.lint_only:
         lint(rtl, logs)
         return
-    full = not (args.smoke or args.wave)
+    full = not (args.smoke or args.wave or args.suite or args.test)
     if full:
         (logs / 'regression.json').write_text(json.dumps({'status': 'RUNNING'}) + '\n')
     generator = ROOT / 'scripts/sim/vectors.py'
-    if full and generator.exists():
+    if not args.wave and generator.exists():
         run([sys.executable, str(generator)], logs / 'vectors.log')
     programs = ROOT / 'scripts/sim/programs.py'
-    if full and programs.exists():
+    if (full or args.suite == 'integration' or args.test) and programs.exists():
         run([sys.executable, str(programs)], logs / 'programs.log')
     firmware = ROOT / 'scripts/sim/build_firmware.py'
-    if (full or args.wave) and firmware.exists():
+    needs_firmware = full or args.wave or args.suite == 'integration' or selected_test == 'tb_firmware'
+    if needs_firmware and firmware.exists():
         run([sys.executable, str(firmware)], logs / 'firmware.log')
     benches = sorted((ROOT / 'tb').glob('**/tb_*.sv'))
     if args.smoke:
@@ -72,6 +76,12 @@ def main():
     elif args.wave:
         benches = [p for p in benches if p.stem == 'tb_firmware']
         (ROOT / 'results/waveforms').mkdir(parents=True, exist_ok=True)
+    elif args.suite:
+        benches = [p for p in benches if p.parent.name == args.suite]
+    elif args.test:
+        benches = [p for p in benches if p.stem == selected_test]
+        if len(benches) != 1:
+            raise RuntimeError(f'unknown or ambiguous testbench: {args.test}')
     if not benches:
         raise RuntimeError('no tests discovered')
     passed = []

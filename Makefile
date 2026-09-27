@@ -1,6 +1,12 @@
-.PHONY: test lint regression firmware smoke wave openlane-env-check openlane-env-smoke openlane-shell
+.PHONY: test unit integration tb lint regression firmware smoke wave openlane-env-check openlane-env-smoke openlane-shell
 test:
 	python3 scripts/regression/run.py
+unit:
+	python3 scripts/regression/run.py --suite unit
+integration:
+	python3 scripts/regression/run.py --suite integration
+tb:
+	python3 scripts/regression/run.py --test $(TB)
 lint:
 	python3 scripts/regression/run.py --lint-only
 regression:

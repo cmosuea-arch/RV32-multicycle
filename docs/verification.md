@@ -3,10 +3,15 @@
 ## Reproduzir
 
 ```sh
+make unit
+make integration
 make smoke
 make regression
 make wave
 ```
+
+O roteiro completo, incluindo execução individual e a ordem incremental, está
+em [testing_roadmap.md](testing_roadmap.md).
 
 `make regression` gera os vetores, compila firmware próprio, executa 28 TBs e faz
 lint. Falhas, timeouts (120 s por processo), qualquer diagnóstico de compilação
