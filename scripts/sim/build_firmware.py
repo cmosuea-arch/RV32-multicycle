@@ -22,6 +22,7 @@ def main():
         x,y=i+1,0x10203+i
         expected ^= (x*y+((x<<5)^(y>>3)))&0xffffffff
     prefix='riscv64-unknown-elf-'
+    # O prefixo da ferramenta é riscv64, mas -march/-mabi selecionam RV32 de 32 bits.
     args=[prefix+'gcc','-march=rv32i_zmmul','-mabi=ilp32','-O2','-g',
           '-ffreestanding','-fno-builtin','-fno-pic','-msmall-data-limit=0',
           '-fno-strict-aliasing','-Wall','-Wextra','-Werror','-nostdlib','-nostartfiles',
@@ -31,6 +32,7 @@ def main():
     command(args)
     command([prefix+'objcopy','-O','binary','build/smoke.elf','build/smoke.bin'])
     data=(BUILD/'smoke.bin').read_bytes()
+    # Gera palavras little-endian para a ROM de 4096 palavras do tb_firmware.
     if len(data)>16384: raise RuntimeError('smoke ROM exceeds configured size')
     data+=bytes(16384-len(data))
     (BUILD/'smoke.hex').write_text(''.join(f'{int.from_bytes(data[i:i+4],"little"):08x}\n' for i in range(0,len(data),4)))

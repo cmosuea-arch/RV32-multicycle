@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Localiza o workspace compartilhado e a imagem usada nesta instalação UNIC-CASS.
 script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
 project_dir="$(cd -- "$script_dir/../.." && pwd -P)"
 shared_dir="$(cd -- "$project_dir/.." && pwd -P)"
@@ -16,6 +17,7 @@ docker info >/dev/null 2>&1 || {
     exit 1
 }
 
+# A montagem preserva arquivos do projeto; --rm remove o contêiner após a execução.
 common_args=(
     --rm
     --entrypoint /bin/bash
@@ -25,6 +27,7 @@ common_args=(
     --env PDK_ROOT=/opt/pdks
 )
 
+# check verifica ferramentas; smoke executa um exemplo; shell abre sessão interativa.
 case "$action" in
     check)
         exec docker run "${common_args[@]}" "$image" \

@@ -1,5 +1,8 @@
 # Roteiro de testes do RTL
 
+Para aprender os conceitos e executar primeiro os passos manuais, siga o
+[laboratório guiado](../labs/rtl-to-gds/README.md). Esta página é a consulta rápida.
+
 Este roteiro valida o subconjunto atual de 41/47 instruções em camadas. CRC,
 sistema/sincronização e firmware oficial continuam pendentes e não são contados
 como PASS.

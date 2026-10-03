@@ -1,3 +1,3 @@
 $ vvp /home/luixf/eda/uniccass-icdesign-tools/shared_xserver/cmos-riscv/build/tb_alu
 PASS alu: 18304 vectors
-/home/luixf/eda/uniccass-icdesign-tools/shared_xserver/cmos-riscv/tb/unit/tb_alu.sv:22: $finish called at 18304000 (1ps)
+/home/luixf/eda/uniccass-icdesign-tools/shared_xserver/cmos-riscv/tb/unit/tb_alu.sv:26: $finish called at 18304000 (1ps)

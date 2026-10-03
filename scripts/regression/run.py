@@ -12,6 +12,7 @@ ROOT = Path(__file__).resolve().parents[2]
 
 
 def run(cmd, log):
+    # Mantém o diretório e os logs previsíveis; erro ou timeout interrompem o fluxo.
     try:
         result = subprocess.run(cmd, cwd=ROOT, text=True, stdout=subprocess.PIPE,
                                 stderr=subprocess.STDOUT, timeout=120)
@@ -26,6 +27,7 @@ def run(cmd, log):
 
 
 def lint(rtl, logs):
+    # Analisa o RTL sem simular estímulos; diagnósticos também reprovam a checagem.
     if not rtl:
         raise RuntimeError('no RTL to lint')
     diagnostics = run(['verilator', '--lint-only', '-Wall', '-Wno-DECLFILENAME',
@@ -37,6 +39,7 @@ def lint(rtl, logs):
 
 
 def main():
+    # Os modos selecionam uma bancada, uma suíte ou todos os testes disponíveis.
     parser = argparse.ArgumentParser()
     mode = parser.add_mutually_exclusive_group()
     mode.add_argument('--lint-only', action='store_true')
@@ -55,9 +58,11 @@ def main():
         lint(rtl, logs)
         return
     full = not (args.smoke or args.wave or args.suite or args.test)
+    # Só uma execução completa publica o manifesto agregado e a matriz de ISA.
     if full:
         (logs / 'regression.json').write_text(json.dumps({'status': 'RUNNING'}) + '\n')
     generator = ROOT / 'scripts/sim/vectors.py'
+    # Recria entradas antes da simulação para evitar dependência de build/ antigo.
     if not args.wave and generator.exists():
         run([sys.executable, str(generator)], logs / 'vectors.log')
     programs = ROOT / 'scripts/sim/programs.py'
@@ -68,6 +73,7 @@ def main():
     if needs_firmware and firmware.exists():
         run([sys.executable, str(firmware)], logs / 'firmware.log')
     benches = sorted((ROOT / 'tb').glob('**/tb_*.sv'))
+    # A descoberta é alfabética; a ordem didática está no laboratório.
     if args.smoke:
         names = {'tb_core_smoke', 'tb_branch_pc', 'tb_lsu_dmem', 'tb_mult_rf'}
         benches = [p for p in benches if p.stem in names]
@@ -86,6 +92,7 @@ def main():
         raise RuntimeError('no tests discovered')
     passed = []
     for tb in benches:
+        # -s escolhe o top; vvp executa somente a simulação elaborada para ele.
         name = tb.stem
         exe = build / name
         diagnostics = run(['iverilog', '-g2012', '-Wall', '-s', name, '-o', str(exe),
@@ -102,6 +109,7 @@ def main():
         lint(rtl, logs)
     print(f'PASS regression: {len(benches)} testbenches')
     if full and (ROOT / 'scripts/regression/coverage.py').exists():
+        # Os hashes identificam o conteúdo verificado, inclusive scripts e firmware.
         from coverage import write_coverage
         write_coverage()
         files = [ROOT / 'docs/isa/enabled.json', ROOT / 'Makefile']

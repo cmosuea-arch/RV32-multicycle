@@ -16,6 +16,7 @@ CATEGORIES = {'Register':list(R),'Immediate':list(I),'Upper':['LUI','AUIPC'],
 
 
 def fields(name):
+    # Centraliza opcode/funct3/funct7; None indica campo ausente ou não definido.
     if name in R: return 0x33,R[name][0],R[name][1]
     if name in I:
         return 0x13,I[name][0], (32 if name=='SRAI' else 0) if name.endswith('LI') or name=='SRAI' else None
@@ -29,6 +30,7 @@ def fields(name):
 
 
 def encode(name, rd=3, rs1=1, rs2=2, imm=0):
+    # Monta uma palavra de instrução; sua execução é modelada em programs.py.
     from vectors import encode_imm
     opcode,f3,f7=fields(name)
     if name in R or name in MULT:

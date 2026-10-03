@@ -21,12 +21,14 @@ class Program:
         self.memory={}
 
     def emit(self,name,rd=3,rs1=1,rs2=2,imm=0):
+        # Guarda a palavra binária e a operação simbólica usada pelo modelo.
         pc=BASE+4*len(self.words)
         inst=encode(name,rd,rs1,rs2,imm)
         self.words.append(inst)
         self.ops.append((name,rd,rs1,rs2,imm))
 
     def evaluate(self):
+        # Segue o PC e atualiza RF/memória para prever cada aposentadoria do RTL.
         pc=BASE
         while pc != BASE+4*len(self.words):
             if pc<BASE or pc>=BASE+4*len(self.words) or pc%4: raise ValueError(f'bad model PC {pc:x}')
@@ -81,6 +83,7 @@ class Program:
             self.emit('ADDI',rd,rd,imm=(value>>shift)&255)
 
     def save(self):
+        # ROM, trace e memória final são entradas de tb_isa; counts alimenta o relatório.
         self.evaluate()
         if len(self.words)>131072: raise ValueError('program exceeds test ROM')
         (OUT/'isa.hex').write_text(''.join(f'{w:08x}\n' for w in self.words+[0]*(131072-len(self.words))))

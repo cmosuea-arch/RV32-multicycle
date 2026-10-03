@@ -13,9 +13,11 @@ from coverage_xlsx import generate_xlsx
 
 
 def write_coverage():
+    # Chamado pelo executor após sucesso; sozinho não executa nem certifica os TBs.
     enabled=set(json.loads((ROOT/'docs/isa/enabled.json').read_text()))
     counts=json.loads((ROOT/'build/isa_counts.json').read_text())
     if not enabled.issubset(counts):
+        # Exige presença no trace modelado; a comparação desse trace é feita em tb_isa.
         raise RuntimeError('coverage includes instructions absent from trace')
     headers=['Categoria','Instrução','Opcode','Funct3','Funct7','Módulo principal',
              'Teste unitário','Teste integrado','Regressão','Firmware oficial',

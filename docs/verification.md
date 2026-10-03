@@ -1,5 +1,7 @@
 # Verificação da versão parcial
 
+Aprendizado passo a passo: [laboratório RTL → fluxo físico](../labs/rtl-to-gds/README.md).
+
 ## Reproduzir
 
 ```sh

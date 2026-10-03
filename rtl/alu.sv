@@ -4,6 +4,7 @@ module alu (
     input  logic [3:0]  op_i,
     output logic [31:0] result_o
 );
+    // Lógica combinacional: o seletor escolhe a operação sem armazenar estado.
     function automatic [31:0] evaluate(input [31:0] a, b, input [3:0] op);
         begin
         case (op)
@@ -13,6 +14,7 @@ module alu (
             4'h3: evaluate = a & b;
             4'h4: evaluate = a | b;
             4'h5: evaluate = a ^ b;
+            // RV32 usa cinco bits para deslocar de 0 a 31 posições.
             4'h6: evaluate = a << b[4:0];
             4'h7: evaluate = a >> b[4:0];
             4'h8: evaluate = $signed(a) >>> b[4:0];

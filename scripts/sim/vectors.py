@@ -11,11 +11,13 @@ EDGES = [0, 1, 2, 31, 32, 33, 0x7fffffff, 0x80000000,
 
 
 def signed(n, bits=32):
+    # Interpreta o padrão binário como complemento de dois na largura indicada.
     n &= (1 << bits) - 1
     return n - (1 << bits) if n & (1 << (bits - 1)) else n
 
 
 def alu_model(a, b, op):
+    # Inteiros Python não têm limite de 32 bits; MASK reproduz o truncamento do RTL.
     return [lambda: b, lambda: a + b, lambda: a - b,
             lambda: a & b, lambda: a | b, lambda: a ^ b,
             lambda: a * (2 ** (b % 32)), lambda: a // (2 ** (b % 32)),
@@ -26,9 +28,11 @@ def alu_model(a, b, op):
 def main():
     OUT.mkdir(exist_ok=True)
     rng = random.Random(0xC005)
+    # A seed fixa repete os casos; EDGES acrescenta limites que o acaso pode omitir.
     pairs = [(a, b) for a in EDGES for b in EDGES]
     pairs += [(rng.getrandbits(32), rng.getrandbits(32)) for _ in range(1000)]
     with (OUT / 'alu.vec').open('w') as f:
+        # Contrato com tb_alu: a, b, seletor e resultado esperado em hexadecimal.
         for op in range(16):
             for a, b in pairs:
                 expected = alu_model(a, b, op) if op < 11 else 0
@@ -77,6 +81,7 @@ def main():
 
 
 def encode_imm(fmt, value, rd=3, rs1=1, rs2=2, funct3=0):
+    # Distribui os bits do imediato pelos campos I/S/B/U/J da instrução.
     v = value & MASK
     if fmt == 'I': return ((v & 4095)<<20)|(rs1<<15)|(funct3<<12)|(rd<<7)|0x13
     if fmt == 'S': return ((v>>5 & 127)<<25)|(rs2<<20)|(rs1<<15)|(funct3<<12)|((v&31)<<7)|0x23

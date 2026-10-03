@@ -1,55 +1,169 @@
 # CMOS RISC-V — ChampionCHIP
 
-Implementação incremental multiciclo conforme `Champion-chip-guia-fase-2.pdf`.
-**41/47 instruções (87,23%)**, com RTL integrado, testes autoverificáveis e
-firmware próprio validado. Estado: [docs/status.md](docs/status.md).
-Matriz por instrução: [docs/isa/coverage.md](docs/isa/coverage.md). A versão para
-Excel está em [docs/isa/coverage.xlsx](docs/isa/coverage.xlsx).
+Processador RISC-V de 32 bits, multiciclo, desenvolvido incrementalmente para a
+Fase 2 da ChampionCHIP. Este repositório reúne RTL, testbenches autoverificáveis,
+firmware próprio, automação Python/Make e documentação arquitetural.
+
+**Estado atual: 41/47 instruções (87,23%)**, com 13 testbenches unitários e 15 de
+integração. O firmware próprio funciona; CRC, sistema/sincronização, firmware
+oficial e interface física final continuam pendentes. O projeto completo ainda
+não está concluído. Consulte [o estado detalhado](docs/status.md) e
+[as definições oficiais necessárias](docs/architecture/official_questions.md).
+
+## Comece pelo laboratório
+
+O [laboratório guiado RTL → fluxo físico](labs/rtl-to-gds/README.md) ensina a
+executar e entender este projeto. Ele usa os arquivos reais, com comentários
+sucintos nos blocos de código que acompanham as explicações.
+
+| Aula | Tema |
+|---|---|
+| [1 — Visão geral](labs/rtl-to-gds/01-visao-geral.md) | circuito, testbench, referência e ferramentas |
+| [2 — Testes unitários](labs/rtl-to-gds/02-testes-unitarios.md) | ALU manual com Icarus/vvp e demais blocos |
+| [3 — Integração](labs/rtl-to-gds/03-testes-integracao.md) | conexões, core, ISA e firmware próprio |
+| [4 — Python](labs/rtl-to-gds/04-scripts-python.md) | geração de vetores, modelos e executor |
+| [5 — Makefile](labs/rtl-to-gds/05-makefile.md) | construção das receitas e comandos do terminal |
+| [6 — Regressão](labs/rtl-to-gds/06-regressao-e-evidencias.md) | logs, hashes, cobertura e critérios de sucesso |
+| [7 — OpenLane](labs/rtl-to-gds/07-introducao-openlane.md) | ambiente LibreLane e plano do simple_system |
+
+Cada aula apresenta objetivo, arquivos, explicação, execução, resultados esperados
+e um exercício com critério de avanço. Execute os comandos na raiz do projeto,
+um de cada vez. Para consulta rápida, use [o roteiro operacional](docs/testing_roadmap.md).
+
+## Arquitetura e escopo
+
+A referência é o Block Guide ChampionCHIP. O projeto busca RV32I, Zmmul e Xicrc;
+a implementação atual cobre aritmética, lógica, imediatos, branches, jumps,
+loads/stores e as quatro multiplicações. O Ibex é apenas uma possível referência
+auxiliar; o RTL do projeto não incorpora o core Ibex.
+
+O caminho básico é `FETCH → DECODE → EXECUTE → WRITEBACK`. Loads/stores acrescentam
+o estado `MEMORY`; erros não suportados levam ao diagnóstico `FAULT` até reset.
+O clock usa borda de subida e o reset é síncrono, ativo alto.
+
+`riscv_core` reúne datapath e controle e expõe o barramento de memória.
+`riscv_top` liga o core ao decodificador de endereços, IMEM e DMEM. Sinais `commit_*`
+permitem verificar instruções aposentadas; ainda não representam a pinagem final.
+
+| Memória | Base | Capacidade padrão |
+|---|---|---|
+| IMEM | `0x00400000` | 4 MiB |
+| DMEM | `0x10010000` | 8 KiB |
+
+Os TBs podem parametrizar memórias menores. Os modelos comportamentais precisam de
+uma estratégia própria para implementação física. Detalhes:
+[diagrama](docs/architecture/block_diagram.md),
+[interfaces](docs/architecture/interfaces.md),
+[mapa de memória](docs/architecture/memory_map.md) e
+[decisões](docs/architecture/decisions.md).
 
 ## Executar
 
-Requisitos: Python 3, Icarus Verilog (`iverilog`, `vvp`), Verilator e Make.
-Firmware próprio usa `riscv64-unknown-elf-gcc` com alvo RV32.
+Para simulação: Python 3.9+ (3.12 no ambiente usado), Make, Icarus Verilog
+(`iverilog`/`vvp`) e Verilator. O firmware usa GCC/binutils
+`riscv64-unknown-elf-*`, configurados para `rv32i_zmmul`/`ilp32`.
+GTKWave é opcional. O ambiente físico usa Docker e a instalação UNIC-CASS;
+veja [os requisitos e caminhos](docs/openlane/environment.md).
 
 ```sh
-make test          # testes unitários e de integração existentes
-make unit          # somente os 13 testbenches isolados
-make integration   # somente os 15 testbenches de integração
-make tb TB=tb_alu  # seleciona um testbench pelo nome
-make lint         # lint dos módulos sintetizáveis
-make regression   # todos os testes, firmware e lint
-make smoke        # quatro bancadas rápidas, sem compilador RISC-V
-make wave         # executa firmware próprio e gera waveform VCD
-make openlane-env-check # valida LibreLane, ferramentas e PDKs no Docker
-make openlane-env-smoke # executa o smoke test físico até GDSII
+# Executar na raiz do repositório.
+make tb TB=tb_alu       # uma bancada, com preparação das entradas
+make unit              # 13 testbenches unitários
+make integration       # 15 testbenches de integração, incluindo firmware próprio
+make smoke             # quatro integrações rápidas, sem GCC RISC-V
+make lint              # análise estática com Verilator
+make test              # todos os TBs; manifesto registra lint NOT_RUN
+make regression        # todos os TBs + lint + cobertura + manifesto
+make firmware          # somente compila o firmware próprio e gera a ROM
+make wave              # executa firmware no RTL e gera VCD
 ```
 
-Ordem detalhada dos testes: [docs/testing_roadmap.md](docs/testing_roadmap.md).
+`make -n tb TB=tb_alu` mostra a receita sem executá-la. `make` sem alvo chama
+`test`; para fechar uma alteração use `make regression`. Não execute essas receitas
+em paralelo: elas compartilham vetores, programas e logs.
 
-Logs ficam em `results/logs/`; artefatos temporários em `build/`.
-Nenhuma instrução CRC ou de sistema é contabilizada sem definição confirmada.
-O projeto não incorpora RTL do Ibex. A assinatura do firmware próprio é
-`0x600dc0de` em `0x10011ff0`; não substitui a validação oficial da competição.
+O Makefile chama o executor Python. O executor gera entradas, chama `iverilog` para
+compilar/elaborar, `vvp` para simular e Verilator para lint. O testbench compara o
+RTL com referências e produz PASS ou erro; o Python registra e propaga esse resultado.
+
+## Verificação e firmware
+
+Uma regressão completa deve terminar com **28 TBs PASS e lint PASS** na versão
+atual. O teste ISA compara 76.409 aposentadorias, 45 stores e 12 bytes finais com
+o modelo Python. O firmware próprio escreve `0x600dc0de` em `0x10011ff0`; sua
+baseline executa 598 aposentadorias em 2.579 ciclos.
+
+O programa em [firmware/smoke/](firmware/smoke/README.md) usa C, startup assembly
+e linker script. Ele valida boot, dados, pilha, controle e cálculos, mas não fecha
+o entregável do [firmware oficial](firmware/official/README.md).
+
+| Evidência | Onde consultar |
+|---|---|
+| Comandos e resultados de cada TB | `results/logs/tb_*.compile.log` e `tb_*.log` |
+| Resultado agregado e hashes da rodada | [regression.json](results/logs/regression.json) |
+| Matriz por instrução | [Markdown](docs/isa/coverage.md), [CSV](docs/isa/coverage.csv), [Excel](docs/isa/coverage.xlsx) |
+| Alcance e limitações dos testes | [verification.md](docs/verification.md) |
+| Forma de onda do firmware | `results/waveforms/smoke.vcd`, gerada por `make wave` |
+
+`build/` contém artefatos recriáveis. Rodadas sobrescrevem logs e a execução completa
+atualiza a cobertura. Um PASS anterior só caracteriza os arquivos daquela rodada;
+após alterações, gere nova evidência. A matriz registra instruções verificadas,
+não prova formal nem cobertura exaustiva de todos os estados do circuito.
 
 ## Organização
 
-- `rtl/`: blocos, decoder, FSM, core e top de integração.
-- `tb/unit/` e `tb/integration/`: 28 testbenches autoverificáveis.
-- `scripts/sim/`: modelos Python, vetores e compilação do firmware.
-- `firmware/smoke/`: programa C/assembly e linker script RV32I_Zmmul.
-- `docs/architecture/`: contratos, datapath, mapa e decisões justificadas.
-- `docs/modules/`: especificação, diagrama, testes e commit de cada bloco.
-- `results/logs/regression.json`: resultado e hashes dos arquivos testados.
+```text
+cmos-riscv/
+├── AGENTS.md               # critérios e ordem de desenvolvimento
+├── Makefile                # receitas de teste e ambiente físico
+├── rtl/                    # blocos, core e top de integração
+├── tb/
+│   ├── unit/               # módulos isolados
+│   └── integration/        # conexões, core e firmware
+├── scripts/
+│   ├── sim/                # modelos, vetores, programas e build do firmware
+│   ├── regression/         # executor e publicação da cobertura
+│   └── openlane/           # acesso ao ambiente Docker
+├── firmware/               # smoke próprio e pendência do firmware oficial
+├── docs/                   # arquitetura, módulos, ISA, estado e ambiente
+├── labs/rtl-to-gds/         # percurso didático
+├── build/                  # temporários gerados, ignorados pelo Git
+└── results/                # logs, evidências e waveforms
+```
 
-O top usa por padrão IMEM de 4 MiB e DMEM de 8 KiB; testbenches parametrizam
-uma ROM menor. Interfaces externas ainda não representam a pinagem física final.
+## OpenLane/LibreLane: ambiente disponível
 
-## Limite desta versão
+A imagem UNIC-CASS `isaiassh/unic-cass-tools:1.1.0` contém LibreLane e SKY130A.
+A validação registrada em 2026-09-15 executou o smoke embutido até GDSII, com DRC,
+LVS e antena PASS. Consulte [o registro](results/openlane/environment-smoke.md).
 
-CRC, sistema/sincronização, firmware oficial e pinagem final têm pendências
-documentadas em [docs/architecture/official_questions.md](docs/architecture/official_questions.md).
-O ambiente LibreLane/OpenLane está instalado e validado até GDSII; consulte
-[docs/openlane/environment.md](docs/openlane/environment.md). O fluxo físico do
-processador não foi iniciado, conforme os pré-requisitos do `AGENTS.md`.
-Diagramas Mermaid estão versionados; os desenhos ChipInventor da submissão
-ainda precisam ser produzidos. Esta versão não recebe a tag de RTL final da competição.
+```bash
+make openlane-env-check     # ferramentas e PDKs
+make openlane-env-smoke     # circuito de exemplo até o fim do fluxo físico
+make openlane-shell        # terminal interativo dentro do contêiner
+```
+
+O wrapper depende do workspace pai UNIC-CASS e de seus scripts `shared_xserver/bin`.
+Um clone isolado deste repositório não instala essas dependências. O smoke usa
+arquivos temporários no contêiner, descartados ao sair. Ainda não há GDSII do
+processador nem configuração de um `simple_system` neste repositório.
+
+## Próximos passos
+
+O próximo exercício será definir e construir o **simple_system**: core validado,
+memórias dimensionadas para um programa pequeno e sinais observáveis de sucesso
+e falha. A sequência proposta está na [aula 7](labs/rtl-to-gds/07-introducao-openlane.md):
+
+1. Documentar interfaces, capacidade/latência das memórias e protocolo de término.
+2. Adaptar firmware e linker ao mapa adotado e criar TB autoverificável do sistema.
+3. Preservar regressão do core e verificar boot, reset, assinatura e timeout.
+4. Definir implementação física das memórias e configuração de síntese.
+5. Conferir netlist e área, depois avançar por floorplan, PDN, placement, CTS,
+   routing e verificações, registrando evidências a cada etapa.
+
+Essa é uma atividade futura de aprendizado. A conclusão do processador da competição
+mantém outra lista de requisitos: confirmar o algoritmo Xicrc e implementar CRC
+até 44/47; confirmar as três instruções de sistema/sincronização até 47/47; validar
+o firmware oficial; fechar interface e top físico; congelar/taguear RTL e executar
+o fluxo final conforme [AGENTS.md](AGENTS.md). Diagramas ChipInventor, relatório
+e vídeo também permanecem entregáveis pendentes.
