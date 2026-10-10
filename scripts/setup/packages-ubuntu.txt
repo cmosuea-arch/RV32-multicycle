@@ -1,0 +1,11 @@
+# Dependências de simulação, firmware e ambiente Python no Ubuntu 24.04.
+git
+ca-certificates
+make
+python3
+python3-venv
+python3-pip
+iverilog
+verilator
+gcc-riscv64-unknown-elf
+binutils-riscv64-unknown-elf

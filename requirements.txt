@@ -1,0 +1,4 @@
+# Python >= 3.9. Atualmente não há dependências externas de Python.
+# CSV/Markdown/XLSX são gerados com a biblioteca padrão (incluindo zipfile/XML).
+# Icarus, Verilator, GCC RISC-V e Make são pacotes do sistema, não do pip.
+# Instalação completa: bash scripts/setup/install.sh

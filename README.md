@@ -59,6 +59,22 @@ uma estratégia própria para implementação física. Detalhes:
 
 ## Executar
 
+Para um clone novo em Ubuntu 24.04 ou WSL2:
+
+```bash
+git clone https://github.com/cmosuea-arch/RV32-multicycle.git
+cd RV32-multicycle
+bash scripts/setup/install.sh
+make doctor
+make regression
+```
+
+O instalador prepara os pacotes do sistema e `.venv`. O `requirements.txt` registra
+que os scripts atuais usam apenas a biblioteca padrão de Python. Atualização:
+`make update` para dependências, ou `bash scripts/setup/update.sh --pull` para
+incluir o código remoto (checkout limpo e fast-forward). Veja
+[instalação, opções e diagnóstico](docs/setup.md).
+
 Para simulação: Python 3.9+ (3.12 no ambiente usado), Make, Icarus Verilog
 (`iverilog`/`vvp`) e Verilator. O firmware usa GCC/binutils
 `riscv64-unknown-elf-*`, configurados para `rv32i_zmmul`/`ilp32`.
@@ -143,8 +159,9 @@ make openlane-env-smoke     # circuito de exemplo até o fim do fluxo físico
 make openlane-shell        # terminal interativo dentro do contêiner
 ```
 
-O wrapper depende do workspace pai UNIC-CASS e de seus scripts `shared_xserver/bin`.
-Um clone isolado deste repositório não instala essas dependências. O smoke usa
+Com Docker disponível, `make setup-openlane` baixa a imagem e verifica ferramentas
+e PDK. O wrapper e o verificador estão neste clone, sem dependência do diretório pai.
+O smoke usa
 arquivos temporários no contêiner, descartados ao sair. Ainda não há GDSII do
 processador nem configuração de um `simple_system` neste repositório.
 

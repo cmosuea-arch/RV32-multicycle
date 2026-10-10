@@ -24,6 +24,7 @@ KLayout, ngspice, xschem, OpenVAF, CACE e CVC-RV.
 Com Docker Desktop aberto e a integração desta distribuição WSL habilitada:
 
 ```sh
+make setup-openlane
 make openlane-env-check
 make openlane-env-smoke
 make openlane-shell
@@ -37,11 +38,17 @@ o contêiner com este repositório em
 Dentro do contêiner, o wrapper padrão é:
 
 ```sh
-/home/designer/shared/bin/librelane-local <config.yaml>
+bash scripts/openlane/librelane.sh <config.yaml>
 ```
 
 A imagem é fixada pelo script para preservar a reprodução. Para testar outra
 imagem sem editar o repositório, defina `UNICCASS_DOCKER_IMAGE`.
+
+O wrapper monta somente o clone atual, mesmo se a pasta tiver outro nome.
+Os scripts de verificação e chamada do LibreLane ficam em `scripts/openlane/`;
+nenhum arquivo do repositório pai é necessário. Consulte [setup.md](../setup.md)
+para preparar uma máquina nova. A tag da imagem é fixa; use um digest para
+fixar também seu conteúdo de forma imutável.
 
 ## Validação realizada
 

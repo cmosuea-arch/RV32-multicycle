@@ -19,6 +19,9 @@ os mesmos passos nos scripts Python e no Makefile.
 
 ## Preparação
 
+Em máquina nova, siga primeiro [a instalação](../../docs/setup.md):
+`bash scripts/setup/install.sh` prepara dependências e `make doctor` confere o ambiente.
+
 Todos os comandos, salvo indicação explícita, são executados **na raiz do projeto**,
 inclusive quando você estiver lendo um arquivo dentro desta pasta:
 

@@ -1,27 +1,49 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Localiza o workspace compartilhado e a imagem usada nesta instalação UNIC-CASS.
+# Monta somente este clone; não depende de scripts ou diretórios do repositório pai.
 script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
 project_dir="$(cd -- "$script_dir/../.." && pwd -P)"
-shared_dir="$(cd -- "$project_dir/.." && pwd -P)"
 image="${UNICCASS_DOCKER_IMAGE:-isaiassh/unic-cass-tools:1.1.0}"
 action="${1:-check}"
+case "$action" in
+    install|check|smoke|shell) ;;
+    -h|--help) echo "Uso: $0 {install|check|smoke|shell}"; exit 0 ;;
+    *) echo "Uso: $0 {install|check|smoke|shell}" >&2; exit 2 ;;
+esac
+if [[ "$(uname -m)" != x86_64 ]]; then
+    echo 'A imagem padrão foi validada somente em Linux x86_64 (nativo ou WSL2).' >&2
+    exit 1
+fi
 
 command -v docker >/dev/null 2>&1 || {
-    echo "ERRO: Docker não encontrado." >&2
+    echo "ERRO: Docker não encontrado. Veja docs/setup.md (Docker Engine ou Desktop/WSL2)." >&2
     exit 1
 }
 docker info >/dev/null 2>&1 || {
-    echo "ERRO: daemon Docker inacessível. Inicie o Docker Desktop e habilite a integração WSL." >&2
+    echo "ERRO: daemon Docker inacessível. Confira docker info e docs/setup.md." >&2
     exit 1
 }
+
+if [[ "$action" == install ]]; then
+    docker pull "$image"
+    action=check
+elif ! docker image inspect "$image" >/dev/null 2>&1; then
+    echo 'Imagem ausente. Execute make setup-openlane para baixá-la.' >&2
+    exit 1
+fi
 
 # A montagem preserva arquivos do projeto; --rm remove o contêiner após a execução.
 common_args=(
     --rm
+    --pull never
     --entrypoint /bin/bash
-    --mount "type=bind,source=$shared_dir,target=/home/designer/shared"
+    --user "$(id -u):$(id -g)"
+    # O home das ferramentas na imagem é 0750, grupo designer (1000).
+    --group-add 1000
+    --env HOME=/home/designer
+    --env XDG_CACHE_HOME=/tmp/cmos-cache
+    --mount "type=bind,source=$project_dir,target=/home/designer/shared/cmos-riscv"
     --workdir /home/designer/shared/cmos-riscv
     --env PDK=sky130A
     --env PDK_ROOT=/opt/pdks
@@ -31,11 +53,11 @@ common_args=(
 case "$action" in
     check)
         exec docker run "${common_args[@]}" "$image" \
-            -lc '/home/designer/shared/bin/verificar-ambiente-unicass'
+            -lc 'bash scripts/openlane/check.sh'
         ;;
     smoke)
         exec docker run "${common_args[@]}" "$image" \
-            -lc 'cd /tmp && /home/designer/shared/bin/librelane-local --smoke-test'
+            -lc 'cd /tmp && bash /home/designer/shared/cmos-riscv/scripts/openlane/librelane.sh --smoke-test'
         ;;
     shell)
         exec docker run -it "${common_args[@]}" "$image"

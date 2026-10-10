@@ -1,5 +1,6 @@
 *:Zone.Identifier
 build/
+.venv/
 __pycache__/
 results/waveforms/*
 !results/waveforms/.gitkeep

@@ -45,10 +45,10 @@ O Makefile chama `scripts/openlane/environment.sh`. O script verifica Docker e u
 a imagem `isaiassh/unic-cass-tools:1.1.0`, com `PDK=sky130A` e `PDK_ROOT=/opt/pdks`.
 Na instalação atual a imagem contém LibreLane, derivado do OpenLane 2.
 
-O diretório pai do projeto é montado em `/home/designer/shared`. O script depende
-desta organização UNIC-CASS, inclusive `../bin/librelane-local` e
-`../bin/verificar-ambiente-unicass`. Um clone isolado do CMOS RISC-V, sem esses
-arquivos e sem a imagem, não constitui a instalação física completa.
+O clone atual é montado em `/home/designer/shared/cmos-riscv`, mesmo que tenha outro
+nome no host. Os scripts auxiliares estão neste repositório, em `scripts/openlane/`.
+Com Docker disponível, `make setup-openlane` baixa a imagem com ferramentas e PDK.
+Veja [a instalação completa](../../docs/setup.md).
 
 `--rm` remove o contêiner temporário após sair. Arquivos gravados na montagem
 compartilhada persistem; arquivos de `/tmp` do contêiner não persistem.
@@ -83,8 +83,8 @@ Dentro do contêiner:
 
 ```bash
 pwd
-/home/designer/shared/bin/librelane-local --version
-/home/designer/shared/bin/librelane-local --help
+bash scripts/openlane/librelane.sh --version
+bash scripts/openlane/librelane.sh --help
 exit
 ```
 

@@ -20,7 +20,7 @@ Para dar um nome a essa ação, o Makefile contém:
 ```make
 # O alvo unit executa a receita abaixo.
 unit:
-	python3 scripts/regression/run.py --suite unit
+	$(PYTHON) scripts/regression/run.py --suite unit
 ```
 
 `unit` é o alvo; a linha recuada é sua receita. O recuo da receita deve ser um
@@ -32,12 +32,17 @@ Make também pode trabalhar com dependências, usando a forma
 por arquivo. `.PHONY` declara isso e evita que um arquivo chamado `unit` impeça a
 receita. Cada chamada executa de novo; o Python controla a sequência interna.
 
+`PYTHON` é uma variável: o Makefile escolhe `.venv/bin/python` quando instalado,
+ou `python3` caso contrário. Também aceita `make unit PYTHON=/caminho/do/python`.
+`make setup`, `make update` e `make doctor` preparam e conferem esse ambiente;
+eles são explicados em [setup.md](../../docs/setup.md).
+
 ## Variáveis passadas no terminal
 
 ```make
 # TB recebe, por exemplo, tb_alu pela linha de comando.
 tb:
-	python3 scripts/regression/run.py --test $(TB)
+	$(PYTHON) scripts/regression/run.py --test $(TB)
 ```
 
 ```bash

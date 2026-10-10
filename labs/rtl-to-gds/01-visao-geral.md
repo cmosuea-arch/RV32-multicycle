@@ -54,6 +54,7 @@ python3 scripts/regression/run.py --help
 ```
 
 O primeiro comando deve imprimir `python3 scripts/regression/run.py --test tb_alu`.
+Se `.venv` existir, o interpretador será `.venv/bin/python`, selecionado pelo Makefile.
 O segundo apresenta os modos disponíveis. Abra o Makefile e localize exatamente
 a linha impressa. Não é o Make que calcula o resultado da ALU.
 
