@@ -86,6 +86,7 @@ veja [os requisitos e caminhos](docs/openlane/environment.md).
 
 ```sh
 # Executar na raiz do repositório.
+make help              # lista comandos e suas finalidades
 make tb TB=tb_alu       # uma bancada, com preparação das entradas
 make unit              # 14 testbenches unitários, incluindo CRC provisório
 make integration       # 17 integrações, incluindo CRC e simple_system
@@ -94,10 +95,14 @@ make lint              # análise estática com Verilator
 make test              # todos os TBs; manifesto registra lint NOT_RUN
 make regression        # todos os TBs + lint + cobertura + manifesto
 make firmware          # somente compila o firmware próprio e gera a ROM
+make run               # compila e executa o firmware próprio no processador simulado
 make wave              # executa firmware no RTL e gera VCD
 make simple-system     # sistema experimental com firmware e CRC provisório
 make simple-synth      # síntese Yosys e teste da netlist genérica
 ```
+
+Para executar o processador com nosso firmware, use `make run`; para acompanhar
+seus sinais, use `make wave`. `make firmware` apenas compila o programa.
 
 `make -n tb TB=tb_alu` mostra a receita sem executá-la. `make` sem alvo chama
 `test`; para fechar uma alteração use `make regression`. Não execute essas receitas

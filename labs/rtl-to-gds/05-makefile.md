@@ -7,6 +7,11 @@
 Entender a construção do [Makefile real](../../Makefile) relacionando cada alvo
 ao comando Python ou shell que você já conhece.
 
+Comece com `make help`. O Makefile está organizado em preparação, testes,
+execução do processador, sistema experimental e ambiente físico. As descrições
+após `##` alimentam a ajuda: a receita usa `awk` para extrair nome e descrição
+de cada alvo. `$$` passa um `$` ao shell, pois Make interpreta `$` primeiro.
+
 ## Da linha manual à receita
 
 Na aula anterior usamos:
@@ -29,7 +34,8 @@ unit:
 
 Make também pode trabalhar com dependências, usando a forma
 `alvo: dependencias`. No arquivo atual, os alvos são ações sem grafo de dependências
-por arquivo. `.PHONY` declara isso e evita que um arquivo chamado `unit` impeça a
+por arquivo. A exceção explícita é `simple-synth: simple-firmware`, que primeiro
+recompila o programa usado na síntese. `.PHONY` evita que um arquivo chamado `unit` impeça a
 receita. Cada chamada executa de novo; o Python controla a sequência interna.
 
 `PYTHON` é uma variável: o Makefile escolhe `.venv/bin/python` quando instalado,
@@ -42,7 +48,8 @@ eles são explicados em [setup.md](../../docs/setup.md).
 ```make
 # TB recebe, por exemplo, tb_alu pela linha de comando.
 tb:
-	$(PYTHON) scripts/regression/run.py --test $(TB)
+	$(if $(strip $(TB)),,$(error Informe a bancada: make tb TB=tb_alu))
+	$(PYTHON) scripts/regression/run.py --test "$(TB)"
 ```
 
 ```bash
@@ -52,12 +59,14 @@ make tb TB=tb_alu
 
 `$(TB)` é expandido por Make antes de enviar a receita ao shell. `-n` mostra a
 receita sem executá-la nestes alvos. Informe um nome simples, como `tb_alu`;
-sem `TB`, o Python rejeita a ausência do argumento de `--test`.
+sem `TB`, o Make informa o exemplo de uso antes de chamar Python. `strip` remove
+espaços; `if` chama `error` quando o nome está vazio.
 
 ## Mapa das ações existentes
 
 | Comando | Processo | Evidência agregada |
 |---|---|---|
+| `make help` | mostra descrições dos alvos | saída no terminal |
 | `make tb TB=tb_alu` | uma bancada | log da bancada |
 | `make unit` | 14 TBs unitários | logs individuais |
 | `make integration` | 17 TBs de integração, com firmware próprio | logs individuais |
@@ -66,6 +75,7 @@ sem `TB`, o Python rejeita a ausência do argumento de `--test`.
 | `make test` | todos os TBs, sem lint | manifesto com lint `NOT_RUN` e cobertura |
 | `make regression` | todos os TBs e lint | manifesto com lint `PASS` e cobertura |
 | `make firmware` | GCC e conversão da imagem | log de build, ELF e hex |
+| `make run` | compila e executa o firmware próprio no core | `tb_firmware.log` |
 | `make wave` | firmware no RTL com VCD | log e waveform |
 | `make simple-firmware` | GCC gera programa experimental com CRC | `simple_build.log` e imagem ROM |
 | `make simple-system` | firmware no sistema pequeno | `tb_simple_system.log` |
@@ -74,7 +84,8 @@ sem `TB`, o Python rejeita a ausência do argumento de `--test`.
 | `make openlane-env-smoke` | script shell → Docker → exemplo físico | resultado no terminal |
 | `make openlane-shell` | sessão interativa no contêiner | shell com ferramentas físicas |
 
-Sem argumento, `make` executa o primeiro alvo normal, `test`. Para fechamento use
+Sem argumento, `make` executa `test`, definido por `.DEFAULT_GOAL`, mesmo com
+`help` aparecendo primeiro no arquivo. Para fechamento use
 explicitamente `make regression`, incluindo lint.
 
 ## Execução guiada
