@@ -40,7 +40,7 @@ module tb_core_faults;
     initial begin
         cases=0;
         clear_rom(); rom[0]=32'hffffffff; expect_fault(0,32'h00400000);
-        clear_rom(); rom[0]=32'h802081b3; expect_fault(0,32'h00400000); // CRC pending
+        clear_rom(); rom[0]=32'h802081b3; expect_fault(0,32'h00400000); // CRC disabled in baseline
         clear_rom(); rom[0]=32'h0220c1b3; expect_fault(0,32'h00400000); // DIV unsupported
         clear_rom(); rom[0]=32'h02009193; expect_fault(0,32'h00400000); // invalid shift
         clear_rom(); rom[0]=32'h00000073; expect_fault(0,32'h00400000);

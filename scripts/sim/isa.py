@@ -33,7 +33,7 @@ def encode(name, rd=3, rs1=1, rs2=2, imm=0):
     # Monta uma palavra de instrução; sua execução é modelada em programs.py.
     from vectors import encode_imm
     opcode,f3,f7=fields(name)
-    if name in R or name in MULT:
+    if name in R or name in MULT or name in CATEGORIES['CRC']:
         return (f7<<25)|(rs2<<20)|(rs1<<15)|(f3<<12)|(rd<<7)|opcode
     if name in I or name in LOAD or name=='JALR':
         if name in ('SLLI','SRLI','SRAI'): imm=(imm&31)|(f7<<5)

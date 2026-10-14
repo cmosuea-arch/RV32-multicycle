@@ -1,0 +1,3 @@
+$ vvp /tmp/cmos-crc-k9rt10z2/build/tb_core_crc
+PASS core_crc: 32147 retirements, 2127 CRC, overlap/x0/stream/store/reset
+/tmp/cmos-crc-k9rt10z2/tb/integration/tb_core_crc.sv:46: $finish called at 1285936000 (1ps)

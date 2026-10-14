@@ -1,31 +1,56 @@
-# CRC — NOT DONE
+# CRC
 
 ## Objetivo
-Extensão Xicrc, Block Guide tabelas 8 e 11, PDF pp.12,14–15.
+Executar CRCB/CRCH/CRCW no [contrato CMOS provisório](../architecture/crc_provisional.md).
+Compatibilidade oficial Xicrc ainda não confirmada.
+
 ## Entradas
-rs1/rs2 de 32 bits; seletor de operação 0/1/2. Papel de cada operando pendente.
+`a_i[31:0]`: acumulador; `b_i[31:0]`: dados; `op_i[3:0]`: 0/1/2 para byte/half/word.
+
 ## Saídas
-Resultado CRC de 16 bits; preenchimento de rd[31:16] pendente.
+`result_o[31:0]`: CRC16 estendido com zeros.
+
 ## Comportamento
-CRCB/CRCH/CRCW processam 8/16/32 bits e produzem CRC-16 combinacional.
-Opcode 0110011, funct7 1000000, funct3 000/001/010 respectivamente.
-Polinômio, seed, reflexão, ordenação e xor final não definidos no guia fornecido.
+Combinacional, polinômio 0x1021, bytes baixos primeiro, MSB primeiro em cada byte.
+Estado inicial a_i[15:0], sem xor final. Sem clock/reset interno.
+
 ## Dependências
-Definição oficial complementar, decoder, datapath e writeback.
+Nenhuma no bloco. Integração requer decoder/core com `EXPERIMENTAL_XICRC=1`.
+
 ## Casos especiais
-Não selecionar uma variante CRC conhecida por aproximação.
+Op inválido retorna zero. Bits altos do acumulador/dados não utilizados são ignorados.
+O decoder bloqueia codificações inválidas; x0 e sobreposição seguem o RF normal.
+
 ## Diagrama
-Proposta arquitetural em architecture/block_diagram.md; módulo não implementado.
+```mermaid
+flowchart LR
+ A[rs1: acumulador 15:0] --> C[CRC16 polinômio 0x1021]
+ B[rs2: bytes baixos primeiro] --> C
+ O[op: 1 / 2 / 4 bytes] --> C
+ C --> Z[zero extend para 32 bits]
+ Z --> E[registro de EXECUTE]
+ E --> W[WRITEBACK no RF]
+```
+
 ## Testbench
-Não há TB funcional nem RTL placeholder. Decoder rejeita essas codificações;
-tb_decoder e tb_core_faults verificam rejeição sem writeback.
+`tb_crc`, `tb_decoder` (duas configurações), `tb_core_crc`.
+
 ## Casos testados
-Somente rejeição como operação ainda não suportada; não conta como cobertura CRC.
+18304 vetores: limites, zero, padrões, seed/dados aleatórios e op inválido.
+Check ASCII `123456789 -> 29b1`. Programa integrado compara trace completo,
+escrita real no RF, x0, rd=rs1/rs2, streams byte/word, store/load e reset.
+O decoder varre 131072 combinações por configuração. Baseline rejeita CRC.
+
 ## Resultado
-0/3, PENDENTE.
+Evidências em `results/experiments/crc/`; regressão inclui a baseline anterior.
+
 ## Integração
-Pendente até contrato funcional confirmado.
+Resultado selecionado no core e registrado em EXECUTE. FSM inalterada.
+Programa/modelo em `scripts/sim/crc_vectors.py` e `crc_model.py`.
+
 ## Commit validado
-Nenhum commit de implementação CRC. Pendência registrada em rtl-subset-v0.1.
+Commit que introduz este módulo e `results/experiments/crc/regression.json`;
+o manifesto identifica os conteúdos por SHA256.
+
 ## Pendências
-Ver architecture/official_questions.md, item 1.
+P01 oficial aberta. Timing/área ainda não medidos; não marcar M7 oficial DONE.

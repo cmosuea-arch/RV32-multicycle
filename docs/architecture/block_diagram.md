@@ -23,7 +23,7 @@ flowchart TB
  P4 --> NEXT
  NEXT --> NP[Registro next_pc_q]
  NP --> PC
- ALU --> EXEC[Mux execução: ALU / MULT / link]
+ ALU --> EXEC[Mux execução: ALU / MULT / CRC / link]
  MULT --> EXEC
  P4 --> EXEC
  EXEC --> RES[Registro result_q]
@@ -46,13 +46,15 @@ flowchart TB
  FSM -. enables .-> IR
  FSM -. enables .-> RF
  FSM -. oe / we .-> AD
- RF -. extensão futura .-> CRC[CRC pendente de especificação]
+ RF -. EXPERIMENTAL_XICRC .-> CRC[CRC provisório CMOS]
+ CRC -. EXPERIMENTAL_XICRC .-> EXEC
 ```
 
 Dados, endereços e instruções são de 32 bits; funct3 tem 3 bits, seletores ALU/MULT
 4 bits, endereços RF 5 bits e byte write 4 bits. O decoder gera as seleções; a FSM
 habilita atualizações. Nenhum barramento de instruções separado ou pipeline.
-CRC pontilhado é uma dependência futura, não um bloco RTL presente.
+CRC pontilhado está implementado e habilitado somente com `EXPERIMENTAL_XICRC=1`;
+o [contrato provisório](crc_provisional.md) não confirma conformidade oficial.
 
 ## Sequência de execução
 

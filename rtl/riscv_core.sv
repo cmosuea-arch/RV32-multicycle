@@ -1,5 +1,7 @@
 `timescale 1ns/1ps
-module riscv_core(
+module riscv_core #(
+    parameter bit EXPERIMENTAL_XICRC=0
+)(
     input logic clk_i,rst_i,
     input logic [31:0] data_i,
     input logic bus_fault_i,
@@ -21,6 +23,8 @@ module riscv_core(
     wire a_pc,b_imm,reg_we,branch,jal,jalr,load,store_op,mul,illegal;
     wire [31:0] load_data,store_data;
     wire [31:0] product;
+    wire crc_op;
+    wire [31:0] crc_result;
     wire [3:0] store_bw;
     wire misaligned,lsu_invalid;
     wire [31:0] writeback_data=load?load_data:result_q;
@@ -29,7 +33,8 @@ module riscv_core(
                      ((state==EXECUTE)&&redirect&&redirect_target[1:0]!=0) ||
                      ((state==MEMORY)&&(bus_fault_i||misaligned||lsu_invalid));
     control_unit control(clk_i,rst_i,illegal,load,store_op,local_fault,state);
-    decoder decode(instruction,alu_op,a_pc,b_imm,reg_we,branch,jal,jalr,load,store_op,mul,illegal);
+    decoder #(.EXPERIMENTAL_XICRC(EXPERIMENTAL_XICRC)) decode(
+        instruction,alu_op,a_pc,b_imm,reg_we,branch,jal,jalr,load,store_op,mul,illegal,crc_op);
     pc program_counter(clk_i,rst_i,retire,next_pc_q,current_pc,plus4);
     ir instruction_register(clk_i,rst_i,state==FETCH&&!local_fault&&!rst_i,data_i,instruction);
     imm_ext immediate_ext(instruction,immediate);
@@ -38,10 +43,15 @@ module riscv_core(
     branch_comp branch_compare(a,b,instruction[14:12],branch_taken);
     lsu load_store(result_q,b,data_i,instruction[14:12],store_op,load_data,store_data,store_bw,misaligned,lsu_invalid);
     multiplier multiply(a,b,{1'b0,instruction[14:12]},product);
+    generate if(EXPERIMENTAL_XICRC) begin : gen_crc
+        crc checksum(a,b,{1'b0,instruction[14:12]},crc_result);
+    end else begin : gen_no_crc
+        assign crc_result=32'b0;
+    end endgenerate
     always @(posedge clk_i) begin
         if(rst_i) begin result_q<=0; next_pc_q<=0; end
         else if(state==EXECUTE) begin
-            result_q<=(jal||jalr)?plus4:mul?product:alu_result;
+            result_q<=(jal||jalr)?plus4:crc_op?crc_result:mul?product:alu_result;
             next_pc_q<=redirect?redirect_target:plus4;
         end
     end

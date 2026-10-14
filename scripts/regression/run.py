@@ -65,6 +65,7 @@ def main():
     # Recria entradas antes da simulação para evitar dependência de build/ antigo.
     if not args.wave and generator.exists():
         run([sys.executable, str(generator)], logs / 'vectors.log')
+        run([sys.executable, str(ROOT/'scripts/sim/crc_vectors.py')], logs / 'crc_vectors.log')
     programs = ROOT / 'scripts/sim/programs.py'
     if (full or args.suite == 'integration' or args.test) and programs.exists():
         run([sys.executable, str(programs)], logs / 'programs.log')

@@ -29,6 +29,11 @@ Data: 2026-09-11. Baseline inicial: `baseline-v1`.
 
 ## Pendências oficiais
 
+Decisão adicional em 2026-10-13: por autorização do usuário, desenvolver o
+[CRC provisório CMOS](crc_provisional.md), habilitado por `EXPERIMENTAL_XICRC`.
+O perfil padrão e a matriz oficial permanecem 41/47. P01 só se encerra após
+confirmação do comportamento pela competição.
+
 | ID | Lacuna | Evidência | Impacto |
 |---|---|---|---|
 | P01 | CRC: polinômio, reflexão/ordem de bits, seed, papel de rs1/rs2, xor final, bits altos de rd | PDF pp.12,14–15: somente CRC8/16/32 e resultado [15:0] | bloqueia 3 Xicrc |

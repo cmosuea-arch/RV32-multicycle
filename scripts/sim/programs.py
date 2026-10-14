@@ -12,7 +12,8 @@ BASE=0x00400000
 
 
 class Program:
-    def __init__(self):
+    def __init__(self, experimental_crc=False):
+        self.experimental_crc=experimental_crc
         self.words=[]
         self.trace=[]
         self.regs=[0]*32
@@ -69,6 +70,9 @@ class Program:
                 aa=signed(a) if name in ('MUL','MULH','MULHSU') else a
                 bb=signed(b) if name in ('MUL','MULH') else b
                 value=((aa*bb)>>(0 if name=='MUL' else 32))&MASK
+            elif self.experimental_crc and name in CATEGORIES['CRC']:
+                from crc_model import crc_model
+                value=crc_model(a,b,fields(name)[1])
             else: raise ValueError(name)
             if rd: self.regs[rd]=value
             self.trace.append((pc,self.words[index],rd,self.regs[rd]))
@@ -82,14 +86,14 @@ class Program:
             for _ in range(8): self.emit('ADD',rd,rd,rd)
             self.emit('ADDI',rd,rd,imm=(value>>shift)&255)
 
-    def save(self):
+    def save(self, prefix='isa', rom_words=131072):
         # ROM, trace e memória final são entradas de tb_isa; counts alimenta o relatório.
         self.evaluate()
-        if len(self.words)>131072: raise ValueError('program exceeds test ROM')
-        (OUT/'isa.hex').write_text(''.join(f'{w:08x}\n' for w in self.words+[0]*(131072-len(self.words))))
-        (OUT/'isa.trace').write_text(''.join(f'{pc:08x} {ins:08x} {rd:02x} {value:08x}\n' for pc,ins,rd,value in self.trace))
-        (OUT/'isa_counts.json').write_text(json.dumps(self.counts,indent=2)+'\n')
-        (OUT/'isa_memory.vec').write_text(''.join(f'{a:08x} {v:02x}\n' for a,v in sorted(self.memory.items())))
+        if len(self.words)>rom_words: raise ValueError('program exceeds test ROM')
+        (OUT/f'{prefix}.hex').write_text(''.join(f'{w:08x}\n' for w in self.words+[0]*(rom_words-len(self.words))))
+        (OUT/f'{prefix}.trace').write_text(''.join(f'{pc:08x} {ins:08x} {rd:02x} {value:08x}\n' for pc,ins,rd,value in self.trace))
+        (OUT/f'{prefix}_counts.json').write_text(json.dumps(self.counts,indent=2)+'\n')
+        (OUT/f'{prefix}_memory.vec').write_text(''.join(f'{a:08x} {v:02x}\n' for a,v in sorted(self.memory.items())))
 
 
 def main():

@@ -1,5 +1,8 @@
 # Definições oficiais necessárias para continuar
 
+Atualização 2026-10-13: existe um [contrato CRC interno provisório](crc_provisional.md)
+autorizado para desenvolvimento. Ele não encerra as perguntas abaixo.
+
 Referências a páginas físicas de `Champion-chip-guia-fase-2.pdf` (arquivo de 24 páginas).
 
 1. **Xicrc — pp.12,14–15, tabelas 8 e 11.** As codificações de CRCB/CRCH/CRCW estão
