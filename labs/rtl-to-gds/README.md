@@ -40,7 +40,7 @@ riscv64-unknown-elf-gcc --version
 Adapte apenas o caminho do `cd` se o clone estiver em outro local. Python 3.9+
 é necessário para a API usada pelo executor; o ambiente do projeto usa Python 3.12.
 A toolchain RISC-V será necessária para o firmware; GTKWave é opcional para abrir
-ondas. Docker com a imagem e o workspace UNIC-CASS é usado na aula física.
+ondas. Docker com a imagem UNIC-CASS é usado na aula física; basta este clone.
 Se uma ferramenta não existir no PATH, resolva o ambiente antes da aula que a utiliza.
 
 ## Como estudar
@@ -59,11 +59,11 @@ blocos usados no percurso; não é necessário alterar o código para fazer as p
 
 ## Alcance
 
-A baseline tem **41/47 instruções (87,23%)**, 13 TBs unitários e 15 de integração.
-Os números esperados das aulas se referem a essa versão. CRC, sistema/sincronização,
+A baseline tem **41/47 instruções (87,23%)**. A regressão atual tem 14 TBs unitários
+e 17 de integração, incluindo CRC provisório e simple_system. CRC oficial, sistema/sincronização,
 firmware oficial e top físico final têm [pendências registradas](../../docs/architecture/official_questions.md).
-O `simple_system` é uma próxima etapa planejada; este laboratório ainda não contém
-seu RTL ou configuração física. O smoke test do LibreLane valida o ambiente com
+O [simple_system](../../docs/modules/simple_system.md) já possui RTL, firmware,
+TB e síntese lógica genérica. A configuração física ainda está pendente. O smoke test do LibreLane valida o ambiente com
 um circuito de exemplo.
 
 Comece pela [aula 1](01-visao-geral.md). Para consulta rápida dos comandos, use

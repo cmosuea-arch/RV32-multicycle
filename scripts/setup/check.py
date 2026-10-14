@@ -14,7 +14,7 @@ def main():
         failed.append('Python >= 3.9')
     commands = {
         'git': '--version', 'make': '--version', 'iverilog': '-V',
-        'vvp': '-V', 'verilator': '--version',
+        'vvp': '-V', 'verilator': '--version', 'yosys': '-V',
         **{f'riscv64-unknown-elf-{tool}': '--version'
            for tool in ('gcc', 'objcopy', 'objdump', 'size')},
     }

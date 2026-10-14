@@ -1,0 +1,3 @@
+$ vvp build/tb_simple_netlist
+PASS simple_netlist: two boots with ROM constants and uninitialized RAM
+scripts/synth/tb_simple_netlist.sv:28: $finish called at 29806000 (1ps)

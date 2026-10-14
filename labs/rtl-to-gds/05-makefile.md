@@ -59,14 +59,17 @@ sem `TB`, o Python rejeita a ausência do argumento de `--test`.
 | Comando | Processo | Evidência agregada |
 |---|---|---|
 | `make tb TB=tb_alu` | uma bancada | log da bancada |
-| `make unit` | 13 TBs unitários | logs individuais |
-| `make integration` | 15 TBs de integração, com firmware próprio | logs individuais |
+| `make unit` | 14 TBs unitários | logs individuais |
+| `make integration` | 17 TBs de integração, com firmware próprio | logs individuais |
 | `make smoke` | quatro integrações rápidas | logs individuais |
 | `make lint` | Verilator sem simulação | `lint.log` |
 | `make test` | todos os TBs, sem lint | manifesto com lint `NOT_RUN` e cobertura |
 | `make regression` | todos os TBs e lint | manifesto com lint `PASS` e cobertura |
 | `make firmware` | GCC e conversão da imagem | log de build, ELF e hex |
 | `make wave` | firmware no RTL com VCD | log e waveform |
+| `make simple-firmware` | GCC gera programa experimental com CRC | `simple_build.log` e imagem ROM |
+| `make simple-system` | firmware no sistema pequeno | `tb_simple_system.log` |
+| `make simple-synth` | Yosys e simulação da netlist genérica | `simple_synth.json`, logs |
 | `make openlane-env-check` | script shell → Docker → verificador | resultado no terminal |
 | `make openlane-env-smoke` | script shell → Docker → exemplo físico | resultado no terminal |
 | `make openlane-shell` | sessão interativa no contêiner | shell com ferramentas físicas |

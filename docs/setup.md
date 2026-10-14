@@ -43,6 +43,7 @@ python scripts/sim/vectors.py
 | `python3-venv`, `python3-pip` | ambiente Python isolado |
 | Icarus (`iverilog`, `vvp`) | compilação e simulação SystemVerilog |
 | Verilator | lint do RTL |
+| Yosys | síntese lógica genérica do `simple_system` (`make simple-synth`) |
 | Make e Git | receitas e versionamento |
 | GCC/binutils `riscv64-unknown-elf-*` | compilação, conversão e inspeção do firmware RV32 |
 | GTKWave, opcional | visualização de VCD |

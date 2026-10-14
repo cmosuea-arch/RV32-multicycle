@@ -42,3 +42,12 @@ doctor:
 	$(PYTHON) scripts/setup/check.py
 setup-openlane:
 	bash scripts/openlane/environment.sh install
+
+# Sistema experimental com firmware próprio e CRC provisório.
+.PHONY: simple-firmware simple-system simple-synth
+simple-firmware:
+	$(PYTHON) scripts/sim/build_simple.py
+simple-system:
+	$(PYTHON) scripts/regression/run.py --test tb_simple_system
+simple-synth: simple-firmware
+	$(PYTHON) scripts/synth/simple.py

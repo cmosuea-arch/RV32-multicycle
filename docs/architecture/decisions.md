@@ -34,6 +34,12 @@ Decisão adicional em 2026-10-13: por autorização do usuário, desenvolver o
 O perfil padrão e a matriz oficial permanecem 41/47. P01 só se encerra após
 confirmação do comportamento pela competição.
 
+Ainda em 2026-10-13: `simple_system` usa ROM 2 KiB/RAM 1 KiB, bases preservadas,
+CRC provisório ativo e assinatura em 0x100103f0. Linker separa pilha/dados.
+ROM vira constantes e RAM vira registradores na síntese lógica genérica;
+nenhuma macro física é presumida. Ver [contrato](../modules/simple_system.md).
+O experimento não encerra requisitos do top final nem do firmware oficial.
+
 | ID | Lacuna | Evidência | Impacto |
 |---|---|---|---|
 | P01 | CRC: polinômio, reflexão/ordem de bits, seed, papel de rs1/rs2, xor final, bits altos de rd | PDF pp.12,14–15: somente CRC8/16/32 e resultado [15:0] | bloqueia 3 Xicrc |

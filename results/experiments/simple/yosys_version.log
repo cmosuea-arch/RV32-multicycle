@@ -1,0 +1,2 @@
+$ yosys -V
+Yosys 0.39+124 (git sha1 d73f71e81, clang++ 14.0.0-1ubuntu1.1 -fPIC -Os)

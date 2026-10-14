@@ -8,10 +8,12 @@ data_o[31:0].
 ## Comportamento
 Leitura combinacional de palavras de 32 bits. Padrão 4 MiB em 0x00400000.
 ## Dependências
-Arquivo hex opcional, uma palavra little-endian por linha.
+Arquivo hex opcional, uma palavra little-endian por linha, preenchendo WORDS posições.
 ## Casos especiais
 Fora da faixa, desalinhamento ou oe=0 retornam zero. Não existe porta de escrita.
-Posições sem conteúdo são zero (instrução inválida), não NOP implícito.
+Sem arquivo, posições são zero (instrução inválida). Com arquivo, os geradores
+devem fazer padding explícito. Fontes exclusivas (arquivo OU zeros) preservam a
+imagem na síntese; não inicializar com zeros antes de executar `$readmemh`.
 ## Diagrama
 ```mermaid
 flowchart LR
@@ -31,5 +33,7 @@ results/logs/tb_imem.log e tb_fetch.log; regressão PASS.
 PC + IMEM + IR + Immediate: endereços BASE até BASE+28 e retenção.
 ## Commit validado
 Tag block-imem-v1.
+Atualização de síntese: commit do simple_system e evidências em
+`results/experiments/simple/`, incluindo execução da netlist com ROM embutida.
 ## Pendências
 ROM física depende de firmware oficial e fluxo físico; ChipInventor pendente.

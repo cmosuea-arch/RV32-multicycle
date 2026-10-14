@@ -15,7 +15,7 @@ make wave
 O roteiro completo, incluindo execução individual e a ordem incremental, está
 em [testing_roadmap.md](testing_roadmap.md).
 
-`make regression` gera os vetores, compila firmware próprio, executa 28 TBs e faz
+`make regression` gera os vetores, compila os firmwares próprios, executa 31 TBs e faz
 lint. Falhas, timeouts (120 s por processo), qualquer diagnóstico de compilação
 e ausência de PASS interrompem o comando com código diferente de zero.
 `results/logs/regression.json` registra estado, testbenches, lint e SHA-256 de
@@ -41,6 +41,13 @@ Uma execução iniciada sem terminar conserva RUNNING; não é evidência PASS.
 | Memória integrada | 45 stores, contagem de escritas físicas e 12 bytes finais |
 | Falhas | 12 casos de decode/controle e 12 de memória; efeitos bloqueados e reset |
 | Firmware próprio | RV32I_Zmmul/ILP32; ROM/.data/.bss, pilha, chamadas, loops e multiplicação |
+| CRC provisório | 18304 vetores, 2127 instruções CRC no core; decoder nos dois perfis |
+| simple_system | 7 cenários de boot/reset/assinatura/fault; firmware exercita os três CRCs |
+
+`make simple-synth` é uma checagem adicional, fora da regressão RTL: síntese
+genérica Yosys, memória mapeada, ausência de inicialização de registradores e
+dois boots do firmware na netlist, observando somente pinos. Logs `simple_synth.*`
+e `simple_netlist.*`. Evidências da versão atual: `results/experiments/simple/`.
 
 Vetores determinísticos: seed `0xC005`; programas: seed `4711`. Modelos Python
 usam inteiros/bytes para gerar resultados esperados, com codificação das instruções
@@ -49,8 +56,9 @@ codificação independente dos geradores de testes. A comparação de todas as
 aposentadorias inclui instruções auxiliares que preparam os operandos.
 
 Lint Verilator: Wall ativo. Suprimidos apenas DECLFILENAME (nomes de arquivos),
-UNUSEDSIGNAL/UNUSEDPARAM (interfaces e bits reservados) e MULTITOP (biblioteca de
-módulos). Nenhuma supressão de latch, largura ou loop combinacional.
+UNUSEDSIGNAL/UNUSEDPARAM (interfaces e bits reservados). `riscv_top` e
+`simple_system` são elaborados separadamente, verificando as duas configurações
+de memórias/CRC. Nenhuma supressão de latch, largura ou loop combinacional.
 
 ## Evidências
 
@@ -68,4 +76,5 @@ São testes funcionais, não prova formal, cobertura de todos os valores de entr
 ou certificação. Firmware oficial ainda não foi executado. FAULT é diagnóstico
 CMOS até reset; não implementa ambiente privilegiado/traps/CSRs. Lint não prova
 que as memórias inferidas cabem fisicamente no chip. Nenhum resultado de área,
-timing, OpenLane ou GDSII é alegado nesta versão.
+timing, OpenLane ou GDSII do processador é alegado nesta versão. A contagem de
+células genéricas da síntese experimental não é área física nem fechamento.

@@ -3,9 +3,9 @@
 Para aprender os conceitos e executar primeiro os passos manuais, siga o
 [laboratório guiado](../labs/rtl-to-gds/README.md). Esta página é a consulta rápida.
 
-Este roteiro valida o subconjunto atual de 41/47 instruções em camadas. CRC,
-sistema/sincronização e firmware oficial continuam pendentes e não são contados
-como PASS.
+Este roteiro valida a baseline 41/47 e os experimentos CRC/simple_system.
+Os testes do contrato CRC provisório não ampliam a matriz oficial; CRC oficial,
+sistema/sincronização e firmware oficial continuam pendentes.
 
 ## 1. Preparação
 
@@ -50,9 +50,10 @@ make tb TB=tb_address_decoder
 make tb TB=tb_multiplier
 make tb TB=tb_decoder
 make tb TB=tb_control_unit
+make tb TB=tb_crc
 ```
 
-Para executar os 13 testbenches unitários em uma chamada:
+Para executar os 14 testbenches unitários em uma chamada:
 
 ```sh
 make unit
@@ -82,12 +83,14 @@ make tb TB=tb_core_faults
 make tb TB=tb_memory_faults
 make tb TB=tb_isa
 make tb TB=tb_firmware
+make tb TB=tb_core_crc
+make tb TB=tb_simple_system
 ```
 
 `tb_isa` é a verificação integrada mais abrangente. `tb_firmware` usa o firmware
 próprio e a assinatura `0x600dc0de`; ele não substitui o firmware oficial.
 
-Para executar os 15 testbenches de integração em uma chamada:
+Para executar os 17 testbenches de integração em uma chamada:
 
 ```sh
 make integration
@@ -122,7 +125,7 @@ make regression
 git status --short
 ```
 
-`make regression` recompõe vetores e firmware, executa os 28 testbenches, roda
+`make regression` recompõe vetores e firmware, executa os 31 testbenches, roda
 lint, atualiza a matriz de cobertura e grava hashes em
 `results/logs/regression.json`. Somente esse resultado completo deve ser usado
 como evidência de fechamento.
@@ -140,16 +143,23 @@ make openlane-env-smoke
 O segundo comando usa o circuito de exemplo embutido do LibreLane e não executa
 o processador.
 
-## 7. Próximo experimento: simple_system
+## 7. Experimento simple_system
 
-Depois de uma regressão PASS, o próximo exercício físico pode ser um top
-`simple_system` separado do `riscv_top` final. A proposta é:
+O sistema com ROM 2 KiB/RAM 1 KiB e CRC provisório já existe. Execute:
+
+```bash
+make simple-system
+make simple-synth
+```
+
+O segundo comando gera e simula uma netlist genérica, sem PDK/timing/GDSII.
+Veja [contrato e testes](modules/simple_system.md). O percurso completo é:
 
 1. instanciar o core validado sem alterar suas interfaces;
 2. usar ROM e RAM pequenas, dimensionadas somente para um firmware de smoke;
 3. expor clock, reset, sinal de sucesso e falha;
 4. verificar o mesmo firmware em RTL antes da síntese;
-5. criar configuração LibreLane própria e executar primeiro até síntese;
+5. após síntese genérica validada, criar configuração LibreLane própria;
 6. avançar por floorplan, placement, CTS e routing somente com cada etapa limpa;
 7. manter os resultados identificados como experimento, sem alegar M11/M12.
 

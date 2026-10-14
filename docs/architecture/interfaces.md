@@ -23,6 +23,7 @@ Interfaces abaixo são decisões CMOS onde o guia não especifica portas complet
 | crc | a_i/b_i[31:0], op_i[3:0] | result_o[31:0]; contrato provisório 0x1021 |
 | riscv_core | clk_i, rst_i, data_i[31:0], bus_fault_i | address_o/data_o[31:0], oe_o, we_o, bw_o[3:0], fault_o, commit_valid_o, commit_pc_o/commit_instr_o/commit_data_o[31:0], commit_rd_o[4:0] |
 | riscv_top | clk_i, rst_i | sinais de observação fault_o e commit_*; instancia core, decoder de endereço e memórias |
+| simple_system | clk_i, rst_i | done_o, success_o, fault_o; experimento CRC, ROM 2 KiB/RAM 1 KiB |
 
 Seleção de operandos: A=rs1 ou PC; B=rs2 ou imediato. Resultado executado é
 registrado; writeback escolhe resultado ou load. Jump registra PC+4 como link.

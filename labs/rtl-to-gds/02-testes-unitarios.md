@@ -93,7 +93,7 @@ make tb TB=tb_control_unit
 
 RF, PC, IR e DMEM também exigem observar bordas de clock e retenção de estado.
 Nem todo TB usa arquivos `.vec`: alguns geram estímulos diretamente no SystemVerilog.
-Para repetir os 13 testes de uma vez, use `make unit` (ordem alfabética do executor).
+Para repetir os 14 testes de uma vez, use `make unit` (ordem alfabética do executor).
 
 ## Investigação de falhas
 

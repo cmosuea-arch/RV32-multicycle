@@ -7,5 +7,6 @@ python3-venv
 python3-pip
 iverilog
 verilator
+yosys
 gcc-riscv64-unknown-elf
 binutils-riscv64-unknown-elf

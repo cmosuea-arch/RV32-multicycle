@@ -9,8 +9,10 @@ module imem #(
     wire [31:0] index=(address_i-BASE)>>2;
     integer i;
     initial begin
-        for(i=0;i<WORDS;i=i+1) mem[i]=0;
+        // Fontes de inicialização exclusivas: evita zeros sobrepondo a ROM na síntese.
+        // Quando há arquivo, ele deve conter WORDS palavras (geradores fazem padding).
         if(INIT_FILE!="") $readmemh(INIT_FILE,mem);
+        else for(i=0;i<WORDS;i=i+1) mem[i]=0;
     end
     assign data_o=(oe_i && address_i>=BASE && index<WORDS && address_i[1:0]==0)
                  ? mem[index[IW-1:0]] : 32'b0;

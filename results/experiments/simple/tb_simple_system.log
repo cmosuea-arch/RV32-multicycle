@@ -1,0 +1,3 @@
+$ vvp /tmp/cmos-simple-jjg4i86o/build/tb_simple_system
+PASS simple_system: 7 boot/reset/signature/fault checks, provisional CRC firmware
+/tmp/cmos-simple-jjg4i86o/tb/integration/tb_simple_system.sv:80: $finish called at 75366000 (1ps)

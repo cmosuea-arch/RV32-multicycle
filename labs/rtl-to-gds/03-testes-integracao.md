@@ -63,7 +63,8 @@ Execute os comandos da tabela, de cima para baixo, na raiz do projeto:
 | `make tb TB=tb_isa` | programa e aposentadorias comparados ao modelo Python |
 | `make tb TB=tb_firmware` | programa C/assembly compilado, executado até assinatura |
 
-Com `tb_rf_alu`, são os 15 testes da suíte. `make integration` executa todos,
+A suíte acrescenta `make tb TB=tb_core_crc` e `make simple-system`, para CRC
+provisório e sistema mínimo. Com `tb_rf_alu`, são os 17 testes da suíte. `make integration` executa todos,
 em ordem alfabética, e prepara programas e firmware automaticamente.
 
 ## Como reconhecer a execução completa

@@ -88,11 +88,19 @@ bash scripts/openlane/librelane.sh --help
 exit
 ```
 
-## Próxima prática planejada: simple_system
+## Prática disponível: simple_system
 
-O sistema mínimo será um experimento próprio, com core, memórias e uma indicação
-observável de sucesso/falha. Ele ainda não foi implementado neste laboratório.
-Antes de escrever a configuração física, precisaremos fechar estes contratos:
+O sistema mínimo já tem ROM 2 KiB, RAM 1 KiB, CRC provisório, firmware e saídas
+done/success/fault. Consulte o [contrato](../../docs/modules/simple_system.md):
+
+```bash
+make simple-system
+make simple-synth
+```
+
+O segundo comando faz síntese genérica e executa firmware na netlist, sem PDK
+ou timing físico. A configuração LibreLane é a próxima etapa experimental.
+Os contratos abaixo orientam o avanço (itens 1–4 já tratados no experimento):
 
 1. **Top e interface:** clock, reset, sucesso/falha e quais sinais de observação
    ficam só no TB. As saídas precisam observar trabalho real do processador para
@@ -115,7 +123,7 @@ A IMEM padrão representa 4 MiB. Seu modelo comportamental não oferece automati
 uma macro ROM/SRAM física; mapear memórias grandes em células pode inviabilizar o
 fluxo. Memórias pequenas inferidas ou macros precisam ser escolhidas e verificadas.
 
-O experimento futuro serve ao aprendizado autorizado nesta sequência. A entrega
+O experimento serve ao aprendizado autorizado nesta sequência. A entrega
 final continua seguindo [AGENTS.md](../../AGENTS.md): ISA 47/47, firmware oficial,
 interface final e regressão antes de declarar os marcos físicos da competição.
 

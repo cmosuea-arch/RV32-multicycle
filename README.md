@@ -4,9 +4,12 @@ Processador RISC-V de 32 bits, multiciclo, desenvolvido incrementalmente para a
 Fase 2 da ChampionCHIP. Este repositório reúne RTL, testbenches autoverificáveis,
 firmware próprio, automação Python/Make e documentação arquitetural.
 
-**Estado atual: 41/47 instruções (87,23%)**, com 13 testbenches unitários e 15 de
-integração. O firmware próprio funciona; CRC, sistema/sincronização, firmware
-oficial e interface física final continuam pendentes. O projeto completo ainda
+**Baseline: 41/47 instruções (87,23%)**, com 14 testbenches unitários e 17 de
+integração na regressão atual. Há também três instruções CRC sob um
+[contrato provisório CMOS](docs/architecture/crc_provisional.md), habilitado
+no `simple_system`, com firmware próprio e síntese lógica genérica. Confirmação
+oficial do CRC, sistema/sincronização, firmware oficial e interface física final
+continuam pendentes. O projeto completo ainda
 não está concluído. Consulte [o estado detalhado](docs/status.md) e
 [as definições oficiais necessárias](docs/architecture/official_questions.md).
 
@@ -24,7 +27,7 @@ sucintos nos blocos de código que acompanham as explicações.
 | [4 — Python](labs/rtl-to-gds/04-scripts-python.md) | geração de vetores, modelos e executor |
 | [5 — Makefile](labs/rtl-to-gds/05-makefile.md) | construção das receitas e comandos do terminal |
 | [6 — Regressão](labs/rtl-to-gds/06-regressao-e-evidencias.md) | logs, hashes, cobertura e critérios de sucesso |
-| [7 — OpenLane](labs/rtl-to-gds/07-introducao-openlane.md) | ambiente LibreLane e plano do simple_system |
+| [7 — OpenLane](labs/rtl-to-gds/07-introducao-openlane.md) | ambiente LibreLane, simple_system e preparação física |
 
 Cada aula apresenta objetivo, arquivos, explicação, execução, resultados esperados
 e um exercício com critério de avanço. Execute os comandos na raiz do projeto,
@@ -84,14 +87,16 @@ veja [os requisitos e caminhos](docs/openlane/environment.md).
 ```sh
 # Executar na raiz do repositório.
 make tb TB=tb_alu       # uma bancada, com preparação das entradas
-make unit              # 13 testbenches unitários
-make integration       # 15 testbenches de integração, incluindo firmware próprio
+make unit              # 14 testbenches unitários, incluindo CRC provisório
+make integration       # 17 integrações, incluindo CRC e simple_system
 make smoke             # quatro integrações rápidas, sem GCC RISC-V
 make lint              # análise estática com Verilator
 make test              # todos os TBs; manifesto registra lint NOT_RUN
 make regression        # todos os TBs + lint + cobertura + manifesto
 make firmware          # somente compila o firmware próprio e gera a ROM
 make wave              # executa firmware no RTL e gera VCD
+make simple-system     # sistema experimental com firmware e CRC provisório
+make simple-synth      # síntese Yosys e teste da netlist genérica
 ```
 
 `make -n tb TB=tb_alu` mostra a receita sem executá-la. `make` sem alvo chama
@@ -104,7 +109,7 @@ RTL com referências e produz PASS ou erro; o Python registra e propaga esse res
 
 ## Verificação e firmware
 
-Uma regressão completa deve terminar com **28 TBs PASS e lint PASS** na versão
+Uma regressão completa deve terminar com **31 TBs PASS e lint PASS** na versão
 atual. O teste ISA compara 76.409 aposentadorias, 45 stores e 12 bytes finais com
 o modelo Python. O firmware próprio escreve `0x600dc0de` em `0x10011ff0`; sua
 baseline executa 598 aposentadorias em 2.579 ciclos.
@@ -163,24 +168,23 @@ Com Docker disponível, `make setup-openlane` baixa a imagem e verifica ferramen
 e PDK. O wrapper e o verificador estão neste clone, sem dependência do diretório pai.
 O smoke usa
 arquivos temporários no contêiner, descartados ao sair. Ainda não há GDSII do
-processador nem configuração de um `simple_system` neste repositório.
+processador nem configuração física final. O `simple_system` já possui RTL,
+firmware, testbench e síntese genérica; ainda não há configuração OpenLane dele.
 
 ## Próximos passos
 
-O próximo exercício será definir e construir o **simple_system**: core validado,
-memórias dimensionadas para um programa pequeno e sinais observáveis de sucesso
-e falha. A sequência proposta está na [aula 7](labs/rtl-to-gds/07-introducao-openlane.md):
+O [simple_system](docs/modules/simple_system.md) executa firmware próprio em ROM
+de 2 KiB e RAM de 1 KiB, com saídas done/success/fault. O CRC provisório é opt-in
+no core e ativo nesse experimento. Consulte a [matriz experimental](docs/isa/experimental_crc.md)
+e as [evidências](results/experiments/simple/README.md).
 
-1. Documentar interfaces, capacidade/latência das memórias e protocolo de término.
-2. Adaptar firmware e linker ao mapa adotado e criar TB autoverificável do sistema.
-3. Preservar regressão do core e verificar boot, reset, assinatura e timeout.
-4. Definir implementação física das memórias e configuração de síntese.
-5. Conferir netlist e área, depois avançar por floorplan, PDN, placement, CTS,
-   routing e verificações, registrando evidências a cada etapa.
+O próximo passo experimental é preparar restrições e configuração física,
+avaliar área/timing e a estratégia de memórias em SKY130A. A síntese genérica
+e seu teste não substituem essas etapas.
 
-Essa é uma atividade futura de aprendizado. A conclusão do processador da competição
-mantém outra lista de requisitos: confirmar o algoritmo Xicrc e implementar CRC
-até 44/47; confirmar as três instruções de sistema/sincronização até 47/47; validar
+A conclusão do processador da competição mantém outra lista de requisitos:
+confirmar o algoritmo Xicrc e adaptar a implementação, se necessário, até
+44/47 oficiais; confirmar as três instruções de sistema/sincronização até 47/47; validar
 o firmware oficial; fechar interface e top físico; congelar/taguear RTL e executar
 o fluxo final conforme [AGENTS.md](AGENTS.md). Diagramas ChipInventor, relatório
 e vídeo também permanecem entregáveis pendentes.

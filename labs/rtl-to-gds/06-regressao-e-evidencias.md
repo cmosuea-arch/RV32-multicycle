@@ -19,7 +19,7 @@ git status --short
 ```
 
 O smoke deve informar quatro bancadas aprovadas. A regressão completa deve informar
-28 testbenches, lint PASS, firmware próprio com assinatura `600dc0de` e cobertura
+31 testbenches, lint PASS, firmware próprio com assinatura `600dc0de` e cobertura
 41/47. Se qualquer etapa falhar, investigue antes de aceitar a rodada.
 
 ## Leia as evidências

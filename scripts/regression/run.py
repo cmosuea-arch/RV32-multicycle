@@ -30,12 +30,19 @@ def lint(rtl, logs):
     # Analisa o RTL sem simular estímulos; diagnósticos também reprovam a checagem.
     if not rtl:
         raise RuntimeError('no RTL to lint')
-    diagnostics = run(['verilator', '--lint-only', '-Wall', '-Wno-DECLFILENAME',
-                      '-Wno-UNUSEDSIGNAL', '-Wno-UNUSEDPARAM', '-Wno-MULTITOP',
-                      *rtl], logs / 'lint.log')
-    if diagnostics.strip():
-        raise RuntimeError(f'lint diagnostics: {diagnostics}')
-    print('PASS lint (Verilator)')
+    # Elabora separadamente as duas configurações reais de parâmetros/memórias.
+    # Todos os blocos estão conectados em pelo menos um destes tops (incluindo CRC).
+    combined=[]
+    for top in ('riscv_top','simple_system'):
+        log=logs / f'lint_{top}.log'
+        diagnostics = run(['verilator', '--lint-only', '-Wall', '-Wno-DECLFILENAME',
+                          '-Wno-UNUSEDSIGNAL', '-Wno-UNUSEDPARAM', '--top-module',top,
+                          *rtl], log)
+        combined.append(log.read_text())
+        (logs/'lint.log').write_text('\n'.join(combined))
+        if diagnostics.strip():
+            raise RuntimeError(f'lint diagnostics: {diagnostics}')
+    print('PASS lint (Verilator): riscv_top + simple_system')
 
 
 def main():
@@ -73,6 +80,8 @@ def main():
     needs_firmware = full or args.wave or args.suite == 'integration' or selected_test == 'tb_firmware'
     if needs_firmware and firmware.exists():
         run([sys.executable, str(firmware)], logs / 'firmware.log')
+    if full or args.suite == 'integration' or selected_test == 'tb_simple_system':
+        run([sys.executable, str(ROOT/'scripts/sim/build_simple.py')], logs / 'simple_firmware.log')
     benches = sorted((ROOT / 'tb').glob('**/tb_*.sv'))
     # A descoberta é alfabética; a ordem didática está no laboratório.
     if args.smoke:
