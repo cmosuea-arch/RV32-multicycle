@@ -1,11 +1,13 @@
 `timescale 1ns/1ps
 module tb_simple_system;
+    // Testa o sistema pequeno com firmware, saídas de término e recuperação após reset/falhas.
     reg clk=0; always #5 clk=~clk;
     reg rst=1;
     wire done,success,fault;
     integer cycles,i,checks=0;
     simple_system dut(clk,rst,done,success,fault);
     task reset_system;
+        // Aplica reset síncrono e confere que done, success e fault foram limpos.
         begin
             @(negedge clk); rst=1;
             @(posedge clk); #1;
@@ -13,6 +15,7 @@ module tb_simple_system;
         end
     endtask
     task run_to_done(input reg expected_success);
+        // Executa até done; compara success com o argumento e limita o tempo de execução.
         begin
             @(negedge clk); rst=0;
             begin : waiting
@@ -24,6 +27,7 @@ module tb_simple_system;
                         if(expected_success && dut.data_memory.mem[252]!==32'h600dc0de)
                             $fatal(1,"simple signature not written to RAM");
                         repeat(12) begin
+                            // A primeira assinatura deve permanecer estável enquanto o firmware entra em loop.
                             @(posedge clk); #1;
                             if(!done || success!==expected_success || fault) $fatal(1,"simple unstable result");
                         end
@@ -42,8 +46,10 @@ module tb_simple_system;
         reset_system(); run_to_done(1); // RAM suja do primeiro boot.
         reset_system();
         dut.data_memory.mem[252]=32'habcdef01;
+        // Valor sentinela permite verificar que reset antes do SW cancela a escrita da assinatura.
         @(negedge clk); rst=0;
         begin : cancel_signature
+            // Observa o pedido na descida e aplica reset antes da próxima subida que gravaria a RAM.
             for(i=0;i<10000;i=i+1) begin
                 @(negedge clk);
                 if(dut.dmem_we && dut.mem_address==32'h100103f0) begin
@@ -67,6 +73,7 @@ module tb_simple_system;
         @(negedge clk); rst=0;
         repeat(12) begin @(posedge clk); #1; if(done || fault) $fatal(1,"partial store terminated system"); end
         run_to_done(0);
+        // Substitui a primeira instrução por uma codificação inválida e espera fault, sem done.
         reset_system();
         dut.instruction_memory.mem[0]=32'hffffffff;
         @(negedge clk); rst=0;
@@ -75,6 +82,7 @@ module tb_simple_system;
         checks=checks+1;
         reset_system();
         $readmemh("build/simple.hex",dut.instruction_memory.mem);
+        // Restaura o programa original e confirma recuperação completa após reset.
         run_to_done(1);
         $display("PASS simple_system: %0d boot/reset/signature/fault checks, provisional CRC firmware",checks);
         $finish;

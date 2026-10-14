@@ -1,5 +1,6 @@
 `timescale 1ns/1ps
 module tb_pc;
+    // Testa carga/retenção do PC, saída PC+4, limites de 32 bits e reset.
     reg clk=0; always #5 clk=~clk;
     reg rst=1,we=0;
     reg [31:0] next_pc=0;
@@ -7,6 +8,7 @@ module tb_pc;
     integer i;
     pc dut(clk,rst,we,next_pc,value,plus4);
     task check(input [31:0] target,input enable,input [31:0] expected);
+        // Aplica próximo endereço e enable na descida; confere PC e PC+4 após a subida.
         begin
             @(negedge clk); next_pc=target; we=enable;
             @(posedge clk); #1;
@@ -17,12 +19,14 @@ module tb_pc;
         @(posedge clk); #1; if(value!==32'h00400000) $fatal(1,"reset");
         @(negedge clk); rst=0;
         for(i=1;i<=16;i=i+1) check(32'h00400000+4*i,1,32'h00400000+4*i);
+        // Casos dirigidos: retenção, saltos para frente/trás e retorno de fffffffc para zero.
         check(32'h00400100,0,32'h00400040);
         check(32'h00400100,1,32'h00400100);
         check(32'h00400000,1,32'h00400000);
         check(32'hfffffffc,1,32'hfffffffc);
         check(0,1,0);
         @(negedge clk); rst=1; next_pc=32'h1234; we=1;
+        // Reset prevalece sobre a carga e restaura a base da IMEM.
         @(posedge clk); #1; if(value!==32'h00400000) $fatal(1,"reset priority");
         $display("PASS pc: sequential, hold, forward/backward targets, wrap and reset"); $finish;
     end

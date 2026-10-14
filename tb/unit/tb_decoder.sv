@@ -1,5 +1,6 @@
 `timescale 1ns/1ps
 module tb_decoder;
+    // Compara os sinais de controle com CRC desabilitado e habilitado.
     reg [31:0] instr;
     reg [13:0] expected;
     wire [3:0] alu_op;
@@ -8,12 +9,14 @@ module tb_decoder;
     wire [13:0] experimental_control;
     integer fd,n,status;
     decoder dut(instr,alu_op,a_pc,b_imm,reg_we,branch,jal,jalr,load,store_op,mul,illegal,crc_op);
+    // Segundo decoder recebe a mesma instrução; suas saídas formam um vetor de controle.
     decoder #(.EXPERIMENTAL_XICRC(1)) experimental(
         instr,experimental_control[13:10],experimental_control[9],experimental_control[8],
         experimental_control[7],experimental_control[6],experimental_control[5],
         experimental_control[4],experimental_control[3],experimental_control[2],
         experimental_control[1],experimental_control[0],experimental_crc);
     initial begin
+        // Varredura Python de todas as combinações opcode/funct3/funct7 da baseline.
         fd=$fopen("build/decoder.vec","r"); n=0;
         if(!fd) $fatal(1,"missing decoder vectors");
         while(!$feof(fd)) begin
@@ -21,6 +24,7 @@ module tb_decoder;
             if(status!=2) $fatal(1,"bad decoder vector");
             #1;
             if(crc_op!==0) $fatal(1,"CRC enabled in baseline");
+            // Apenas as três codificações CRC podem mudar no perfil experimental.
             if(instr[6:0]==7'h33 && instr[31:25]==7'h40 && instr[14:12]<=2) begin
                 if(experimental_control!==14'h0080 || experimental_crc!==1)
                     $fatal(1,"CRC decode failed instr=%h",instr);

@@ -1,5 +1,6 @@
 `timescale 1ns/1ps
 module tb_alu;
+    // Compara cada operação da ALU com o resultado calculado pelo modelo Python.
     reg [31:0] a, b, expected;
     reg [3:0] op;
     wire [31:0] result;
@@ -12,6 +13,7 @@ module tb_alu;
         if (!fd) $fatal(1, "missing vectors");
         count = 0;
         while (!$feof(fd)) begin
+            // Lê quatro campos hexadecimais; status informa quantos foram lidos.
             status = $fscanf(fd, "%h %h %h %h\n", a, b, op, expected);
             if (status != 4) $fatal(1, "malformed vector");
             // Aguarda a propagação simulada; !== também detecta bits X/Z na saída.
@@ -23,6 +25,7 @@ module tb_alu;
         // Evita declarar sucesso se o arquivo contiver poucos casos por engano.
         if (count < 10000) $fatal(1, "insufficient vectors");
         $display("PASS alu: %0d vectors", count);
+        // $display informa o sucesso ao executor; $finish encerra a simulação.
         $finish;
     end
 endmodule
