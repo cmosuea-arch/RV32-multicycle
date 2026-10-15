@@ -1,4 +1,4 @@
-# Estado do projeto — 2026-10-13
+# Estado do projeto — 2026-10-15
 
 Versão parcial de entrega: `rtl-subset-v0.1`. **41/47 instruções (87,23%)**.
 Matriz por instrução e categoria: [isa/coverage.md](isa/coverage.md).
@@ -32,7 +32,7 @@ Address Decoder e Multiplicador têm RTL, TB unitário, integração, diagrama M
 documentação, evidências PASS e commits identificados. Decoder, FSM e core estão
 funcionais para as 41 instruções. Top de integração executável, top físico pendente.
 
-Verificação atual: **31 testbenches PASS + lint Verilator PASS**, sem diagnósticos
+Rodada funcional registrada em 2026-10-13: **31 testbenches PASS + lint Verilator PASS**, sem diagnósticos
 de compilação Icarus. Teste ISA: **76.409 aposentadorias**, 45 stores físicos e
 12 bytes finais comparados ao modelo Python. Decoder: 131.072 combinações de
 opcode/funct3/funct7. Detalhes em [verification.md](verification.md).
@@ -41,6 +41,12 @@ O perfil experimental acrescenta CRCB/CRCH/CRCW às 41 instruções, mas não mu
 a cobertura de conformidade: **41/47 (87,23%)**. Polinômio/operandos foram escolhidos
 internamente por autorização do usuário; confirmação oficial continua necessária.
 O sistema mínimo passou também por síntese lógica e dois boots na netlist.
+
+Para reproduzir: `make run` executa o firmware baseline, `make simple-system`
+verifica o sistema experimental e `make simple-synth` gera/testa sua netlist.
+O [laboratório](../labs/rtl-to-gds/README.md) possui oito aulas, com
+[síntese na aula 7](../labs/rtl-to-gds/07-sintese.md) e preparação física na aula 8.
+Consulte [synthesis.md](synthesis.md) para saídas e limites.
 
 Pendências para retomar: [architecture/official_questions.md](architecture/official_questions.md).
 Os diagramas no ChipInventor, relatório PDF e vídeo da submissão não estão prontos.

@@ -2,11 +2,13 @@
 ## Objetivo
 Gerar controles a partir da instrução (RISC-V oficial e guia).
 ## Entradas
-instr_i[31:0].
+instr_i[31:0]; parâmetro EXPERIMENTAL_XICRC=0 por padrão.
 ## Saídas
-alu_op_o e seletores/enables descritos na baseline.
+alu_op_o e seletores/enables descritos na baseline, incluindo crc_o.
 ## Comportamento
 Reconhece as instruções de docs/isa/enabled.json; demais palavras ilegais.
+Com EXPERIMENTAL_XICRC=1, também reconhece CRCB/CRCH/CRCW sob o
+[contrato provisório](../architecture/crc_provisional.md).
 ## Dependências
 ALU e FSM.
 ## Casos especiais
@@ -19,15 +21,16 @@ flowchart LR
  F --> ILLEGAL[illegal]
 ```
 ## Testbench
-tb_decoder: varredura opcode/funct3/funct7; tb_isa e tb_core_smoke.
+tb_decoder: varredura opcode/funct3/funct7 em dois perfis; tb_isa, tb_core_smoke e tb_core_crc.
 ## Casos testados
-131072 combinações de campos, instruções válidas e inválidas; operandos limite
+131072 combinações de campos por perfil, instruções válidas e inválidas; operandos limite
 e aleatórios, x0 e sobreposição rd/rs1 no core.
 ## Resultado
-results/logs/tb_core_smoke.log.
+results/logs/tb_decoder.log e tb_core_smoke.log. Evidência dos dois perfis:
+`results/experiments/crc/tb_decoder.log`.
 ## Integração
 Decoder → muxes de operandos / RF / FSM.
 ## Commit validado
 Tags core-smoke-v1, isa-rtype-v1 e marcos seguintes em git log.
 ## Pendências
-CRC/sistema aguardam definição oficial; ChipInventor para submissão.
+Confirmação oficial do CRC provisório, definição de sistema e ChipInventor para submissão.

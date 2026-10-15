@@ -1,6 +1,6 @@
 # 6 — Regressão, logs e cobertura
 
-[Anterior](05-makefile.md) · [Índice](README.md) · [Próxima](07-introducao-openlane.md)
+[Anterior](05-makefile.md) · [Índice](README.md) · [Próxima](07-sintese.md)
 
 ## Objetivo e arquivos
 
@@ -31,11 +31,14 @@ O smoke deve informar quatro bancadas aprovadas. A regressão completa deve info
 | `tb_isa.log` | o trace arquitetural e a memória final coincidiram? |
 | `firmware_build.log` | quais flags compilaram o firmware e qual seu tamanho? |
 | `tb_firmware.log` | o core realmente executou até a assinatura? |
+| `tb_core_crc.log` | as instruções CRC provisórias coincidiram com o trace? |
+| `tb_simple_system.log` | sistema pequeno passou nos cenários de boot/reset/falha? |
 | `lint.log` | qual análise estática foi executada? |
 | `regression.json` | quais testes, status, horário e hashes formam a rodada? |
 
 Todos ficam em `results/logs/`. Um log de lint bem-sucedido ainda tem a linha do
-comando; o que deve estar ausente são diagnósticos da ferramenta.
+comando; o que deve estar ausente são diagnósticos da ferramenta. `lint.log`
+reúne as duas chamadas, também salvas em `lint_riscv_top.log` e `lint_simple_system.log`.
 
 O manifesto recebe `RUNNING` no início, `PASS` no fechamento ou `FAIL` nas falhas
 tratadas pelo executor. Uma interrupção pode deixar `RUNNING`. A seção `sha256`
@@ -75,6 +78,17 @@ python3 scripts/regression/coverage.py --render-only
 Essa opção lê o CSV existente e recria Markdown/Excel. A tag `isa-41-v1` identifica
 o marco RTL da matriz atual; hashes e horário no manifesto identificam a rodada.
 O firmware oficial continua `PENDING` mesmo com o firmware próprio aprovado.
+
+## Evidências de síntese são outra rodada
+
+Na próxima aula, `make simple-synth` produz `simple_synth.log`, `simple_netlist.log`
+e o resumo `simple_synth.json`. Esses arquivos verificam estrutura sintetizada e
+dois boots na netlist. Não publicam cobertura de ISA nem substituem a regressão RTL.
+
+Os testes CRC provisórios também passam na regressão, mas permanecem em
+[matriz separada](../../docs/isa/experimental_crc.md). A baseline oficial mantém
+41/47. Consulte [as evidências do sistema](../../results/experiments/simple/README.md)
+para distinguir a rodada registrada dos logs de exercícios posteriores.
 
 ## Se algo falhar
 

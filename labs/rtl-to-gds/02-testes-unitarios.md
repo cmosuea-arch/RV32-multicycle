@@ -16,6 +16,10 @@ da ALU, não o opcode completo de uma instrução RISC-V.
 
 A bancada conecta as entradas ao módulo chamado `dut` (dispositivo sob teste):
 
+Nos arquivos comentados, `initial` executa a sequência uma vez; `always` repete
+ações, como gerar clock; `task` agrupa passos reutilizáveis, como aplicar um caso.
+`$fatal` encerra com erro; `$display` informa PASS e `$finish` encerra normalmente.
+
 ```systemverilog
 // Saída observada da ALU; expected vem do arquivo de vetores.
 alu dut(.a_i(a), .b_i(b), .op_i(op), .result_o(result));
@@ -89,11 +93,14 @@ make tb TB=tb_address_decoder
 make tb TB=tb_multiplier
 make tb TB=tb_decoder
 make tb TB=tb_control_unit
+make tb TB=tb_crc
 ```
 
 RF, PC, IR e DMEM também exigem observar bordas de clock e retenção de estado.
 Nem todo TB usa arquivos `.vec`: alguns geram estímulos diretamente no SystemVerilog.
 Para repetir os 14 testes de uma vez, use `make unit` (ordem alfabética do executor).
+`tb_crc` usa o contrato CMOS provisório; seu PASS não confirma o algoritmo oficial
+da competição. Os comentários explicam entradas, referência e comparações em cada TB.
 
 ## Investigação de falhas
 

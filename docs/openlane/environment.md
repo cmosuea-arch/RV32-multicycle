@@ -3,10 +3,18 @@
 ## Estado
 
 O ambiente físico está instalado e validado no WSL2 por meio da imagem Docker
-`isaiassh/unic-cass-tools:1.1.0` usada pelo repositório UNIC-CASS. LibreLane é o
-sucessor do OpenLane 2 e fornece o fluxo RTL até GDSII deste projeto.
+`isaiassh/unic-cass-tools:1.1.0` usada pelo repositório UNIC-CASS. A imagem fornece
+LibreLane e ferramentas para o fluxo RTL até GDSII. A validação física registrada
+usa um circuito de exemplo; nosso simple_system chegou à síntese lógica genérica.
+
+Percurso didático: [aula 7 — síntese](../../labs/rtl-to-gds/07-sintese.md) e
+[aula 8 — ambiente físico](../../labs/rtl-to-gds/08-introducao-openlane.md).
+Comandos de síntese do sistema: [synthesis.md](../synthesis.md).
 
 Versões verificadas em 2026-09-15:
+
+Esta tabela descreve a imagem Docker. `make simple-synth` usa o Yosys disponível
+no terminal do host, cuja versão fica em `results/logs/yosys_version.log`.
 
 | Componente | Versão / identificação |
 |---|---|

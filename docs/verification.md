@@ -9,6 +9,7 @@ make unit
 make integration
 make smoke
 make regression
+make run
 make wave
 ```
 
@@ -47,7 +48,9 @@ Uma execução iniciada sem terminar conserva RUNNING; não é evidência PASS.
 `make simple-synth` é uma checagem adicional, fora da regressão RTL: síntese
 genérica Yosys, memória mapeada, ausência de inicialização de registradores e
 dois boots do firmware na netlist, observando somente pinos. Logs `simple_synth.*`
-e `simple_netlist.*`. Evidências da versão atual: `results/experiments/simple/`.
+e `simple_netlist.*`. Evidências da rodada de referência: `results/experiments/simple/`.
+Comandos e interpretação: [síntese](synthesis.md) e
+[aula 7](../labs/rtl-to-gds/07-sintese.md).
 
 Vetores determinísticos: seed `0xC005`; programas: seed `4711`. Modelos Python
 usam inteiros/bytes para gerar resultados esperados, com codificação das instruções
@@ -67,6 +70,8 @@ de memórias/CRC. Nenhuma supressão de latch, largura ou loop combinacional.
 - `results/logs/firmware_build.log` e `smoke.disasm`: compilação e instruções emitidas.
 - `results/logs/lint.log`: comando de lint; sem diagnósticos significa sucesso.
 - `results/logs/regression.json`: resultado agregado com hashes.
+- `results/logs/simple_synth.json` e `simple_netlist.log`: rodada de síntese genérica,
+  produzida separadamente por `make simple-synth`.
 - `results/waveforms/smoke.vcd`: waveform reproduzível por `make wave`, ignorada
   pelo Git para evitar arquivos grandes; o log da execução com waveform é versionado.
 

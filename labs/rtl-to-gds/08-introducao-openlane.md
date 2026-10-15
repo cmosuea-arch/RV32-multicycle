@@ -1,11 +1,11 @@
-# 7 — Ambiente físico e preparação do simple_system
+# 8 — Ambiente físico e preparação do fluxo OpenLane
 
-[Anterior](06-regressao-e-evidencias.md) · [Índice](README.md)
+[Anterior](07-sintese.md) · [Índice](README.md)
 
 ## Objetivo e arquivos
 
-Conectar a verificação funcional à implementação física, validar a infraestrutura
-já configurada e entender o próximo experimento. Leia
+Conectar a netlist estudada na aula de síntese à implementação física, validar
+a infraestrutura já configurada e identificar a preparação pendente. Leia
 [environment.sh](../../scripts/openlane/environment.sh) e
 [o registro do ambiente](../../docs/openlane/environment.md).
 
@@ -88,7 +88,7 @@ bash scripts/openlane/librelane.sh --help
 exit
 ```
 
-## Prática disponível: simple_system
+## Do sistema sintetizado ao próximo experimento físico
 
 O sistema mínimo já tem ROM 2 KiB, RAM 1 KiB, CRC provisório, firmware e saídas
 done/success/fault. Consulte o [contrato](../../docs/modules/simple_system.md):
@@ -98,8 +98,9 @@ make simple-system
 make simple-synth
 ```
 
-O segundo comando faz síntese genérica e executa firmware na netlist, sem PDK
-ou timing físico. A configuração LibreLane é a próxima etapa experimental.
+Esses comandos foram estudados na [aula 7](07-sintese.md): o segundo faz síntese
+genérica e executa firmware na netlist. A configuração LibreLane do sistema
+é a próxima etapa experimental e ainda não está no repositório.
 Os contratos abaixo orientam o avanço (itens 1–4 já tratados no experimento):
 
 1. **Top e interface:** clock, reset, sucesso/falha e quais sinais de observação
@@ -112,8 +113,8 @@ Os contratos abaixo orientam o avanço (itens 1–4 já tratados no experimento)
    O smoke atual usa assinatura em `0x10011ff0`; reduzir a RAM exige adaptar e
    documentar software e teste, sem apenas diminuir um parâmetro.
 4. **Teste autoverificável:** boot, cálculo, assinatura, timeout, reset e falha.
-   A solução de inicialização precisa ser implementável fisicamente, não depender
-   apenas de valores que o simulador fornece em `initial`.
+   No experimento atual, a ROM é resolvida em constantes e a RAM é inicializada
+   pelo software. Preservar esses contratos ao preparar o fluxo físico.
 5. **Configuração física:** arquivos RTL explícitos, top, clock, restrições e área.
    Primeiro validar a síntese e a presença do circuito esperado na netlist.
 6. **Execução progressiva:** floorplan, PDN, placement, CTS, routing e verificações;
@@ -131,5 +132,6 @@ interface final e regressão antes de declarar os marcos físicos da competiçã
 
 Explique a diferença entre `make smoke` e `make openlane-env-smoke`.
 O primeiro simula quatro integrações do nosso RTL; o segundo executa fisicamente
-um circuito de exemplo do ambiente. Ao terminar, você deve saber executar ambos
-e identificar qual circuito e qual propriedade cada resultado valida.
+um circuito de exemplo do ambiente. `make simple-synth` sintetiza nosso sistema
+experimental e testa a netlist, conforme a aula anterior. Ao terminar, identifique
+qual circuito e qual propriedade cada um dos três comandos valida.

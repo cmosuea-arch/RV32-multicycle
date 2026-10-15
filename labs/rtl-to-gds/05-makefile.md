@@ -67,6 +67,9 @@ espaços; `if` chama `error` quando o nome está vazio.
 | Comando | Processo | Evidência agregada |
 |---|---|---|
 | `make help` | mostra descrições dos alvos | saída no terminal |
+| `make setup` | instala dependências e cria .venv | diagnóstico de ferramentas |
+| `make update` | atualiza dependências declaradas | diagnóstico de ferramentas |
+| `make doctor` | verifica ferramentas e compilador | saída no terminal |
 | `make tb TB=tb_alu` | uma bancada | log da bancada |
 | `make unit` | 14 TBs unitários | logs individuais |
 | `make integration` | 17 TBs de integração, com firmware próprio | logs individuais |
@@ -81,6 +84,7 @@ espaços; `if` chama `error` quando o nome está vazio.
 | `make simple-system` | firmware no sistema pequeno | `tb_simple_system.log` |
 | `make simple-synth` | Yosys e simulação da netlist genérica | `simple_synth.json`, logs |
 | `make openlane-env-check` | script shell → Docker → verificador | resultado no terminal |
+| `make setup-openlane` | baixa imagem e verifica o ambiente físico | resultado no terminal |
 | `make openlane-env-smoke` | script shell → Docker → exemplo físico | resultado no terminal |
 | `make openlane-shell` | sessão interativa no contêiner | shell com ferramentas físicas |
 
@@ -115,6 +119,10 @@ Uma ferramenta retorna um código de saída ao terminar. O executor Python trans
 falhas em saída diferente de zero; Make então interrompe a receita e informa erro.
 Leia a mensagem anterior do Python e o log indicado para achar a causa original.
 
+No alvo `help`, o prefixo `@` oculta o comando da receita para mostrar apenas a
+ajuda. Ele não oculta falhas. `##` continua sendo comentário para Make; `awk`
+lê essas descrições para montar a lista de comandos.
+
 Use um comando por vez. `make -j` não é apropriado para estes alvos: eles escrevem
 nos mesmos arquivos gerados e logs e não possuem isolamento para execução paralela.
 
@@ -124,3 +132,6 @@ Qual a diferença entre `make firmware` e `make tb TB=tb_firmware`?
 O primeiro só produz a imagem; o segundo também a executa no processador simulado
 e verifica a assinatura. Avance quando conseguir seguir uma receita até a ferramenta
 final e explicar por que Make e Python são camadas diferentes.
+
+Para estudar uma dependência real, use `make -n simple-synth`: o build do firmware
+aparece antes da chamada de síntese. A [aula 7](07-sintese.md) executa esse percurso.

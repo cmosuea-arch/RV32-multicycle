@@ -53,6 +53,19 @@ A lista de pacotes APT é [packages-ubuntu.txt](../scripts/setup/packages-ubuntu
 O firmware atual usa `-nostdlib` e fornece seu startup: não requer picolibc.
 `pip install -r requirements.txt` sozinho não instala as ferramentas EDA do sistema.
 
+Depois da instalação, consulte os comandos e percorra simulação/síntese:
+
+```bash
+make help
+make run
+make simple-system
+make simple-synth
+```
+
+`run` usa o firmware baseline; `simple-system` usa o programa experimental com
+CRC provisório. `simple-synth` requer Yosys e verifica uma netlist genérica;
+não precisa de Docker. Veja [a aula de síntese](../labs/rtl-to-gds/07-sintese.md).
+
 Para incluir GTKWave:
 
 ```bash

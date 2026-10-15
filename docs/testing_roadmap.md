@@ -14,6 +14,8 @@ Execute na raiz do repositório:
 ```sh
 cd /home/luixf/eda/uniccass-icdesign-tools/shared_xserver/cmos-riscv
 git status --short
+make help
+make doctor
 make lint
 ```
 
@@ -99,7 +101,17 @@ make integration
 Esse comando requer a toolchain `riscv64-unknown-elf-gcc`, pois inclui
 `tb_firmware`.
 
-## 4. Smoke e waveform
+## 4. Firmware, smoke e waveform
+
+Para executar o firmware próprio no processador baseline:
+
+```bash
+make run
+cat results/logs/tb_firmware.log
+```
+
+O comando compila e simula. `make firmware` somente gera a imagem; `make run`
+é equivalente a `make tb TB=tb_firmware` e verifica a assinatura 0x600dc0de.
 
 Antes de uma regressão longa:
 
@@ -130,30 +142,16 @@ lint, atualiza a matriz de cobertura e grava hashes em
 `results/logs/regression.json`. Somente esse resultado completo deve ser usado
 como evidência de fechamento.
 
-## 6. Ambiente físico
-
-Enquanto o RTL final da competição permanece pendente, valide apenas a
-infraestrutura LibreLane:
-
-```sh
-make openlane-env-check
-make openlane-env-smoke
-```
-
-O segundo comando usa o circuito de exemplo embutido do LibreLane e não executa
-o processador.
-
-## 7. Experimento simple_system
+## 6. Experimento simple_system
 
 O sistema com ROM 2 KiB/RAM 1 KiB e CRC provisório já existe. Execute:
 
 ```bash
 make simple-system
-make simple-synth
 ```
 
-O segundo comando gera e simula uma netlist genérica, sem PDK/timing/GDSII.
-Veja [contrato e testes](modules/simple_system.md). O percurso completo é:
+Esse comando compila o programa experimental e verifica boot, reset, assinatura
+e falhas no RTL. Veja [contrato e testes](modules/simple_system.md). O percurso completo é:
 
 1. instanciar o core validado sem alterar suas interfaces;
 2. usar ROM e RAM pequenas, dimensionadas somente para um firmware de smoke;
@@ -167,3 +165,33 @@ Não se deve sintetizar a IMEM padrão de 4 MiB como registradores. A escolha en
 memória pequena inferida, memória externa ou macro SRAM precisa ser explícita no
 contrato do `simple_system`. O top de submissão só deve entrar no fluxo depois de
 47/47, firmware oficial e interface física confirmada.
+
+## 7. Síntese lógica e teste da netlist
+
+Depois do sistema RTL aprovado:
+
+```bash
+make -n simple-synth
+make simple-synth
+cat results/logs/simple_netlist.log
+python3 -m json.tool results/logs/simple_synth.json
+```
+
+Gera `build/simple_netlist.v` com Yosys e simula dois boots nessa netlist.
+O resumo deve registrar status/simulação PASS. A execução é adicional aos 31 TBs;
+não envolve PDK, timing físico ou GDSII. Tutorial e comandos manuais:
+[aula 7](../labs/rtl-to-gds/07-sintese.md); consulta: [synthesis.md](synthesis.md).
+
+## 8. Ambiente físico
+
+Para preparar Docker/imagem, siga [setup.md](setup.md). Depois:
+
+```sh
+make setup-openlane
+make openlane-env-check
+make openlane-env-smoke
+```
+
+O smoke executa o circuito de exemplo embutido do LibreLane. Ainda não há
+configuração física do simple_system ou do top final; a preparação está na
+[aula 8](../labs/rtl-to-gds/08-introducao-openlane.md).

@@ -2,8 +2,9 @@
 
 O objetivo é entender e executar o projeto CMOS RISC-V em camadas: bloco isolado,
 blocos conectados, core executando programas e automação que registra os resultados.
-O exemplo contínuo é a ALU. Primeiro vamos simulá-la manualmente; depois reconhecer
-os mesmos passos nos scripts Python e no Makefile.
+O exemplo contínuo é a ALU. Primeiro vamos simulá-la manualmente e reconhecer
+os mesmos passos nos scripts Python e no Makefile. Em seguida executamos firmware
+no core e sintetizamos o sistema pequeno, antes de estudar a preparação física.
 
 ## Percurso
 
@@ -15,7 +16,8 @@ os mesmos passos nos scripts Python e no Makefile.
 | 4 | [Scripts Python](04-scripts-python.md) | seguir a preparação e a execução automática dos testes |
 | 5 | [Makefile](05-makefile.md) | explicar alvos, receitas, variáveis e os comandos disponíveis |
 | 6 | [Regressão e evidências](06-regressao-e-evidencias.md) | fechar uma rodada e interpretar logs, hashes e cobertura |
-| 7 | [Introdução ao OpenLane](07-introducao-openlane.md) | verificar o ambiente físico e planejar o simple_system |
+| 7 | [Síntese](07-sintese.md) | gerar a netlist com Yosys, simulá-la e interpretar relatórios |
+| 8 | [Introdução ao OpenLane](08-introducao-openlane.md) | verificar o ambiente físico e preparar a próxima etapa |
 
 ## Preparação
 
@@ -29,11 +31,14 @@ inclusive quando você estiver lendo um arquivo dentro desta pasta:
 cd /home/luixf/eda/uniccass-icdesign-tools/shared_xserver/cmos-riscv
 pwd
 git status --short
+make help
+make doctor
 python3 --version
 make --version
 iverilog -V
 vvp -V
 verilator --version
+yosys -V
 riscv64-unknown-elf-gcc --version
 ```
 
@@ -55,25 +60,44 @@ executor ao mesmo tempo: elas compartilham os mesmos caminhos.
 
 Os códigos apresentados são os do repositório, acessíveis pelos links. Não há cópia
 didática de RTL para manter sincronizada. Comentários curtos foram adicionados aos
-blocos usados no percurso; não é necessário alterar o código para fazer as práticas.
+32 testbenches (31 de RTL e um de netlist) e aos blocos usados no percurso.
+Não é necessário alterar o código para fazer as práticas.
+
+Para se orientar: `make run` executa o firmware baseline; `make simple-system`
+verifica o sistema experimental; `make simple-synth` sintetiza esse sistema e
+simula sua netlist. `make help` descreve todos os comandos.
 
 ## Alcance
 
 A baseline tem **41/47 instruções (87,23%)**. A regressão atual tem 14 TBs unitários
-e 17 de integração, incluindo CRC provisório e simple_system. CRC oficial, sistema/sincronização,
+e 17 de integração, incluindo CRC provisório e simple_system. O teste da netlist
+é adicional, executado por `make simple-synth`. CRC oficial, sistema/sincronização,
 firmware oficial e top físico final têm [pendências registradas](../../docs/architecture/official_questions.md).
 O [simple_system](../../docs/modules/simple_system.md) já possui RTL, firmware,
-TB e síntese lógica genérica. A configuração física ainda está pendente. O smoke test do LibreLane valida o ambiente com
-um circuito de exemplo.
+TB e síntese lógica genérica. A configuração física ainda está pendente.
+O smoke test do LibreLane valida o ambiente com um circuito de exemplo.
 
 Comece pela [aula 1](01-visao-geral.md). Para consulta rápida dos comandos, use
 o [roteiro operacional](../../docs/testing_roadmap.md).
 
 ## Validação deste material
 
+As evidências mais recentes do sistema experimental registram 31 TBs/lint PASS,
+síntese genérica e dois boots na netlist: [rodada do simple_system](../../results/experiments/simple/README.md).
+O comando `make run` foi validado após a reorganização do Makefile, com assinatura
+600dc0de. Na atualização de 2026-10-13, os sete blocos de comandos da aula de
+síntese foram executados em cópia isolada: teste RTL, síntese automática,
+síntese manual e simulação das duas netlists PASS. Links e prévias dos comandos
+Make foram conferidos; os logs locais do usuário foram preservados.
+
+A revisão da documentação e da navegação das oito aulas foi concluída em
+2026-10-15, preservando as datas das execuções registradas.
+
+Registro histórico da primeira versão das aulas:
+
 Em 2026-10-03 foram executados os exemplos manuais de ALU e RF/ALU, as consultas
 Python de resultado/codificação, `make wave` e `make regression`: 28 TBs e lint PASS,
 com 41/47 preservado. Os links locais foram conferidos. As alterações nos códigos
-são somente comentários. A prática física se baseia na instalação e na validação
-anterior documentadas em [environment.md](../../docs/openlane/environment.md);
+são somente comentários nessa primeira versão. A prática física se baseia na
+instalação e na validação anterior documentadas em [environment.md](../../docs/openlane/environment.md);
 o fluxo físico não foi reexecutado para escrever este laboratório.

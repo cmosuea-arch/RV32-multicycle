@@ -27,7 +27,8 @@ sucintos nos blocos de código que acompanham as explicações.
 | [4 — Python](labs/rtl-to-gds/04-scripts-python.md) | geração de vetores, modelos e executor |
 | [5 — Makefile](labs/rtl-to-gds/05-makefile.md) | construção das receitas e comandos do terminal |
 | [6 — Regressão](labs/rtl-to-gds/06-regressao-e-evidencias.md) | logs, hashes, cobertura e critérios de sucesso |
-| [7 — OpenLane](labs/rtl-to-gds/07-introducao-openlane.md) | ambiente LibreLane, simple_system e preparação física |
+| [7 — Síntese](labs/rtl-to-gds/07-sintese.md) | Yosys, netlist genérica, simulação e relatórios |
+| [8 — OpenLane](labs/rtl-to-gds/08-introducao-openlane.md) | ambiente LibreLane e preparação física |
 
 Cada aula apresenta objetivo, arquivos, explicação, execução, resultados esperados
 e um exercício com critério de avanço. Execute os comandos na raiz do projeto,
@@ -104,6 +105,10 @@ make simple-synth      # síntese Yosys e teste da netlist genérica
 Para executar o processador com nosso firmware, use `make run`; para acompanhar
 seus sinais, use `make wave`. `make firmware` apenas compila o programa.
 
+Para sintetizar o sistema experimental, siga a [aula de síntese](labs/rtl-to-gds/07-sintese.md)
+ou a [consulta rápida](docs/synthesis.md). `make simple-synth` gera a netlist e a
+testa com o firmware; o fluxo físico completo do sistema ainda é uma etapa futura.
+
 `make -n tb TB=tb_alu` mostra a receita sem executá-la. `make` sem alvo chama
 `test`; para fechar uma alteração use `make regression`. Não execute essas receitas
 em paralelo: elas compartilham vetores, programas e logs.
@@ -149,6 +154,7 @@ cmos-riscv/
 ├── scripts/
 │   ├── sim/                # modelos, vetores, programas e build do firmware
 │   ├── regression/         # executor e publicação da cobertura
+│   ├── synth/              # síntese Yosys e teste da netlist genérica
 │   └── openlane/           # acesso ao ambiente Docker
 ├── firmware/               # smoke próprio e pendência do firmware oficial
 ├── docs/                   # arquitetura, módulos, ISA, estado e ambiente
@@ -185,7 +191,8 @@ e as [evidências](results/experiments/simple/README.md).
 
 O próximo passo experimental é preparar restrições e configuração física,
 avaliar área/timing e a estratégia de memórias em SKY130A. A síntese genérica
-e seu teste não substituem essas etapas.
+e seu teste não substituem essas etapas. Veja o percurso na
+[aula 8](labs/rtl-to-gds/08-introducao-openlane.md).
 
 A conclusão do processador da competição mantém outra lista de requisitos:
 confirmar o algoritmo Xicrc e adaptar a implementação, se necessário, até

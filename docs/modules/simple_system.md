@@ -86,6 +86,8 @@ make regression       # baseline + CRC + simple_system + lint
 
 Síntese verifica ausência de memória não mapeada, inicialização de registradores
 e saídas constantes. Não utiliza PDK, restrições de timing ou fluxo físico.
+Passo a passo: [aula 7](../../labs/rtl-to-gds/07-sintese.md).
+Consulta de comandos e saídas: [síntese](../synthesis.md).
 
 ## Commit validado
 Commit que inclui este documento e `results/experiments/simple/regression.json`;

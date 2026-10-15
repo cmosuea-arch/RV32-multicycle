@@ -2,20 +2,21 @@
 ## Objetivo
 Integrar datapath e FSM multiciclo.
 ## Entradas
-clk_i/rst_i, data_i e bus_fault_i.
+clk_i/rst_i, data_i e bus_fault_i. Parâmetro EXPERIMENTAL_XICRC=0 por padrão.
 ## Saídas
 Barramento address/data/oe/we/bw e sinais de aposentadoria commit_*.
 ## Comportamento
 Uma instrução por vez; PC e RF escrevem em WRITEBACK, IR em FETCH.
 ## Dependências
 PC, IR, RF, Immediate, ALU, branch_comp, LSU, multiplier, decoder e control_unit.
+Com EXPERIMENTAL_XICRC=1, inclui o [CRC provisório](crc.md).
 ## Casos especiais
 FAULT diagnóstico CMOS persistente; x0 sempre zero, inclusive na observação.
 ## Diagrama
 Ver architecture/block_diagram.md para o datapath e a FSM integrados.
 ## Testbench
 tb_core_smoke, tb_isa (trace arquitetural Python por aposentadoria), tb_core_faults,
-tb_memory_faults e tb_firmware.
+tb_memory_faults e tb_firmware. Perfil provisório: tb_core_crc e tb_simple_system.
 ## Casos testados
 Operações habilitadas em docs/isa/enabled.json; PC, dados aposentados, escrita
 física no RF, dependências, limites e branches tomados/não tomados para frente/trás.
@@ -28,7 +29,10 @@ results/logs/tb_core_smoke.log e regressão PASS.
 Núcleo executável de 41 instruções. Barramento simples sem handshake externo;
 IMEM combinacional e DMEM síncrona conectadas pelo top. Loads/stores acrescentam
 o estado MEMORY. Multiplicação combinacional selecionada em EXECUTE.
+CRC habilitado também é combinacional e usa EXECUTE/WRITEBACK sem novos estados.
 ## Commit validado
 Tag isa-41-v1; firmware e evidências finais em rtl-subset-v0.1.
+Perfil CRC provisório em 05fd114; sistema experimental em 2e87e0e, com evidências
+em `results/experiments/`. As tags anteriores descrevem a baseline histórica.
 ## Pendências
-CRC, sistema, firmware oficial e interface física oficial.
+Confirmação do algoritmo oficial CRC, sistema, firmware oficial e interface física oficial.

@@ -13,9 +13,13 @@ vira circuito; eles executam no computador de desenvolvimento.
 | [isa.py](../../scripts/sim/isa.py) | nome da instrução e operandos | campos e palavra binária; biblioteca importada |
 | [programs.py](../../scripts/sim/programs.py) | `enabled.json`, modelos e seed | `isa.hex`, `isa.trace`, `isa_counts.json`, `isa_memory.vec`, `decoder.vec` |
 | [build_firmware.py](../../scripts/sim/build_firmware.py) | C, startup e linker script | ELF, binário, ROM hex e disassembly |
+| [crc_model.py](../../scripts/sim/crc_model.py) | acumulador, dados e tamanho | referência CRC usando binascii, sem copiar o RTL |
+| [crc_vectors.py](../../scripts/sim/crc_vectors.py) | contrato CRC provisório e seed | `crc.vec`, ROM/trace/contagens CRC separados da baseline |
+| [build_simple.py](../../scripts/sim/build_simple.py) | firmware/simple | `simple.elf`, `simple.hex`, mapa e disassembly |
 | [run.py](../../scripts/regression/run.py) | modo solicitado e arquivos do projeto | chamadas às ferramentas, logs e manifesto |
 | [coverage.py](../../scripts/regression/coverage.py) | instruções habilitadas e contagens | CSV e Markdown; chama o gerador Excel |
 | [coverage_xlsx.py](../../scripts/regression/coverage_xlsx.py) | CSV | planilha formatada `.xlsx` |
+| [synth/simple.py](../../scripts/synth/simple.py) | RTL e `simple.hex` | netlist Yosys, teste com Icarus/vvp e resumo de síntese |
 
 Os arquivos intermediários da tabela ficam em `build/`; logs e disassembly ficam
 em `results/logs/`; a cobertura publicada fica em `docs/isa/`.
@@ -77,7 +81,27 @@ O script chama GCC com `-march=rv32i_zmmul -mabi=ilp32`, apesar do nome da ferra
 começar com `riscv64`. O linker script posiciona código e dados; o startup configura
 a execução. `objcopy` gera bytes, convertidos em palavras little-endian para
 `build/smoke.hex` (4.096 palavras, 16 KiB). Esse comando **compila** o firmware.
-`make tb TB=tb_firmware` o compila e **executa no RTL**.
+`make run` (equivalente a `make tb TB=tb_firmware`) o compila e **executa no RTL**.
+
+Para o sistema experimental, `make simple-firmware` gera `build/simple.hex` com
+512 palavras (2 KiB), e `make simple-system` também executa esse programa no RTL.
+Os linker scripts e endereços de assinatura dos dois programas são distintos.
+
+## Referência CRC e coordenação da síntese
+
+```bash
+PYTHONPATH=scripts/sim python3 -c 'from crc_model import check_reference, crc_model; check_reference(); print(hex(crc_model(0xffff, 0x34333231, 2)))'
+```
+
+`check_reference()` confere os valores conhecidos de `123456789` com duas seeds.
+`crc_model()` processa os bytes de `1234` e devolve `0x5349`. O gerador usa essa
+referência para alimentar `tb_crc` e o programa de `tb_core_crc`, sem alterar
+`enabled.json` nem a cobertura de conformidade.
+
+`scripts/synth/simple.py` coordena outras ferramentas: Yosys gera o circuito,
+Python verifica sua estrutura e Icarus/vvp executam o teste da netlist. O Python
+continua sendo o coordenador; o circuito vem do RTL. A execução guiada está na
+[aula 7](07-sintese.md).
 
 ## Leia o coordenador run.py
 
@@ -92,6 +116,9 @@ Siga estas regiões no arquivo:
 5. Laço dos TBs: compila com `iverilog`, executa com `vvp`, exige a marca `PASS`.
 6. Fechamento: opcionalmente roda lint; em execução completa publica cobertura e
    manifesto com hashes.
+
+O lint elabora `riscv_top` e `simple_system` separadamente. A síntese genérica
+tem outro script e outro resumo: `simple_synth.json`, sem substituir `regression.json`.
 
 ```bash
 python3 scripts/regression/run.py --test tb_alu

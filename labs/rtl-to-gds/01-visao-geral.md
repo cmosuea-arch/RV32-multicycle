@@ -17,6 +17,7 @@ do bloco; a ordem de estudo aqui começa por um RTL que já existe.
 | [scripts/sim/vectors.py](../../scripts/sim/vectors.py) | calcula entradas e referências numéricas |
 | [scripts/regression/run.py](../../scripts/regression/run.py) | chama ferramentas e verifica sucesso |
 | [Makefile](../../Makefile) | associa nomes de comandos às receitas |
+| [scripts/synth/simple.py](../../scripts/synth/simple.py) | transforma RTL em netlist e verifica sua execução |
 | `build/` | vetores, ROMs e executáveis de simulação recriáveis |
 | [results/logs/](../../results/logs/) | comandos executados e resultados |
 
@@ -49,13 +50,15 @@ execução e verifica, por exemplo, uma assinatura escrita em memória.
 Inspecione a receita sem executar os testes:
 
 ```bash
+make help
 make -n tb TB=tb_alu
 python3 scripts/regression/run.py --help
 ```
 
-O primeiro comando deve imprimir `python3 scripts/regression/run.py --test tb_alu`.
+`make help` apresenta os alvos. A prévia de `tb` imprime uma chamada equivalente
+a `python3 scripts/regression/run.py --test "tb_alu"`.
 Se `.venv` existir, o interpretador será `.venv/bin/python`, selecionado pelo Makefile.
-O segundo apresenta os modos disponíveis. Abra o Makefile e localize exatamente
+O `--help` do Python apresenta os modos disponíveis. Abra o Makefile e localize exatamente
 a linha impressa. Não é o Make que calcula o resultado da ALU.
 
 ## Exercício e critério para avançar
@@ -65,3 +68,7 @@ circuito, quem compara e quem inicia as ferramentas.
 
 Resposta: `vectors.py`, `alu.sv`, `tb_alu.sv` e `run.py`, respectivamente. O Makefile
 fornece a receita que inicia `run.py`. Avance quando conseguir explicar essa cadeia.
+
+No percurso posterior, `make run` executa software no core, `make simple-synth`
+gera/testa uma netlist e a aula 8 apresenta o ambiente físico. Cada comando
+verifica uma etapa diferente do desenvolvimento.
