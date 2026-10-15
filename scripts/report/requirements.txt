@@ -1,0 +1,4 @@
+# Dependências opcionais apenas para exportar o relatório; não são usadas no RTL.
+reportlab==5.0.1
+markdown-it-py==4.2.0
+pypdf==6.20.1

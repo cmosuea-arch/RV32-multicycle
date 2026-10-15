@@ -49,5 +49,8 @@ O [laboratório](../labs/rtl-to-gds/README.md) possui oito aulas, com
 Consulte [synthesis.md](synthesis.md) para saídas e limites.
 
 Pendências para retomar: [architecture/official_questions.md](architecture/official_questions.md).
-Os diagramas no ChipInventor, relatório PDF e vídeo da submissão não estão prontos.
+O [relatório da Fase 2](report/README.md) possui versão preliminar em Markdown/PDF,
+com requisitos conferidos no guia e pendências explícitas. Diagramas ChipInventor,
+resultados físicos, evidência do firmware oficial e vídeo ainda faltam para
+fechar a submissão. A redação não corresponde a uma nova execução dos testes.
 **O projeto completo e a parte RTL da competição permanecem NOT DONE.**

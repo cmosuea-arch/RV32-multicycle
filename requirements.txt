@@ -1,4 +1,5 @@
-# Python >= 3.9. Atualmente não há dependências externas de Python.
+# Python >= 3.9. Simulação, regressão e cobertura não usam pacotes Python externos.
 # CSV/Markdown/XLSX são gerados com a biblioteca padrão (incluindo zipfile/XML).
 # Icarus, Verilator, GCC RISC-V e Make são pacotes do sistema, não do pip.
 # Instalação completa: bash scripts/setup/install.sh
+# Exportação opcional do relatório: scripts/report/requirements.txt (ambiente separado).

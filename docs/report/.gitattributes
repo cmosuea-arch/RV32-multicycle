@@ -1,0 +1,2 @@
+# PDFs são artefatos binários; não aplicar diff/merge textual ou conversão de EOL.
+*.pdf binary

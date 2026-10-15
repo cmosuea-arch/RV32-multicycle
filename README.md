@@ -13,6 +13,11 @@ continuam pendentes. O projeto completo ainda
 não está concluído. Consulte [o estado detalhado](docs/status.md) e
 [as definições oficiais necessárias](docs/architecture/official_questions.md).
 
+O [relatório técnico da Fase 2](docs/report/README.md) já possui redação inicial
+e prévia PDF, organizadas conforme o guia da competição. A
+[lista de conferência](docs/report/conformidade.md) identifica os requisitos e
+as figuras/resultados ainda necessários para a submissão.
+
 ## Comece pelo laboratório
 
 O [laboratório guiado RTL → fluxo físico](labs/rtl-to-gds/README.md) ensina a
@@ -74,7 +79,9 @@ make regression
 ```
 
 O instalador prepara os pacotes do sistema e `.venv`. O `requirements.txt` registra
-que os scripts atuais usam apenas a biblioteca padrão de Python. Atualização:
+que os scripts de simulação/regressão usam apenas a biblioteca padrão de Python.
+A exportação opcional do relatório tem [dependências separadas](docs/report/README.md).
+Atualização:
 `make update` para dependências, ou `bash scripts/setup/update.sh --pull` para
 incluir o código remoto (checkout limpo e fast-forward). Veja
 [instalação, opções e diagnóstico](docs/setup.md).
@@ -198,5 +205,5 @@ A conclusão do processador da competição mantém outra lista de requisitos:
 confirmar o algoritmo Xicrc e adaptar a implementação, se necessário, até
 44/47 oficiais; confirmar as três instruções de sistema/sincronização até 47/47; validar
 o firmware oficial; fechar interface e top físico; congelar/taguear RTL e executar
-o fluxo final conforme [AGENTS.md](AGENTS.md). Diagramas ChipInventor, relatório
-e vídeo também permanecem entregáveis pendentes.
+o fluxo final conforme [AGENTS.md](AGENTS.md). Diagramas ChipInventor, fechamento
+do relatório preliminar e vídeo também permanecem entregáveis pendentes.

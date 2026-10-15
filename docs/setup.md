@@ -53,6 +53,10 @@ A lista de pacotes APT é [packages-ubuntu.txt](../scripts/setup/packages-ubuntu
 O firmware atual usa `-nostdlib` e fornece seu startup: não requer picolibc.
 `pip install -r requirements.txt` sozinho não instala as ferramentas EDA do sistema.
 
+A exportação opcional do [relatório da competição](report/README.md) usa outro
+ambiente Python e `scripts/report/requirements.txt`. Essas dependências editoriais
+não são necessárias para testar ou sintetizar o RTL.
+
 Depois da instalação, consulte os comandos e percorra simulação/síntese:
 
 ```bash
