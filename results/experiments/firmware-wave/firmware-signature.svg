@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg
+  PUBLIC '-//W3C//DTD SVG 1.0//EN'
+  'http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd'>
+<svg width="700" height="580" preserveAspectRatio="xMinYMin meet" viewBox="0 0 700 580" xmlns="http://www.w3.org/2000/svg" version="1.0" fill-rule="evenodd" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<title>...</title>
+	<desc>...</desc>
+	<clipPath id="clip">
+		<rect x="0" y="0" width="700" height="580"/>
+	</clipPath>
+	<g id="group" transform="scale(1,-1) translate(0,-580)" style="clip-path: url(#clip)">
+		<g transform="">
+			<rect x="0" y="0" width="700" height="580" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(100%,100%,100%); fill-rule: evenodd;"/>
+			<text x="12" y="556" style="font-family: DejaVu Sans; font-size: 15px;fill: rgb(13%,24%,31%); stroke:none;" transform="translate(0,1112) scale(1,-1)">F20-B — Término do firmware próprio</text>
+			<text x="12" y="538" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(13%,24%,31%); stroke:none;" transform="translate(0,1076) scale(1,-1)">SW: endereço 10011ff0, dado 600dc0de, máscara f; fault permanece zero.</text>
+			<path d="M 225.465116,80 L 225.465116,500 Z" style="stroke: rgb(86%,89%,91%); stroke-linecap: butt; stroke-width: 0.5;"/>
+			<text x="210.46511627906978" y="510" style="font-family: DejaVu Sans; font-size: 9px;fill: rgb(13%,24%,31%); stroke:none;" transform="translate(0,1020) scale(1,-1)">25720</text>
+			<path d="M 346.395349,80 L 346.395349,500 Z" style="stroke: rgb(86%,89%,91%); stroke-linecap: butt; stroke-width: 0.5;"/>
+			<text x="331.3953488372093" y="510" style="font-family: DejaVu Sans; font-size: 9px;fill: rgb(13%,24%,31%); stroke:none;" transform="translate(0,1020) scale(1,-1)">25740</text>
+			<path d="M 467.325581,80 L 467.325581,500 Z" style="stroke: rgb(86%,89%,91%); stroke-linecap: butt; stroke-width: 0.5;"/>
+			<text x="452.3255813953489" y="510" style="font-family: DejaVu Sans; font-size: 9px;fill: rgb(13%,24%,31%); stroke:none;" transform="translate(0,1020) scale(1,-1)">25760</text>
+			<path d="M 588.255814,80 L 588.255814,500 Z" style="stroke: rgb(86%,89%,91%); stroke-linecap: butt; stroke-width: 0.5;"/>
+			<text x="573.2558139534883" y="510" style="font-family: DejaVu Sans; font-size: 9px;fill: rgb(13%,24%,31%); stroke:none;" transform="translate(0,1020) scale(1,-1)">25780</text>
+			<text x="12" y="510" style="font-family: DejaVu Sans; font-size: 9px;fill: rgb(13%,24%,31%); stroke:none;" transform="translate(0,1020) scale(1,-1)">Tempo de simulação (ns)</text>
+			<text x="12" y="481" style="font-family: DejaVu Sans; font-size: 10.5px;fill: rgb(13%,24%,31%); stroke:none;" transform="translate(0,962) scale(1,-1)">clk</text>
+			<path d="M 165,478 L 195.232558,478 Z" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 1.1;"/>
+			<path d="M 195.232558,492 L 225.465116,492 Z" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 1.1;"/>
+			<path d="M 195.232558,478 L 195.232558,492 Z" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 1.1;"/>
+			<path d="M 225.465116,478 L 255.697674,478 Z" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 1.1;"/>
+			<path d="M 225.465116,492 L 225.465116,478 Z" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 1.1;"/>
+			<path d="M 255.697674,492 L 285.930233,492 Z" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 1.1;"/>
+			<path d="M 255.697674,478 L 255.697674,492 Z" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 1.1;"/>
+			<path d="M 285.930233,478 L 316.162791,478 Z" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 1.1;"/>
+			<path d="M 285.930233,492 L 285.930233,478 Z" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 1.1;"/>
+			<path d="M 316.162791,492 L 346.395349,492 Z" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 1.1;"/>
+			<path d="M 316.162791,478 L 316.162791,492 Z" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 1.1;"/>
+			<path d="M 346.395349,478 L 376.627907,478 Z" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 1.1;"/>
+			<path d="M 346.395349,492 L 346.395349,478 Z" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 1.1;"/>
+			<path d="M 376.627907,492 L 406.860465,492 Z" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 1.1;"/>
+			<path d="M 376.627907,478 L 376.627907,492 Z" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 1.1;"/>
+			<path d="M 406.860465,478 L 437.093023,478 Z" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 1.1;"/>
+			<path d="M 406.860465,492 L 406.860465,478 Z" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 1.1;"/>
+			<path d="M 437.093023,492 L 467.325581,492 Z" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 1.1;"/>
+			<path d="M 437.093023,478 L 437.093023,492 Z" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 1.1;"/>
+			<path d="M 467.325581,478 L 497.55814,478 Z" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 1.1;"/>
+			<path d="M 467.325581,492 L 467.325581,478 Z" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 1.1;"/>
+			<path d="M 497.55814,492 L 527.790698,492 Z" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 1.1;"/>
+			<path d="M 497.55814,478 L 497.55814,492 Z" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 1.1;"/>
+			<path d="M 527.790698,478 L 558.023256,478 Z" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 1.1;"/>
+			<path d="M 527.790698,492 L 527.790698,478 Z" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 1.1;"/>
+			<path d="M 558.023256,492 L 588.255814,492 Z" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 1.1;"/>
+			<path d="M 558.023256,478 L 558.023256,492 Z" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 1.1;"/>
+			<path d="M 588.255814,478 L 618.488372,478 Z" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 1.1;"/>
+			<path d="M 588.255814,492 L 588.255814,478 Z" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 1.1;"/>
+			<path d="M 618.488372,492 L 648.72093,492 Z" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 1.1;"/>
+			<path d="M 618.488372,478 L 618.488372,492 Z" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 1.1;"/>
+			<path d="M 648.72093,478 L 678.953488,478 Z" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 1.1;"/>
+			<path d="M 648.72093,492 L 648.72093,478 Z" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 1.1;"/>
+			<path d="M 678.953488,492 L 685,492 Z" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 1.1;"/>
+			<path d="M 678.953488,478 L 678.953488,492 Z" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 1.1;"/>
+			<text x="12" y="452" style="font-family: DejaVu Sans; font-size: 10.5px;fill: rgb(13%,24%,31%); stroke:none;" transform="translate(0,904) scale(1,-1)">reset</text>
+			<path d="M 165,449 L 685,449 Z" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 1.1;"/>
+			<text x="12" y="423" style="font-family: DejaVu Sans; font-size: 10.5px;fill: rgb(13%,24%,31%); stroke:none;" transform="translate(0,846) scale(1,-1)">FSM</text>
+			<polygon points="165 427, 167 436, 193.2326 436, 195.2326 427, 193.2326 418, 167 418" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 0.6; fill: rgb(92%,96%,98%); fill-rule: evenodd;"/>
+			<text x="175.17243141351744" y="423.5" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(14%,30%,43%); stroke:none;" transform="translate(0,847) scale(1,-1)">W</text>
+			<polygon points="195.2326 427, 197.2326 436, 253.6977 436, 255.6977 427, 253.6977 418, 197.2326 418" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 0.6; fill: rgb(92%,96%,98%); fill-rule: evenodd;"/>
+			<text x="222.58913971656978" y="423.5" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(14%,30%,43%); stroke:none;" transform="translate(0,847) scale(1,-1)">F</text>
+			<polygon points="255.6977 427, 257.6977 436, 314.1628 436, 316.1628 427, 314.1628 418, 257.6977 418" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 0.6; fill: rgb(92%,96%,98%); fill-rule: evenodd;"/>
+			<text x="282.08013490188955" y="423.5" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(14%,30%,43%); stroke:none;" transform="translate(0,847) scale(1,-1)">D</text>
+			<polygon points="316.1628 427, 318.1628 436, 374.6279 436, 376.6279 427, 374.6279 418, 318.1628 418" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 0.6; fill: rgb(92%,96%,98%); fill-rule: evenodd;"/>
+			<text x="343.2361691497093" y="423.5" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(14%,30%,43%); stroke:none;" transform="translate(0,847) scale(1,-1)">E</text>
+			<polygon points="376.6279 427, 378.6279 436, 435.093 436, 437.093 427, 435.093 418, 378.6279 418" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 0.6; fill: rgb(92%,96%,98%); fill-rule: evenodd;"/>
+			<text x="401.9166174600291" y="423.5" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(14%,30%,43%); stroke:none;" transform="translate(0,847) scale(1,-1)">W</text>
+			<polygon points="437.093 427, 439.093 436, 495.5581 436, 497.5581 427, 495.5581 418, 439.093 418" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 0.6; fill: rgb(92%,96%,98%); fill-rule: evenodd;"/>
+			<text x="464.4496048328489" y="423.5" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(14%,30%,43%); stroke:none;" transform="translate(0,847) scale(1,-1)">F</text>
+			<polygon points="497.5581 427, 499.5581 436, 556.0233 436, 558.0233 427, 556.0233 418, 499.5581 418" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 0.6; fill: rgb(92%,96%,98%); fill-rule: evenodd;"/>
+			<text x="523.9406000181687" y="423.5" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(14%,30%,43%); stroke:none;" transform="translate(0,847) scale(1,-1)">D</text>
+			<polygon points="558.0233 427, 560.0233 436, 616.4884 436, 618.4884 427, 616.4884 418, 560.0233 418" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 0.6; fill: rgb(92%,96%,98%); fill-rule: evenodd;"/>
+			<text x="585.0966342659883" y="423.5" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(14%,30%,43%); stroke:none;" transform="translate(0,847) scale(1,-1)">E</text>
+			<polygon points="618.4884 427, 620.4884 436, 676.9535 436, 678.9535 427, 676.9535 418, 620.4884 418" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 0.6; fill: rgb(92%,96%,98%); fill-rule: evenodd;"/>
+			<text x="644.4069653888082" y="423.5" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(14%,30%,43%); stroke:none;" transform="translate(0,847) scale(1,-1)">M</text>
+			<polygon points="678.9535 427, 680.9535 436, 683 436, 685 427, 683 418, 680.9535 418" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 0.6; fill: rgb(92%,96%,98%); fill-rule: evenodd;"/>
+			<text x="12" y="394" style="font-family: DejaVu Sans; font-size: 10.5px;fill: rgb(13%,24%,31%); stroke:none;" transform="translate(0,788) scale(1,-1)">PC [31:0]</text>
+			<polygon points="165 398, 167 407, 193.2326 407, 195.2326 398, 193.2326 389, 167 389" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 0.6; fill: rgb(92%,96%,98%); fill-rule: evenodd;"/>
+			<polygon points="195.2326 398, 197.2326 407, 435.093 407, 437.093 398, 435.093 389, 197.2326 389" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 0.6; fill: rgb(92%,96%,98%); fill-rule: evenodd;"/>
+			<text x="290.71357194767444" y="394.5" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(14%,30%,43%); stroke:none;" transform="translate(0,789) scale(1,-1)">00400064</text>
+			<polygon points="437.093 398, 439.093 407, 683 407, 685 398, 683 389, 439.093 389" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 0.6; fill: rgb(92%,96%,98%); fill-rule: evenodd;"/>
+			<text x="535.597292877907" y="394.5" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(14%,30%,43%); stroke:none;" transform="translate(0,789) scale(1,-1)">00400068</text>
+			<text x="12" y="365" style="font-family: DejaVu Sans; font-size: 10.5px;fill: rgb(13%,24%,31%); stroke:none;" transform="translate(0,730) scale(1,-1)">instrução [31:0]</text>
+			<polygon points="165 369, 167 378, 253.6977 378, 255.6977 369, 253.6977 360, 167 360" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 0.6; fill: rgb(92%,96%,98%); fill-rule: evenodd;"/>
+			<text x="184.90694267805233" y="365.5" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(14%,30%,43%); stroke:none;" transform="translate(0,731) scale(1,-1)">100122b7</text>
+			<polygon points="255.6977 369, 257.6977 378, 495.5581 378, 497.5581 369, 495.5581 360, 257.6977 360" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 0.6; fill: rgb(92%,96%,98%); fill-rule: evenodd;"/>
+			<text x="354.02048510174416" y="365.5" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(14%,30%,43%); stroke:none;" transform="translate(0,731) scale(1,-1)">ff028293</text>
+			<polygon points="497.5581 369, 499.5581 378, 683 378, 685 369, 683 360, 499.5581 360" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 0.6; fill: rgb(92%,96%,98%); fill-rule: evenodd;"/>
+			<text x="566.0642260174418" y="365.5" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(14%,30%,43%); stroke:none;" transform="translate(0,731) scale(1,-1)">00a2a023</text>
+			<text x="12" y="336" style="font-family: DejaVu Sans; font-size: 10.5px;fill: rgb(13%,24%,31%); stroke:none;" transform="translate(0,672) scale(1,-1)">commit_valid</text>
+			<path d="M 165,347 L 195.232558,347 Z" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 1.1;"/>
+			<path d="M 195.232558,333 L 376.627907,333 Z" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 1.1;"/>
+			<path d="M 195.232558,347 L 195.232558,333 Z" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 1.1;"/>
+			<path d="M 376.627907,347 L 437.093023,347 Z" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 1.1;"/>
+			<path d="M 376.627907,333 L 376.627907,347 Z" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 1.1;"/>
+			<path d="M 437.093023,333 L 678.953488,333 Z" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 1.1;"/>
+			<path d="M 437.093023,347 L 437.093023,333 Z" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 1.1;"/>
+			<path d="M 678.953488,347 L 685,347 Z" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 1.1;"/>
+			<path d="M 678.953488,333 L 678.953488,347 Z" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 1.1;"/>
+			<text x="12" y="307" style="font-family: DejaVu Sans; font-size: 10.5px;fill: rgb(13%,24%,31%); stroke:none;" transform="translate(0,614) scale(1,-1)">commit_rd [4:0]</text>
+			<polygon points="165 311, 167 320, 495.5581 320, 497.5581 311, 495.5581 302, 167 302" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 0.6; fill: rgb(92%,96%,98%); fill-rule: evenodd;"/>
+			<text x="324.91676507994185" y="307.5" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(14%,30%,43%); stroke:none;" transform="translate(0,615) scale(1,-1)">05</text>
+			<polygon points="497.5581 311, 499.5581 320, 683 320, 685 311, 683 302, 499.5581 302" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 0.6; fill: rgb(92%,96%,98%); fill-rule: evenodd;"/>
+			<text x="584.9167650799418" y="307.5" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(14%,30%,43%); stroke:none;" transform="translate(0,615) scale(1,-1)">00</text>
+			<text x="12" y="278" style="font-family: DejaVu Sans; font-size: 10.5px;fill: rgb(13%,24%,31%); stroke:none;" transform="translate(0,556) scale(1,-1)">commit_data [31:0]</text>
+			<polygon points="165 282, 167 291, 374.6279 291, 376.6279 282, 374.6279 273, 167 273" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 0.6; fill: rgb(92%,96%,98%); fill-rule: evenodd;"/>
+			<text x="245.36473473837208" y="278.5" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(14%,30%,43%); stroke:none;" transform="translate(0,557) scale(1,-1)">10012000</text>
+			<polygon points="376.6279 282, 378.6279 291, 495.5581 291, 497.5581 282, 495.5581 273, 378.6279 273" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 0.6; fill: rgb(92%,96%,98%); fill-rule: evenodd;"/>
+			<text x="414.48560138081393" y="278.5" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(14%,30%,43%); stroke:none;" transform="translate(0,557) scale(1,-1)">10011ff0</text>
+			<polygon points="497.5581 282, 499.5581 291, 683 291, 685 282, 683 273, 499.5581 273" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 0.6; fill: rgb(92%,96%,98%); fill-rule: evenodd;"/>
+			<text x="565.8298510174418" y="278.5" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(14%,30%,43%); stroke:none;" transform="translate(0,557) scale(1,-1)">00000000</text>
+			<text x="12" y="249" style="font-family: DejaVu Sans; font-size: 10.5px;fill: rgb(13%,24%,31%); stroke:none;" transform="translate(0,498) scale(1,-1)">oe</text>
+			<path d="M 165,246 L 195.232558,246 Z" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 1.1;"/>
+			<path d="M 195.232558,260 L 255.697674,260 Z" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 1.1;"/>
+			<path d="M 195.232558,246 L 195.232558,260 Z" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 1.1;"/>
+			<path d="M 255.697674,246 L 437.093023,246 Z" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 1.1;"/>
+			<path d="M 255.697674,260 L 255.697674,246 Z" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 1.1;"/>
+			<path d="M 437.093023,260 L 497.55814,260 Z" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 1.1;"/>
+			<path d="M 437.093023,246 L 437.093023,260 Z" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 1.1;"/>
+			<path d="M 497.55814,246 L 685,246 Z" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 1.1;"/>
+			<path d="M 497.55814,260 L 497.55814,246 Z" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 1.1;"/>
+			<text x="12" y="220" style="font-family: DejaVu Sans; font-size: 10.5px;fill: rgb(13%,24%,31%); stroke:none;" transform="translate(0,440) scale(1,-1)">we</text>
+			<path d="M 165,217 L 618.488372,217 Z" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 1.1;"/>
+			<path d="M 618.488372,231 L 678.953488,231 Z" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 1.1;"/>
+			<path d="M 618.488372,217 L 618.488372,231 Z" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 1.1;"/>
+			<path d="M 678.953488,217 L 685,217 Z" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 1.1;"/>
+			<path d="M 678.953488,231 L 678.953488,217 Z" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 1.1;"/>
+			<text x="12" y="191" style="font-family: DejaVu Sans; font-size: 10.5px;fill: rgb(13%,24%,31%); stroke:none;" transform="translate(0,382) scale(1,-1)">endereço [31:0]</text>
+			<polygon points="165 195, 167 204, 193.2326 204, 195.2326 195, 193.2326 186, 167 186" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 0.6; fill: rgb(92%,96%,98%); fill-rule: evenodd;"/>
+			<polygon points="195.2326 195, 197.2326 204, 435.093 204, 437.093 195, 435.093 186, 197.2326 186" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 0.6; fill: rgb(92%,96%,98%); fill-rule: evenodd;"/>
+			<text x="290.71357194767444" y="191.5" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(14%,30%,43%); stroke:none;" transform="translate(0,383) scale(1,-1)">00400064</text>
+			<polygon points="437.093 195, 439.093 204, 616.4884 204, 618.4884 195, 616.4884 186, 439.093 186" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 0.6; fill: rgb(92%,96%,98%); fill-rule: evenodd;"/>
+			<text x="502.34147892441865" y="191.5" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(14%,30%,43%); stroke:none;" transform="translate(0,383) scale(1,-1)">00400068</text>
+			<polygon points="618.4884 195, 620.4884 204, 683 204, 685 195, 683 186, 620.4884 186" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 0.6; fill: rgb(92%,96%,98%); fill-rule: evenodd;"/>
+			<text x="629.1367641715117" y="191.5" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(14%,30%,43%); stroke:none;" transform="translate(0,383) scale(1,-1)">10011ff0</text>
+			<text x="12" y="162" style="font-family: DejaVu Sans; font-size: 10.5px;fill: rgb(13%,24%,31%); stroke:none;" transform="translate(0,324) scale(1,-1)">dado store [31:0]</text>
+			<polygon points="165 166, 167 175, 495.5581 175, 497.5581 166, 495.5581 157, 167 157" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 0.6; fill: rgb(92%,96%,98%); fill-rule: evenodd;"/>
+			<text x="305.82985101744185" y="162.5" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(14%,30%,43%); stroke:none;" transform="translate(0,325) scale(1,-1)">00000000</text>
+			<polygon points="497.5581 166, 499.5581 175, 683 175, 685 166, 683 157, 499.5581 157" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 0.6; fill: rgb(92%,96%,98%); fill-rule: evenodd;"/>
+			<text x="566.3816088299418" y="162.5" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(14%,30%,43%); stroke:none;" transform="translate(0,325) scale(1,-1)">600dc0de</text>
+			<text x="12" y="133" style="font-family: DejaVu Sans; font-size: 10.5px;fill: rgb(13%,24%,31%); stroke:none;" transform="translate(0,266) scale(1,-1)">bw [3:0]</text>
+			<polygon points="165 137, 167 146, 616.4884 146, 618.4884 137, 616.4884 128, 167 128" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 0.6; fill: rgb(92%,96%,98%); fill-rule: evenodd;"/>
+			<text x="388.56303370276163" y="133.5" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(14%,30%,43%); stroke:none;" transform="translate(0,267) scale(1,-1)">0</text>
+			<polygon points="618.4884 137, 620.4884 146, 676.9535 146, 678.9535 137, 676.9535 128, 620.4884 128" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 0.6; fill: rgb(92%,96%,98%); fill-rule: evenodd;"/>
+			<text x="646.9606763263082" y="133.5" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(14%,30%,43%); stroke:none;" transform="translate(0,267) scale(1,-1)">f</text>
+			<polygon points="678.9535 137, 680.9535 146, 683 146, 685 137, 683 128, 680.9535 128" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 0.6; fill: rgb(92%,96%,98%); fill-rule: evenodd;"/>
+			<text x="12" y="104" style="font-family: DejaVu Sans; font-size: 10.5px;fill: rgb(13%,24%,31%); stroke:none;" transform="translate(0,208) scale(1,-1)">fault</text>
+			<path d="M 165,101 L 685,101 Z" style="stroke: rgb(14%,30%,43%); stroke-linecap: butt; stroke-width: 1.1;"/>
+			<path d="M 678.953488,79 L 678.953488,502 Z" style="stroke: rgb(67%,20%,20%); stroke-linecap: butt; stroke-width: 1.1;"/>
+			<text x="400" y="522" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(67%,20%,20%); stroke:none;" transform="translate(0,1044) scale(1,-1)">SW na borda: 25795 ns</text>
+			<text x="12" y="55" style="font-family: DejaVu Sans; font-size: 9px;fill: rgb(13%,24%,31%); stroke:none;" transform="translate(0,110) scale(1,-1)">FSM: F=FETCH(0), D=DECODE(1), E=EXECUTE(2), W=WRITEBACK(3), M=MEMORY(4).</text>
+			<text x="12" y="38" style="font-family: DejaVu Sans; font-size: 9px;fill: rgb(13%,24%,31%); stroke:none;" transform="translate(0,76) scale(1,-1)">Buses em hexadecimal; X/Z preservados. Valores sem espaço para rótulo são omitidos.</text>
+			<text x="12" y="21" style="font-family: DejaVu Sans; font-size: 9px;fill: rgb(13%,24%,31%); stroke:none;" transform="translate(0,42) scale(1,-1)">commit_rd/data só têm significado com commit_valid=1; we/bw qualificam o store.</text>
+		</g>
+	</g>
+</svg>

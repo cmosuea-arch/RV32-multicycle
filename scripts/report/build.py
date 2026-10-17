@@ -152,7 +152,7 @@ def main():
         canvas.setFillColor(colors.HexColor('#50616f'))
         canvas.drawString(46, A4[1] - 28, 'CMOS RISC-V | ChampionCHIP — Fase 2')
         canvas.drawRightString(A4[0] - 46, A4[1] - 28, 'PRELIMINAR — NÃO SUBMETER')
-        canvas.drawString(46, 27, 'Relatório de andamento | v0.2 | 17/10/2026')
+        canvas.drawString(46, 27, 'Relatório de andamento | v0.3 | 17/10/2026')
         canvas.drawRightString(A4[0] - 46, 27, str(doc.page))
         canvas.restoreState()
 

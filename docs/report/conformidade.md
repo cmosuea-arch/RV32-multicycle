@@ -15,7 +15,7 @@ geral ou retificações que não estejam nesse arquivo.
 
 ## Requisitos expressos do guia
 
-| ID | Origem | Exigência | Local no relatório | Situação da versão 0.2 |
+| ID | Origem | Exigência | Local no relatório | Situação da versão 0.3 |
 |---|---|---|---|---|
 | R01 | §1, p. 2 | Objetivo, arquitetura, módulos, funcionamento e funcionalidades | §1 | Redigido para o escopo atual |
 | R02 | §2, pp. 2–3 | Quantidades esperadas/implementadas e percentual por categoria | §2.1 | 41/47; CRC experimental identificado separadamente |
@@ -27,10 +27,10 @@ geral ou retificações que não estejam nesse arquivo.
 | R08 | §4, p. 3 | Testbenches individuais | §4 e código da entrega | 14 unitários e 17 integrações identificados; anexar todo o código no pacote |
 | R09 | §5, p. 4 | Área total e densidade após fluxo OpenLane | §5.1 | Pendentes; células genéricas não preenchem área física |
 | R10 | §5, p. 4 | Imagem do GDSII final | §5.1 | F19 pendente; GDS do exemplo da ferramenta não serve como resultado do processador |
-| R11 | §6, p. 4 | Waveforms comprovando execução do firmware de validação | §6 | F21 oficial pendente; F20 próprio é evidência complementar |
-| R12 | §6, p. 4 | Logs do TB mostrando conclusão sem erros | §6 | Log próprio incluído; log do firmware oficial pendente |
+| R11 | §6, p. 4 | Waveforms comprovando execução do firmware de validação | §6 | F20-A/B próprios incluídos e arquivados; F21 oficial pendente |
+| R12 | §6, p. 4 | Logs do TB mostrando conclusão sem erros | §6 | Nova execução própria de 17/10 com log/VCD/hashes; log oficial pendente |
 | R13 | §7, p. 4 | Vídeo de 5–7 min no YouTube cobrindo os seis temas indicados | Entregável separado | Pendente |
-| R14 | §8, p. 4 | Relatório PDF contendo tópicos 1–6, máximo 20 páginas | PDF preliminar | Formato e tópicos presentes; 17 páginas; conteúdo final ainda incompleto |
+| R14 | §8, p. 4 | Relatório PDF contendo tópicos 1–6, máximo 20 páginas | PDF preliminar | Formato e tópicos presentes; 19 páginas; conteúdo final ainda incompleto |
 | R15 | §9, p. 4 | Relatório, GDSII, GL, config.json e todo o código, incluindo TBs | Pacote de submissão | Código existente; PDF preliminar; resultados físicos ausentes |
 
 O guia menciona a GL em `results/final/verilog/gl`. Verificar a localização
@@ -47,7 +47,7 @@ final OpenLane exigida.
 | F09–F13 | LSU, DMEM, Address Decoder, Decoder, FSM | Incluir controles, máscaras, latência e erros |
 | F14–F18 | Multiplicador, CRC, Core, Top, simple_system | Identificar CRC e sistema experimental; alinhar top final |
 | F19 | GDSII final do processador | Run, commit, top, escala e correspondência com área/densidade |
-| F20 | Waveform do firmware próprio | Opcional complementar: boot e assinatura SW correta |
+| F20-A/B | Waveform do firmware próprio | Incluídos: boot e SW de assinatura, com VCD/logs/hashes em results/experiments/firmware-wave/ |
 | F21 | Waveform do firmware oficial | Protocolo oficial, etapa final e ausência de erros, acompanhados de log |
 
 As figuras podem ser agrupadas em painéis legíveis. A numeração é uma escolha
@@ -61,7 +61,7 @@ simuladas ou ilustrativas apresentadas como waveforms reais.
 | 41/47 e codificações | `docs/isa/coverage.csv` | Contagem funcional da baseline; firmware oficial pendente |
 | 31 TBs e lint PASS | `results/experiments/simple/regression.json` | Rodada de 13/10 local, 14/10 UTC; hashes identificam arquivos |
 | CRC próprio PASS | `results/experiments/crc/` | Contrato CMOS; algoritmo oficial não confirmado |
-| 598 aposentadorias, 2579 ciclos | `results/logs/tb_firmware.log` | Smoke próprio, não benchmark geral |
+| 598 aposentadorias, 2579 ciclos e SW em 25795 ns | `results/experiments/firmware-wave/` | Smoke próprio reexecutado; VCD e TB conferem a escrita; não é benchmark geral |
 | 32922 células e dois boots na netlist | `results/experiments/simple/simple_synth.json`, `simple_netlist.log` | Yosys genérico, sem PDK/timing/área física |
 | Ambiente físico aprovado | `results/openlane/environment-smoke.md` | Somente circuito de exemplo LibreLane |
 
@@ -71,7 +71,8 @@ o fechamento da entrega deve registrar uma rodada nova no commit final.
 
 ## Organização das páginas
 
-Versão 0.2: 17 páginas, com até três adicionais dentro do limite.
+Versão 0.3: 19 páginas, com uma página adicional dentro do limite. Reorganizar
+texto/figuras antes de incorporar todos os resultados finais.
 O limite considera conservadoramente tudo, inclusive identificação e referências,
 pois o guia não informa exceções de contagem.
 
@@ -82,7 +83,7 @@ pois o guia não informa exceções de contagem.
 | Datapath e sequenciamento | 6–9 |
 | Módulos, testes e automação | 10–13 |
 | Resultados físicos / síntese preparatória | 14 |
-| Firmware e referências | 15–17 |
+| Firmware, waveforms e referências | 15–19 |
 
 A4, fonte DejaVu, margens, referências e esta distribuição são escolhas de
 edição. O guia consultado não determina template, ABNT, fonte ou margens.
@@ -98,6 +99,7 @@ a ponto de comprometer a leitura para manter a contagem.
 - [x] Incorporar datapath/controle da versão atual (três painéis, revisados em 17/10/2026).
 - [ ] Rever as figuras após mudanças de RTL e incorporar diagramas ChipInventor de cada módulo.
 - [ ] Preencher área/densidade e inserir imagem do GDSII do processador.
+- [x] Incluir waveforms/logs do firmware próprio e arquivar VCD e hashes (17/10/2026).
 - [ ] Incluir waveform e logs do firmware oficial, declarando a etapa efetivamente atingida.
 - [ ] Vincular relatório, RTL, testes, firmware e resultados físicos ao commit de entrega.
 - [ ] Gerar PDF final, contar no máximo 20 páginas e revisar visualmente todas elas.
@@ -111,3 +113,7 @@ mas não foram inventados como critérios de pontuação no Guia de Submissão.
 Revisão editorial de 17/10/2026: figuras F01-A/B/C incorporadas e PDF conferido
 com 17 páginas. O usuário informou que a organização ainda não enviou as
 definições nem o firmware oficial; essa dependência permanece aberta.
+
+Revisão da captura em 17/10/2026: `make wave` executado em cópia isolada;
+figuras F20-A/B incorporadas; PDF com 19 páginas. Apenas o TB do firmware próprio
+foi reexecutado, sem nova regressão completa ou implementação física.

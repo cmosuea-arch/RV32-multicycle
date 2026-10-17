@@ -1,0 +1,27 @@
+{
+  "status": "PASS",
+  "scope": "own smoke firmware; RTL simulation; not official firmware",
+  "signature_edge_tick": 25795000,
+  "reset_release_tick": 10000,
+  "retirements": 598,
+  "cycles": 2579,
+  "signature_address": "0x10011ff0",
+  "signature_data": "0x600dc0de",
+  "signature_bw": "0xf",
+  "signature_edge_ns": 25795.0,
+  "timescale_ns_per_tick": 0.001,
+  "end_ns": 25796.0,
+  "windows": {
+    "firmware-boot": {
+      "start_ns": 0.0,
+      "end_ns": 150.0
+    },
+    "firmware-signature": {
+      "start_ns": 25710.0,
+      "end_ns": 25796.0
+    }
+  },
+  "vcd_content_sha256": "8ba724c3be746e61fd920a7309a855759c9759b1a7817267c84d4a7770cd8686",
+  "log_sha256": "9821884c1bc0abba0a744c09cfe9ea48e8ba963911054e1d0eab1fb73cc4a4b2",
+  "renderer_sha256": "4f8fa7a289fda736a1794e9e11b46fd956c51bf17a9596f114fe9ac510ee04d4"
+}

@@ -1,14 +1,14 @@
 # CMOS RISC-V — Relatório técnico da Fase 2
 
-**Versão preliminar 0.2 — 17 de outubro de 2026**
+**Versão preliminar 0.3 — 17 de outubro de 2026**
 
 Equipe: CMOS. Integrantes, instituição e orientador: **a preencher pela equipe**.
-Repositório: cmosuea-arch/RV32-multicycle. Referência documental: commit `33c1722`.
+Repositório: cmosuea-arch/RV32-multicycle. Referência do RTL e da captura: commit `7ddc6bf`, com snapshot identificado em [R10].
 
 Este documento segue os tópicos 1 a 6 do Guia de Submissão ChampionCHIP,
 versão 1.0/2026, páginas físicas 2–4 do PDF local [R1]. É um relatório de
 andamento: contém resultados existentes e identifica entregáveis ainda ausentes.
-As referências [R1]–[R9] estão ao final da seção 6.
+As referências [R1]–[R10] estão ao final da seção 6.
 
 ## 1. Visão Geral do Projeto
 
@@ -54,8 +54,9 @@ A rodada funcional de referência, registrada em 13/10/2026 no horário de Manau
 (14/10/2026 em UTC), aprovou 31 testbenches e lint. O sistema pequeno também
 passou por síntese lógica e dois boots simulados na netlist. A execução do
 firmware oficial, os diagramas ChipInventor e o fluxo físico do processador
-permanecem pendentes. Os resultados são vinculados aos manifestos [R4–R6];
-a redação deste relatório não constitui uma nova execução dos testes.
+permanecem pendentes. Os resultados são vinculados aos manifestos [R4–R6]. Em 17/10/2026 foi
+reexecutado somente o firmware próprio para a captura de waveform [R10];
+a regressão completa continua referida à rodada histórica identificada.
 
 <!-- pagebreak -->
 
@@ -621,8 +622,8 @@ make run
 make wave
 ```
 
-O segundo comando também gera `results/waveforms/smoke.vcd`. A saída registrada
-em `results/logs/tb_firmware.log` contém:
+O segundo comando também gera `results/waveforms/smoke.vcd`. A execução isolada
+de 17/10/2026 registrou em `results/experiments/firmware-wave/tb_firmware.wave.log`:
 
 ```text
 PASS firmware: signature 600dc0de, 598 retirements, 2579 cycles
@@ -632,18 +633,55 @@ A execução própria terminou com **598 instruções aposentadas e 2.579 ciclos
 Esse resultado caracteriza esse programa e a configuração simulada; não é
 frequência máxima, benchmark geral ou aprovação do firmware oficial.
 
-### 6.2 Evidência visual a incorporar
+### 6.2 Waveform do firmware próprio
 
-**Figura F20 pendente — waveform do smoke próprio.** Exportar uma imagem
-legível da execução real mostrando clock, reset, PC, instrução, estado da FSM,
-commit, endereço/dado de escrita e assinatura final. A legenda deve informar
-commit, comando, janela temporal e interpretação dos sinais. Uma visão geral
-pode ser acompanhada de ampliação do SW de término.
+As figuras F20-A/B foram extraídas do VCD real gerado por `make wave` em uma
+cópia isolada do projeto, com o RTL do commit `7ddc6bf`. O inventário SHA-256,
+versões das ferramentas, logs e VCD comprimido estão em [R10]. As imagens são
+exportações programáticas dos valores capturados, não desenhos de resultados
+esperados. A escala de simulação é 1 ps por tick; o clock do testbench tem
+período de 10 ns. Isso não mede a frequência máxima do circuito físico.
 
-O VCD é regenerável e não é versionado por tamanho. O relatório final precisa
-de imagens efetivas; um caminho para o VCD ou a descrição acima não satisfaz,
-sozinho, a exigência de waveform. O registro do firmware oficial deve ter
-figura e log próprios, conforme a seção 6.4.
+<!-- pagebreak -->
+
+### 6.2 Waveform — boot
+
+![Figura F20-A: waveform real do boot do firmware próprio](../../results/experiments/firmware-wave/firmware-boot.png)
+
+**Figura F20-A — Janela de 0 a 150 ns da execução própria de 17/10/2026.**
+O reset é aplicado na primeira borda de subida, em 5 ns, e liberado em 10 ns.
+Após isso, a FSM percorre busca, decode, execução e writeback. O PC inicia em
+`0x00400000` e avança por palavras; `commit_valid` indica as aposentadorias.
+Os valores X anteriores à primeira borda de reset são preservados na figura.
+Os buses são exibidos em hexadecimal; intervalos curtos podem não ter rótulo.
+`commit_rd` e `commit_data` devem ser interpretados quando `commit_valid=1`.
+
+A captura mostra as primeiras instruções do startup, que estabelece a pilha e
+prepara a inicialização de dados. O VCD completo cobre a execução até o teste
+final de assinatura; esta figura é apenas uma janela inicial para leitura.
+
+<!-- pagebreak -->
+
+### 6.2 Waveform — escrita da assinatura
+
+![Figura F20-B: waveform real da escrita final da assinatura](../../results/experiments/firmware-wave/firmware-signature.png)
+
+**Figura F20-B — Janela de 25.710 a 25.796 ns da mesma execução.**
+A instrução SW `0x00a2a023`, no PC `0x00400068`, escreve `0x600dc0de` no
+endereço `0x10011ff0`. Durante MEMORY, `we=1` e `bw=0xf`; a escrita ocorre
+na borda de subida marcada em vermelho, **25.795 ns**. O sinal fault permanece
+zero. O testbench confere a palavra efetivamente armazenada e encerra a
+simulação um nanossegundo depois, com o log PASS transcrito na seção 6.1.
+
+A contagem de 598 aposentadorias corresponde às instruções já concluídas
+antes dessa escrita. A instrução SW final ainda não alcançou a borda de sua
+aposentadoria quando o testbench termina. A análise do VCD usa os valores
+anteriores à borda para conferir a transação síncrona e reproduziu tanto os
+598 commits quanto os 2.579 ciclos do testbench.
+
+Essas imagens e logs são evidência do firmware próprio. O firmware oficial
+precisa de sua própria execução, waveform e protocolo de conclusão, conforme
+seção 6.4. Não houve execução de regressão completa ou de fluxo físico nesta rodada.
 
 <!-- pagebreak -->
 
@@ -756,6 +794,14 @@ e o escopo da escolha interna constam desses documentos.
 As instruções RV32I/Zmmul usam as fontes registradas em
 [fontes arquiteturais](../architecture/sources.md).
 
-**Estado editorial:** primeira redação com evidências disponíveis; autoria,
+**[R10] Captura do firmware próprio — 17/10/2026.**
+[Registro e reprodução](../../results/experiments/firmware-wave/README.md),
+[inventário da execução](../../results/experiments/firmware-wave/capture.json),
+[verificação do VCD](../../results/experiments/firmware-wave/waveform.json) e
+[log do testbench](../../results/experiments/firmware-wave/tb_firmware.wave.log).
+O [VCD comprimido](../../results/experiments/firmware-wave/smoke.vcd.gz) permite
+reproduzir as figuras sem executar uma nova simulação.
+
+**Estado editorial:** redação atualizada com evidências disponíveis; autoria,
 figuras, resultados físicos e execução oficial devem ser completados e revisados
 antes de nomear esta versão como relatório final de submissão.

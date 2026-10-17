@@ -1,0 +1,2 @@
+$ /usr/bin/python3 /tmp/cmos-firmware-wave-_d33r7s6/scripts/sim/build_firmware.py
+PASS own firmware built: RV32I_Zmmul, checksum 0x00101a3e

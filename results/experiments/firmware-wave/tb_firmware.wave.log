@@ -1,0 +1,4 @@
+$ vvp /tmp/cmos-firmware-wave-_d33r7s6/build/tb_firmware +WAVE
+VCD info: dumpfile results/waveforms/smoke.vcd opened for output.
+PASS firmware: signature 600dc0de, 598 retirements, 2579 cycles
+/tmp/cmos-firmware-wave-_d33r7s6/tb/integration/tb_firmware.sv:30: $finish called at 25796000 (1ps)

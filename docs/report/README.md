@@ -5,9 +5,10 @@
 - [Conferência dos requisitos](conformidade.md): exigência, página de origem e pendência.
 
 O documento descreve arquitetura, desenvolvimento incremental, RTL, testes,
-automação, firmware e síntese lógica. Os resultados vêm de evidências já
-registradas; nenhuma regressão ou implementação física foi executada para redigi-lo.
-Os logs existentes são preservados.
+automação, firmware e síntese lógica. As rodadas de referência permanecem
+identificadas. Em 17/10 o firmware próprio foi reexecutado isoladamente para
+produzir as figuras reais de waveform; os logs existentes foram preservados.
+Não houve nova regressão completa nem implementação física.
 
 ## Fonte normativa consultada
 
@@ -38,6 +39,9 @@ As dependências de edição ficam separadas do ambiente de simulação. Na raiz
 python3 -m venv build/report-venv
 build/report-venv/bin/python -m pip install -r scripts/report/requirements.txt
 build/report-venv/bin/python scripts/report/figures.py
+build/report-venv/bin/python scripts/report/waveforms.py \
+  --vcd results/experiments/firmware-wave/smoke.vcd.gz \
+  --log results/experiments/firmware-wave/tb_firmware.wave.log
 build/report-venv/bin/python scripts/report/build.py
 ```
 
@@ -51,11 +55,18 @@ Markdown ainda não suportados causam erro explícito, evitando perda silenciosa
 de conteúdo. Cabeçalho/rodapé identificam esta versão como preliminar.
 
 O PDF é versionado para leitura direta e deve ser regenerado após editar o
-texto. A versão 0.2 possui 17 páginas, incluindo os três painéis do datapath
-e referências, deixando três páginas de margem para novos resultados e figuras.
+texto. A versão 0.3 possui 19 páginas, incluindo os três painéis do datapath,
+duas imagens reais de waveform e referências. Resta uma página de margem;
+será necessário reorganizar/compactar conteúdo para os resultados finais.
 Inserir os 17 diagramas de módulo
 exigirá composição compacta e revisão editorial; a margem não garante que
 todas as figuras futuras caibam sem reorganizar o texto.
+
+As figuras F20-A/B e seus logs/VCD/hashes estão em
+[results/experiments/firmware-wave](../../results/experiments/firmware-wave/README.md).
+Reexportar o arquivo arquivado mantém a origem da evidência. Para obter dados
+do RTL atual, execute `make wave` e use `scripts/report/waveforms.py` sem opções;
+essa execução atualiza build/logs conforme o fluxo de testes existente.
 
 ## Fechamento editorial
 

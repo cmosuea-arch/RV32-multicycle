@@ -74,6 +74,9 @@ de memórias/CRC. Nenhuma supressão de latch, largura ou loop combinacional.
   produzida separadamente por `make simple-synth`.
 - `results/waveforms/smoke.vcd`: waveform reproduzível por `make wave`, ignorada
   pelo Git para evitar arquivos grandes; o log da execução com waveform é versionado.
+- [Captura própria de 17/10/2026](../results/experiments/firmware-wave/README.md):
+  um TB reexecutado isoladamente, VCD comprimido arquivado, imagens de boot/término
+  e conferência dos contadores/transação pelo exportador. Não é nova regressão completa.
 
 ## Limitações
 

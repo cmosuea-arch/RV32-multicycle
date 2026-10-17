@@ -18,7 +18,8 @@ e prévia PDF, organizadas conforme o guia da competição. A
 [lista de conferência](docs/report/conformidade.md) identifica os requisitos e
 as figuras/resultados ainda necessários para a submissão. A ordem de trabalho
 está no [roteiro de conclusão](docs/completion_roadmap.md); o datapath atual
-já está desenhado em três painéis na prévia de 17 páginas.
+já está desenhado em três painéis. A prévia atual tem 19 páginas e inclui os
+[waveforms reais do firmware próprio](results/experiments/firmware-wave/README.md).
 
 ## Comece pelo laboratório
 
