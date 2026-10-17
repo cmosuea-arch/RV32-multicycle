@@ -9,7 +9,7 @@
 PYTHON ?= $(if $(wildcard .venv/bin/python),.venv/bin/python,python3)
 
 # .PHONY faz os comandos executarem mesmo se existir um arquivo com o nome do alvo.
-.PHONY: help setup update doctor setup-openlane \
+.PHONY: help clean setup update doctor setup-openlane \
         tb unit integration smoke lint test regression \
         firmware run wave simple-firmware simple-system simple-synth \
         openlane-env-check openlane-env-smoke openlane-shell
@@ -18,6 +18,10 @@ PYTHON ?= $(if $(wildcard .venv/bin/python),.venv/bin/python,python3)
 help: ## Lista os comandos disponíveis e sua finalidade.
 	@printf 'Uso: make <comando>\nExemplo de bancada: make tb TB=tb_branch_pc\n\n'
 	@awk 'BEGIN {FS = ":.*## "} /^[a-zA-Z0-9_-]+:.*## / {printf "  %-24s %s\n", $$1, $$2}' $(MAKEFILE_LIST)
+
+# Reinicia a prática arquivando saídas. Prévia: python3 scripts/setup/clean.py --dry-run
+clean: ## Arquiva build, logs e ondas em results/archive/ para recomeçar.
+	$(PYTHON) scripts/setup/clean.py
 
 # 1. Preparar a máquina. Sem make instalado, use: bash scripts/setup/install.sh
 setup: ## Instala dependências e prepara o ambiente Python (Ubuntu 24.04).

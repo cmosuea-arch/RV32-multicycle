@@ -24,6 +24,10 @@ espaço para os diagramas ChipInventor, preparados por outro colaborador.
 
 ## Comece pelo laboratório
 
+Para aprender a explicar o sistema no vídeo, siga a
+[atividade guiada](labs/rtl-to-gds/00-pratica-para-video.md) no workspace atual.
+Build/logs/ondas antigos foram arquivados; suas execuções produzirão as saídas novas.
+
 O [laboratório guiado RTL → fluxo físico](labs/rtl-to-gds/README.md) ensina a
 executar e entender este projeto. Ele usa os arquivos reais, com comentários
 sucintos nos blocos de código que acompanham as explicações.
@@ -99,6 +103,7 @@ veja [os requisitos e caminhos](docs/openlane/environment.md).
 ```sh
 # Executar na raiz do repositório.
 make help              # lista comandos e suas finalidades
+make clean             # arquiva build/logs/ondas para reiniciar uma prática
 make tb TB=tb_alu       # uma bancada, com preparação das entradas
 make unit              # 14 testbenches unitários, incluindo CRC provisório
 make integration       # 17 integrações, incluindo CRC e simple_system
@@ -142,7 +147,7 @@ o entregável do [firmware oficial](firmware/official/README.md).
 | Evidência | Onde consultar |
 |---|---|
 | Comandos e resultados de cada TB | `results/logs/tb_*.compile.log` e `tb_*.log` |
-| Resultado agregado e hashes da rodada | [regression.json](results/logs/regression.json) |
+| Resultado agregado e hashes da rodada | [regression.json da rodada identificada](results/experiments/simple/regression.json) |
 | Matriz por instrução | [Markdown](docs/isa/coverage.md), [CSV](docs/isa/coverage.csv), [Excel](docs/isa/coverage.xlsx) |
 | Alcance e limitações dos testes | [verification.md](docs/verification.md) |
 | Forma de onda do firmware | `results/waveforms/smoke.vcd`, gerada por `make wave` |

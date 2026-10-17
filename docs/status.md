@@ -69,3 +69,9 @@ sem alterar RTL. Registro: [firmware-wave](../results/experiments/firmware-wave/
 Revisão editorial v0.4: descrições/testes consolidados em tabelas, sem reduzir
 fontes ou executar novos testes. A execução do projeto fica para a etapa
 posterior acordada com o usuário.
+
+Preparação da prática em 17/10/2026: mesmo workspace/branch, build/logs/ondas
+arquivados, sem nova simulação. [Histórico dos logs](../results/history/pre-guided-20261017/README.md)
+e [percurso para o vídeo](../labs/rtl-to-gds/00-pratica-para-video.md).
+As evidências do relatório permanecem intactas; a matriz publicada aponta aos
+logs preservados até a próxima regressão completa.

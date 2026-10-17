@@ -1,0 +1,3 @@
+$ vvp /home/designer/shared/cmos-riscv/build/tb_imm_ext
+PASS imm_ext: 5102 I/S/B/U/J vectors plus opcode aliases
+/home/designer/shared/cmos-riscv/tb/unit/tb_imm_ext.sv:20: $finish called at 5105000 (1ps)

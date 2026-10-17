@@ -6,6 +6,10 @@ O exemplo contínuo é a ALU. Primeiro vamos simulá-la manualmente e reconhecer
 os mesmos passos nos scripts Python e no Makefile. Em seguida executamos firmware
 no core e sintetizamos o sistema pequeno, antes de estudar a preparação física.
 
+Para a atividade acompanhada e a preparação do vídeo, comece por
+[prática guiada para o vídeo](00-pratica-para-video.md). Usaremos o workspace
+atual, com saídas limpas e avanço por etapas conforme você executar.
+
 ## Percurso
 
 | Ordem | Aula | Ao terminar, você conseguirá… |
@@ -53,6 +57,11 @@ Se uma ferramenta não existir no PATH, resolva o ambiente antes da aula que a u
 Leia o objetivo, abra os arquivos indicados, faça a previsão do resultado e então
 execute os comandos um por vez. Ao aparecer uma falha, leia o log antes de avançar.
 As perguntas no final de cada aula possuem respostas para conferência.
+
+`make clean` arquiva build/logs/ondas em `results/archive/`, com hashes. Os logs
+anteriores à prática estão em [histórico](../../results/history/pre-guided-20261017/README.md).
+Saídas correntes são ignoradas pelo Git; evidências publicadas ficam identificadas
+em `results/experiments/`.
 
 Os testes geram ou sobrescrevem arquivos em `build/` e `results/`; a execução
 completa também atualiza `docs/isa/coverage.*`. Não execute duas instâncias do

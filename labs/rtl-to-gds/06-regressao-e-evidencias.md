@@ -36,7 +36,9 @@ O smoke deve informar quatro bancadas aprovadas. A regressão completa deve info
 | `lint.log` | qual análise estática foi executada? |
 | `regression.json` | quais testes, status, horário e hashes formam a rodada? |
 
-Todos ficam em `results/logs/`. Um log de lint bem-sucedido ainda tem a linha do
+Todos ficam em `results/logs/`, gerados pela sua execução e ignorados pelo Git.
+O diretório começa sem resultados depois da limpeza; rodadas anteriores estão
+no histórico ou em `results/experiments/`. Um log de lint bem-sucedido ainda tem a linha do
 comando; o que deve estar ausente são diagnósticos da ferramenta. `lint.log`
 reúne as duas chamadas, também salvas em `lint_riscv_top.log` e `lint_simple_system.log`.
 

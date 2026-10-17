@@ -69,7 +69,8 @@ def render_coverage():
 
     total=len(rows)
     n=sum(passed(row) for row in rows)
-    lines=['# Cobertura ISA','',f'**{n}/{total} instruções ({percent(n,total)})** com testes unitários, integração e regressão PASS.','',
+    lines=['# Cobertura ISA','',f'**{n}/{total} instruções ({percent(n,total)})** com testes unitários, integração e regressão PASS registrados.','',
+           'Os estados abaixo são resultados preservados; uma nova validação exige executar `make regression`.',
            'Abra a [planilha Excel](coverage.xlsx) para filtrar, ordenar e consultar todos os campos.',
            'Esta página apresenta os mesmos resultados registrados em [coverage.csv](coverage.csv).',
            'As codificações abaixo estão em binário; **—** indica campo não aplicável ou ainda não definido.','',
@@ -103,10 +104,17 @@ def render_coverage():
         notes=list(dict.fromkeys(row['Observação'] for row in items if row['Observação'] and not row['Observação'].split()[0].isdigit()))
         if notes:
             lines += ['','**Pendência:** '+'; '.join(notes)+'. Ver [definições oficiais necessárias](../architecture/official_questions.md).']
+    # O CSV também pode apontar a evidências históricas após limpar o workspace.
+    candidates=list(dict.fromkeys(str(Path(path).parent/'regression.json')
+                    for row in rows for path in row['Evidência'].split('; ') if path))
+    manifest=next((path for path in candidates if (ROOT/path).is_file()),None)
+    manifest_note=(f'Manifesto preservado junto aos caminhos da matriz: [regression.json](../../{manifest}). '
+                   'Confira a identificação da rodada antes de combinar logs de exercícios individuais.'
+                   if manifest else 'O manifesto da nova rodada será publicado em `results/logs/regression.json` após a regressão.')
     lines += ['', '## Como interpretar','',
               '¹ Execuções são aposentadorias verificadas no teste próprio por instrução, incluindo instruções auxiliares que preparam operandos.',
               'PASS representa os testes disponíveis, não prova formal nem certificação da competição.',
-              'A tag identifica o RTL verificado; [regression.json](../../results/logs/regression.json) contém hashes dos arquivos testados.',
+              'A tag identifica o marco RTL; '+manifest_note,
               'Cada tag incremental conserva os logs da respectiva regressão. Esta tabela é atualizada automaticamente pela regressão.',
               'Para apenas reformatar os resultados existentes: `python3 scripts/regression/coverage.py --render-only`.']
     (ROOT/'docs/isa/coverage.md').write_text('\n'.join(lines)+'\n')

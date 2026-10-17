@@ -1,3 +1,0 @@
-$ vvp /home/luixf/eda/uniccass-icdesign-tools/shared_xserver/cmos-riscv/build/tb_regfile
-PASS regfile: 32 writes, 1024 dual reads, x0, enables and reset
-/home/luixf/eda/uniccass-icdesign-tools/shared_xserver/cmos-riscv/tb/unit/tb_regfile.sv:35: $finish called at 1406000 (1ps)

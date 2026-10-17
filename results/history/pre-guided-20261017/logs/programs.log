@@ -1,0 +1,2 @@
+$ /usr/bin/python3 /home/designer/shared/cmos-riscv/scripts/sim/programs.py
+PASS generated 76414 instructions; targets=41

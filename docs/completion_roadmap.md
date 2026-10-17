@@ -46,3 +46,12 @@ e executar aquele programa.
 
 Critérios detalhados da entrega: [report/conformidade.md](report/conformidade.md).
 Situação técnica e evidências: [status.md](status.md).
+
+## Prática guiada no workspace atual
+
+Por decisão do usuário em 17/10/2026, não será criada uma branch de entrega
+separada para a atividade. Build/logs/ondas foram arquivados para recomeçar a
+execução de forma acompanhada. O objetivo é compreender cada etapa e explicar
+o sistema no vídeo. Siga a [prática para o vídeo](../labs/rtl-to-gds/00-pratica-para-video.md).
+A preparação não executou testes; as próximas evidências serão geradas pelo usuário.
+As pendências oficiais e físicas da entrega continuam registradas acima.

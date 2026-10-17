@@ -65,6 +65,11 @@ de memórias/CRC. Nenhuma supressão de latch, largura ou loop combinacional.
 
 ## Evidências
 
+Na preparação da prática de 17/10/2026, as saídas correntes foram limpas.
+Os [logs anteriores](../results/history/pre-guided-20261017/README.md) foram
+preservados e os caminhos abaixo serão recriados pelos próximos comandos.
+Logs correntes são locais; rodadas publicadas ficam em `results/experiments/`.
+
 - `results/logs/tb_*.compile.log`: comandos e compilação limpa.
 - `results/logs/tb_*.log`: verificações PASS.
 - `results/logs/firmware_build.log` e `smoke.disasm`: compilação e instruções emitidas.
@@ -73,7 +78,8 @@ de memórias/CRC. Nenhuma supressão de latch, largura ou loop combinacional.
 - `results/logs/simple_synth.json` e `simple_netlist.log`: rodada de síntese genérica,
   produzida separadamente por `make simple-synth`.
 - `results/waveforms/smoke.vcd`: waveform reproduzível por `make wave`, ignorada
-  pelo Git para evitar arquivos grandes; o log da execução com waveform é versionado.
+  pelo Git para evitar arquivos grandes; cópias identificadas de log/VCD são
+  versionadas em `results/experiments/firmware-wave/`.
 - [Captura própria de 17/10/2026](../results/experiments/firmware-wave/README.md):
   um TB reexecutado isoladamente, VCD comprimido arquivado, imagens de boot/término
   e conferência dos contadores/transação pelo exportador. Não é nova regressão completa.

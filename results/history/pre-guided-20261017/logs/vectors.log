@@ -1,0 +1,2 @@
+$ /usr/bin/python3 /home/designer/shared/cmos-riscv/scripts/sim/vectors.py
+PASS deterministic vectors generated

@@ -6,3 +6,8 @@ results/waveforms/*
 !results/waveforms/.gitkeep
 *.elf
 *.bin
+
+# Saídas da prática; evidências identificadas ficam em experiments/ e history/.
+results/logs/*
+!results/logs/README.md
+results/archive/

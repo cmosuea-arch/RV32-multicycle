@@ -1,0 +1,12 @@
+$ iverilog -g2012 -Wall -s tb_core_smoke -o /home/designer/shared/cmos-riscv/build/tb_core_smoke rtl/address_decoder.sv rtl/alu.sv rtl/branch_comp.sv rtl/control_unit.sv rtl/decoder.sv rtl/dmem.sv rtl/imem.sv rtl/imm_ext.sv rtl/ir.sv rtl/lsu.sv rtl/multiplier.sv rtl/pc.sv rtl/regfile.sv rtl/riscv_core.sv rtl/riscv_top.sv /home/designer/shared/cmos-riscv/tb/integration/tb_core_smoke.sv
+rtl/riscv_core.sv:18: error: Unable to bind wire/reg/memory `jalr' in `tb_core_smoke.dut'
+rtl/riscv_core.sv:21:      : A symbol with that name was declared here. Check for declaration after use.
+rtl/riscv_core.sv:18: error: Unable to elaborate r-value: (jalr)?({alu_result['sd31:'sd1], 1'd0}):(alu_result)
+rtl/riscv_core.sv:19: error: Unable to bind wire/reg/memory `branch' in `tb_core_smoke.dut'
+rtl/riscv_core.sv:21:      : A symbol with that name was declared here. Check for declaration after use.
+rtl/riscv_core.sv:19: error: Unable to bind wire/reg/memory `jal' in `tb_core_smoke.dut'
+rtl/riscv_core.sv:21:      : A symbol with that name was declared here. Check for declaration after use.
+rtl/riscv_core.sv:19: error: Unable to bind wire/reg/memory `jalr' in `tb_core_smoke.dut'
+rtl/riscv_core.sv:21:      : A symbol with that name was declared here. Check for declaration after use.
+rtl/riscv_core.sv:19: error: Unable to elaborate r-value: (((branch)&&(branch_taken))o(jal))o(jalr)
+6 error(s) during elaboration.

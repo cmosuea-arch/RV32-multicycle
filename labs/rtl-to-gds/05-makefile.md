@@ -67,6 +67,7 @@ espaços; `if` chama `error` quando o nome está vazio.
 | Comando | Processo | Evidência agregada |
 |---|---|---|
 | `make help` | mostra descrições dos alvos | saída no terminal |
+| `make clean` | arquiva build/logs/ondas para reiniciar a prática | backup local com inventário/hash |
 | `make setup` | instala dependências e cria .venv | diagnóstico de ferramentas |
 | `make update` | atualiza dependências declaradas | diagnóstico de ferramentas |
 | `make doctor` | verifica ferramentas e compilador | saída no terminal |
