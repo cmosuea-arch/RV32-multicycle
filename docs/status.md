@@ -1,4 +1,4 @@
-# Estado do projeto — 2026-10-15
+# Estado do projeto — 2026-10-17
 
 Versão parcial de entrega: `rtl-subset-v0.1`. **41/47 instruções (87,23%)**.
 Matriz por instrução e categoria: [isa/coverage.md](isa/coverage.md).
@@ -49,8 +49,14 @@ O [laboratório](../labs/rtl-to-gds/README.md) possui oito aulas, com
 Consulte [synthesis.md](synthesis.md) para saídas e limites.
 
 Pendências para retomar: [architecture/official_questions.md](architecture/official_questions.md).
-O [relatório da Fase 2](report/README.md) possui versão preliminar em Markdown/PDF,
-com requisitos conferidos no guia e pendências explícitas. Diagramas ChipInventor,
+O [relatório da Fase 2](report/README.md) possui versão preliminar v0.2 em Markdown/PDF,
+com 17 páginas e figuras do datapath/controle em três painéis conferidos com o RTL.
+Os requisitos foram conferidos no guia e as pendências estão explícitas. Diagramas ChipInventor,
 resultados físicos, evidência do firmware oficial e vídeo ainda faltam para
 fechar a submissão. A redação não corresponde a uma nova execução dos testes.
 **O projeto completo e a parte RTL da competição permanecem NOT DONE.**
+
+Ordem de execução e progresso: [roteiro de conclusão](completion_roadmap.md).
+Em 17/10 o usuário confirmou que os esclarecimentos e o firmware ainda não
+foram enviados pela organização. As pendências oficiais permanecem abertas;
+a revisão atual concluiu as figuras do datapath existente, sem alterar RTL.

@@ -4,6 +4,7 @@ import argparse
 from html import escape
 from pathlib import Path
 import tempfile
+from urllib.parse import unquote
 
 from markdown_it import MarkdownIt
 from pypdf import PdfReader
@@ -14,7 +15,7 @@ from reportlab.lib.styles import ParagraphStyle
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import (
-    PageBreak, Paragraph, Preformatted, SimpleDocTemplate, Spacer, Table, TableStyle,
+    Image, PageBreak, Paragraph, Preformatted, SimpleDocTemplate, Spacer, Table, TableStyle,
 )
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -85,6 +86,18 @@ def main():
     while i < len(tokens):
         tok = tokens[i]
         if tok.type in ('heading_open', 'paragraph_open'):
+            children = tokens[i + 1].children or []
+            if tok.type == 'paragraph_open' and len(children) == 1 and children[0].type == 'image':
+                # Figuras locais são resolvidas em relação ao Markdown de origem.
+                path = args.source.parent / unquote(children[0].attrGet('src'))
+                figure = Image(str(path))
+                scale = min(WIDTH / figure.imageWidth, 560 / figure.imageHeight)
+                figure.drawWidth = figure.imageWidth * scale
+                figure.drawHeight = figure.imageHeight * scale
+                figure.hAlign = 'CENTER'
+                story.extend([figure, Spacer(1, 8)])
+                i += 3
+                continue
             style = headings[tok.tag] if tok.type == 'heading_open' else body
             story.append(Paragraph(inline(tokens[i + 1]), style))
             i += 3
@@ -139,7 +152,7 @@ def main():
         canvas.setFillColor(colors.HexColor('#50616f'))
         canvas.drawString(46, A4[1] - 28, 'CMOS RISC-V | ChampionCHIP — Fase 2')
         canvas.drawRightString(A4[0] - 46, A4[1] - 28, 'PRELIMINAR — NÃO SUBMETER')
-        canvas.drawString(46, 27, 'Relatório de andamento | v0.1 | 15/10/2026')
+        canvas.drawString(46, 27, 'Relatório de andamento | v0.2 | 17/10/2026')
         canvas.drawRightString(A4[0] - 46, 27, str(doc.page))
         canvas.restoreState()
 

@@ -2,6 +2,11 @@
 
 Fonte principal: Block Guide, seções 2–4, páginas físicas 9–23 do PDF combinado.
 
+Figuras para o relatório, conferidas com o RTL em 2026-10-17:
+[execução](figures/datapath-execution.svg), [memórias/PC](figures/datapath-memory.svg)
+e [controle](figures/datapath-control.svg). Os três painéis usam redes nomeadas;
+veja [fontes, reprodução e conferência](figures/README.md).
+
 ```mermaid
 flowchart TB
  IR[IR 32 bits] --> DEC[Decoder]

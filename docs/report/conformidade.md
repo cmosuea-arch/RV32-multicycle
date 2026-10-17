@@ -15,13 +15,13 @@ geral ou retificações que não estejam nesse arquivo.
 
 ## Requisitos expressos do guia
 
-| ID | Origem | Exigência | Local no relatório | Situação da versão 0.1 |
+| ID | Origem | Exigência | Local no relatório | Situação da versão 0.2 |
 |---|---|---|---|---|
 | R01 | §1, p. 2 | Objetivo, arquitetura, módulos, funcionamento e funcionalidades | §1 | Redigido para o escopo atual |
 | R02 | §2, pp. 2–3 | Quantidades esperadas/implementadas e percentual por categoria | §2.1 | 41/47; CRC experimental identificado separadamente |
 | R03 | §2, p. 3 | Lista de instruções por categoria | §2.2 | Incluída; sistema oficial pendente |
 | R04 | §2, p. 3 | Tabela opcode/funct3/funct7 das instruções implementadas | §§2.4–2.6 | 41 da baseline + 3 experimentais; conferida com CSV |
-| R05 | §3, p. 3 | Desenho completo do datapath com unidade de controle | §3 | Esquema textual provisório; incorporar figura completa e legível |
+| R05 | §3, p. 3 | Desenho completo do datapath com unidade de controle | §3 | Três painéis SVG/PNG incluídos, conferidos com o RTL atual; rever se houver alteração funcional |
 | R06 | §4, p. 3 | Explicação de cada módulo desenvolvido | §§4.1–4.3 | 17 módulos descritos, incluindo tops e experimento |
 | R07 | §4, p. 3 | Diagrama por módulo feito no ChipInventor | §§4.1–4.3 | F02–F18 pendentes; Mermaid não é evidência de autoria no ChipInventor |
 | R08 | §4, p. 3 | Testbenches individuais | §4 e código da entrega | 14 unitários e 17 integrações identificados; anexar todo o código no pacote |
@@ -30,7 +30,7 @@ geral ou retificações que não estejam nesse arquivo.
 | R11 | §6, p. 4 | Waveforms comprovando execução do firmware de validação | §6 | F21 oficial pendente; F20 próprio é evidência complementar |
 | R12 | §6, p. 4 | Logs do TB mostrando conclusão sem erros | §6 | Log próprio incluído; log do firmware oficial pendente |
 | R13 | §7, p. 4 | Vídeo de 5–7 min no YouTube cobrindo os seis temas indicados | Entregável separado | Pendente |
-| R14 | §8, p. 4 | Relatório PDF contendo tópicos 1–6, máximo 20 páginas | PDF preliminar | Formato e tópicos presentes; 15 páginas; conteúdo final ainda incompleto |
+| R14 | §8, p. 4 | Relatório PDF contendo tópicos 1–6, máximo 20 páginas | PDF preliminar | Formato e tópicos presentes; 17 páginas; conteúdo final ainda incompleto |
 | R15 | §9, p. 4 | Relatório, GDSII, GL, config.json e todo o código, incluindo TBs | Pacote de submissão | Código existente; PDF preliminar; resultados físicos ausentes |
 
 O guia menciona a GL em `results/final/verilog/gl`. Verificar a localização
@@ -42,7 +42,7 @@ final OpenLane exigida.
 
 | Identificador | Conteúdo | Critério de revisão |
 |---|---|---|
-| F01 | Datapath completo + controle | Caminho de dados, muxes, registradores, enables, larguras, memória e CRC opcional |
+| F01-A/B/C | Datapath completo + controle | Incluídos: execução, memória/PC e controle; fontes em architecture/figures/ |
 | F02–F08 | ALU, RF, Immediate, PC, IR, IMEM, Branch Comparator | Exportação ChipInventor, pinos legíveis, correspondência ao RTL |
 | F09–F13 | LSU, DMEM, Address Decoder, Decoder, FSM | Incluir controles, máscaras, latência e erros |
 | F14–F18 | Multiplicador, CRC, Core, Top, simple_system | Identificar CRC e sistema experimental; alinhar top final |
@@ -71,7 +71,7 @@ o fechamento da entrega deve registrar uma rodada nova no commit final.
 
 ## Organização das páginas
 
-Meta editorial atual: 15 páginas, com até cinco adicionais dentro do limite.
+Versão 0.2: 17 páginas, com até três adicionais dentro do limite.
 O limite considera conservadoramente tudo, inclusive identificação e referências,
 pois o guia não informa exceções de contagem.
 
@@ -79,10 +79,10 @@ pois o guia não informa exceções de contagem.
 |---|---|
 | Visão geral e método | 1–2 |
 | Cobertura, lista e codificações | 3–5 |
-| Datapath e sequenciamento | 6–7 |
-| Módulos, testes e automação | 8–11 |
-| Resultados físicos / síntese preparatória | 12 |
-| Firmware e referências | 13–15 |
+| Datapath e sequenciamento | 6–9 |
+| Módulos, testes e automação | 10–13 |
+| Resultados físicos / síntese preparatória | 14 |
+| Firmware e referências | 15–17 |
 
 A4, fonte DejaVu, margens, referências e esta distribuição são escolhas de
 edição. O guia consultado não determina template, ABNT, fonte ou margens.
@@ -95,7 +95,8 @@ a ponto de comprometer a leitura para manter a contagem.
 - [ ] Preencher integrantes, instituição e orientador e revisar autoria.
 - [ ] Resolver P01–P04 em `docs/architecture/official_questions.md` e atualizar resultados.
 - [ ] Conferir tabelas ISA com o RTL final, testes e firmware oficial.
-- [ ] Incorporar datapath completo e diagramas ChipInventor de cada módulo.
+- [x] Incorporar datapath/controle da versão atual (três painéis, revisados em 17/10/2026).
+- [ ] Rever as figuras após mudanças de RTL e incorporar diagramas ChipInventor de cada módulo.
 - [ ] Preencher área/densidade e inserir imagem do GDSII do processador.
 - [ ] Incluir waveform e logs do firmware oficial, declarando a etapa efetivamente atingida.
 - [ ] Vincular relatório, RTL, testes, firmware e resultados físicos ao commit de entrega.
@@ -106,3 +107,7 @@ a ponto de comprometer a leitura para manter a contagem.
 DRC/LVS, timing, hashes, regressão contínua e tag de fechamento são controles de
 engenharia internos documentados em AGENTS.md. São úteis para a validade técnica,
 mas não foram inventados como critérios de pontuação no Guia de Submissão.
+
+Revisão editorial de 17/10/2026: figuras F01-A/B/C incorporadas e PDF conferido
+com 17 páginas. O usuário informou que a organização ainda não enviou as
+definições nem o firmware oficial; essa dependência permanece aberta.

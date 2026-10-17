@@ -16,7 +16,9 @@ não está concluído. Consulte [o estado detalhado](docs/status.md) e
 O [relatório técnico da Fase 2](docs/report/README.md) já possui redação inicial
 e prévia PDF, organizadas conforme o guia da competição. A
 [lista de conferência](docs/report/conformidade.md) identifica os requisitos e
-as figuras/resultados ainda necessários para a submissão.
+as figuras/resultados ainda necessários para a submissão. A ordem de trabalho
+está no [roteiro de conclusão](docs/completion_roadmap.md); o datapath atual
+já está desenhado em três painéis na prévia de 17 páginas.
 
 ## Comece pelo laboratório
 

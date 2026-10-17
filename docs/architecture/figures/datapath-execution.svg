@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg
+  PUBLIC '-//W3C//DTD SVG 1.0//EN'
+  'http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd'>
+<svg width="600" height="660" preserveAspectRatio="xMinYMin meet" viewBox="0 0 600 660" xmlns="http://www.w3.org/2000/svg" version="1.0" fill-rule="evenodd" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<title>...</title>
+	<desc>...</desc>
+	<clipPath id="clip">
+		<rect x="0" y="0" width="600" height="660"/>
+	</clipPath>
+	<g id="group" transform="scale(1,-1) translate(0,-660)" style="clip-path: url(#clip)">
+		<g transform="">
+			<rect x="0" y="0" width="600" height="660" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(100%,100%,100%); fill-rule: evenodd;"/>
+			<text x="16" y="638" style="font-family: DejaVu Sans; font-size: 15px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,1276) scale(1,-1)">F01-A — Operandos, execução e writeback</text>
+			<text x="16" y="618" style="font-family: DejaVu Sans; font-size: 9px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,1236) scale(1,-1)">Painéis A–C usam redes nomeadas: mesmo nome significa o mesmo fio.</text>
+			<rect x="20" y="535" width="245" height="60" rx="6" ry="6" style="stroke: rgb(19%,36%,47%); stroke-linecap: butt; stroke-width: 1; fill: rgb(92%,96%,98%); fill-rule: evenodd;"/>
+			<text x="30" y="577" style="font-family: DejaVu Sans; font-size: 12px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,1154) scale(1,-1)">IR → instruction[31:0]</text>
+			<text x="30" y="559" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,1118) scale(1,-1)">Entrada do painel B</text>
+			<text x="30" y="545" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,1090) scale(1,-1)">Índices rs1/rs2/rd: 5 bits cada</text>
+			<rect x="335" y="535" width="245" height="60" rx="6" ry="6" style="stroke: rgb(19%,36%,47%); stroke-linecap: butt; stroke-width: 1; fill: rgb(92%,96%,98%); fill-rule: evenodd;"/>
+			<text x="345" y="577" style="font-family: DejaVu Sans; font-size: 12px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,1154) scale(1,-1)">Immediate Extension</text>
+			<text x="345" y="559" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,1118) scale(1,-1)">instruction → immediate[31:0]</text>
+			<text x="345" y="545" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,1090) scale(1,-1)">Formatos I / S / B / U / J</text>
+			<polyline points="265 565, 335 565" style="stroke: rgb(19%,36%,47%); stroke-linecap: butt; stroke-width: 1; fill: None; fill-rule: evenodd;"/>
+			<polygon points="335 565, 328 562, 328 568" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(19%,36%,47%); fill-rule: evenodd;"/>
+			<text x="289" y="573" style="font-family: DejaVu Sans; font-size: 9px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,1146) scale(1,-1)">32</text>
+			<rect x="20" y="425" width="245" height="80" rx="6" ry="6" style="stroke: rgb(19%,36%,47%); stroke-linecap: butt; stroke-width: 1; fill: rgb(85%,92%,87%); fill-rule: evenodd;"/>
+			<text x="30" y="487" style="font-family: DejaVu Sans; font-size: 12px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,974) scale(1,-1)">Register File — 32 × 32</text>
+			<text x="30" y="469" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,938) scale(1,-1)">instruction: índices; entrada: writeback_data</text>
+			<text x="30" y="455" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,910) scale(1,-1)">Saídas a = rs1 e b = rs2 (32 bits)</text>
+			<text x="30" y="441" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,882) scale(1,-1)">WE = retire &amp;&amp; reg_we; x0 = 0</text>
+			<polyline points="140 535, 140 505" style="stroke: rgb(19%,36%,47%); stroke-linecap: butt; stroke-width: 1; fill: None; fill-rule: evenodd;"/>
+			<polygon points="140 505, 137 512, 143 512" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(19%,36%,47%); fill-rule: evenodd;"/>
+			<text x="148" y="516" style="font-family: DejaVu Sans; font-size: 9px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,1032) scale(1,-1)">índices</text>
+			<rect x="335" y="425" width="245" height="80" rx="6" ry="6" style="stroke: rgb(19%,36%,47%); stroke-linecap: butt; stroke-width: 1; fill: rgb(92%,96%,98%); fill-rule: evenodd;"/>
+			<text x="345" y="487" style="font-family: DejaVu Sans; font-size: 12px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,974) scale(1,-1)">Branch Comparator</text>
+			<text x="345" y="469" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,938) scale(1,-1)">Entradas: a, b e funct3[2:0]</text>
+			<text x="345" y="455" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,910) scale(1,-1)">Saída: branch_taken (1 bit)</text>
+			<text x="345" y="441" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,882) scale(1,-1)">Destino: seleção de PC no painel B</text>
+			<text x="335" y="408" style="font-family: DejaVu Sans; font-size: 9px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,816) scale(1,-1)">a / b / funct3 são redes nomeadas do RF e IR.</text>
+			<rect x="20" y="315" width="245" height="65" rx="6" ry="6" style="stroke: rgb(19%,36%,47%); stroke-linecap: butt; stroke-width: 1; fill: rgb(92%,96%,98%); fill-rule: evenodd;"/>
+			<text x="30" y="362" style="font-family: DejaVu Sans; font-size: 12px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,724) scale(1,-1)">MUX A</text>
+			<text x="30" y="344" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,688) scale(1,-1)">a_pc ? current_pc : a</text>
+			<text x="30" y="330" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,660) scale(1,-1)">Saída A[31:0] para a ALU</text>
+			<rect x="335" y="315" width="245" height="65" rx="6" ry="6" style="stroke: rgb(19%,36%,47%); stroke-linecap: butt; stroke-width: 1; fill: rgb(92%,96%,98%); fill-rule: evenodd;"/>
+			<text x="345" y="362" style="font-family: DejaVu Sans; font-size: 12px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,724) scale(1,-1)">MUX B</text>
+			<text x="345" y="344" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,688) scale(1,-1)">b_imm ? immediate : b</text>
+			<text x="345" y="330" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,660) scale(1,-1)">Saída B[31:0] para a ALU</text>
+			<polyline points="140 425, 140 380" style="stroke: rgb(19%,36%,47%); stroke-linecap: butt; stroke-width: 1; fill: None; fill-rule: evenodd;"/>
+			<polygon points="140 380, 137 387, 143 387" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(19%,36%,47%); fill-rule: evenodd;"/>
+			<text x="148" y="390" style="font-family: DejaVu Sans; font-size: 9px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,780) scale(1,-1)">a[31:0]</text>
+			<text x="335" y="390" style="font-family: DejaVu Sans; font-size: 9px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,780) scale(1,-1)">current_pc vem do painel B.</text>
+			<rect x="20" y="210" width="175" height="65" rx="6" ry="6" style="stroke: rgb(19%,36%,47%); stroke-linecap: butt; stroke-width: 1; fill: rgb(92%,96%,98%); fill-rule: evenodd;"/>
+			<text x="30" y="257" style="font-family: DejaVu Sans; font-size: 12px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,514) scale(1,-1)">ALU</text>
+			<text x="30" y="239" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,478) scale(1,-1)">A, B, alu_op[3:0]</text>
+			<text x="30" y="225" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,450) scale(1,-1)">alu_result[31:0]</text>
+			<rect x="215" y="210" width="175" height="65" rx="6" ry="6" style="stroke: rgb(19%,36%,47%); stroke-linecap: butt; stroke-width: 1; fill: rgb(92%,96%,98%); fill-rule: evenodd;"/>
+			<text x="225" y="257" style="font-family: DejaVu Sans; font-size: 12px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,514) scale(1,-1)">Multiplicador</text>
+			<text x="225" y="239" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,478) scale(1,-1)">a, b, {0, funct3}</text>
+			<text x="225" y="225" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,450) scale(1,-1)">product[31:0]</text>
+			<rect x="410" y="210" width="170" height="65" rx="6" ry="6" style="stroke: rgb(63%,36%,7%); stroke-linecap: butt; stroke-width: 1; fill: rgb(100%,95%,87%); fill-rule: evenodd;"/>
+			<text x="420" y="257" style="font-family: DejaVu Sans; font-size: 12px;fill: rgb(63%,36%,7%); stroke:none;" transform="translate(0,514) scale(1,-1)">CRC experimental</text>
+			<text x="420" y="239" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(63%,36%,7%); stroke:none;" transform="translate(0,478) scale(1,-1)">a, b, {0, funct3}</text>
+			<text x="420" y="225" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(63%,36%,7%); stroke:none;" transform="translate(0,450) scale(1,-1)">crc_result[31:0]</text>
+			<polyline points="100 315, 100 275" style="stroke: rgb(19%,36%,47%); stroke-linecap: butt; stroke-width: 1; fill: None; fill-rule: evenodd;"/>
+			<polygon points="100 275, 97 282, 103 282" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(19%,36%,47%); fill-rule: evenodd;"/>
+			<text x="25" y="291" style="font-family: DejaVu Sans; font-size: 9px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,582) scale(1,-1)">A[31:0]</text>
+			<polyline points="450 315, 450 295, 170 295, 170 275" style="stroke: rgb(19%,36%,47%); stroke-linecap: butt; stroke-width: 1; fill: None; fill-rule: evenodd;"/>
+			<polygon points="170 275, 167 282, 173 282" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(19%,36%,47%); fill-rule: evenodd;"/>
+			<text x="247" y="301" style="font-family: DejaVu Sans; font-size: 9px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,602) scale(1,-1)">B[31:0]</text>
+			<rect x="20" y="105" width="560" height="65" rx="6" ry="6" style="stroke: rgb(19%,36%,47%); stroke-linecap: butt; stroke-width: 1; fill: rgb(85%,92%,87%); fill-rule: evenodd;"/>
+			<text x="30" y="152" style="font-family: DejaVu Sans; font-size: 12px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,304) scale(1,-1)">MUX de execução → result_q[31:0]</text>
+			<text x="30" y="134" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,268) scale(1,-1)">Prioridade: (jal || jalr) ? plus4 : crc_op ? CRC : mul ? MULT : ALU</text>
+			<text x="30" y="120" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,240) scale(1,-1)">Captura em EXECUTE; reset zera. plus4 vem do PC (painel B).</text>
+			<polyline points="110 210, 110 170" style="stroke: rgb(19%,36%,47%); stroke-linecap: butt; stroke-width: 1; fill: None; fill-rule: evenodd;"/>
+			<polygon points="110 170, 107 177, 113 177" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(19%,36%,47%); fill-rule: evenodd;"/>
+			<text x="117" y="184" style="font-family: DejaVu Sans; font-size: 9px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,368) scale(1,-1)">32</text>
+			<polyline points="300 210, 300 170" style="stroke: rgb(19%,36%,47%); stroke-linecap: butt; stroke-width: 1; fill: None; fill-rule: evenodd;"/>
+			<polygon points="300 170, 297 177, 303 177" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(19%,36%,47%); fill-rule: evenodd;"/>
+			<text x="307" y="184" style="font-family: DejaVu Sans; font-size: 9px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,368) scale(1,-1)">32</text>
+			<polyline points="490 210, 490 170" style="stroke: rgb(19%,36%,47%); stroke-linecap: butt; stroke-width: 1; fill: None; fill-rule: evenodd;"/>
+			<polygon points="490 170, 487 177, 493 177" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(19%,36%,47%); fill-rule: evenodd;"/>
+			<text x="497" y="184" style="font-family: DejaVu Sans; font-size: 9px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,368) scale(1,-1)">32</text>
+			<rect x="20" y="10" width="560" height="60" rx="6" ry="6" style="stroke: rgb(19%,36%,47%); stroke-linecap: butt; stroke-width: 1; fill: rgb(92%,96%,98%); fill-rule: evenodd;"/>
+			<text x="30" y="52" style="font-family: DejaVu Sans; font-size: 12px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,104) scale(1,-1)">MUX writeback → writeback_data[31:0] → RF</text>
+			<text x="30" y="34" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,68) scale(1,-1)">load ? load_data : result_q; load_data vem da LSU (painel B).</text>
+			<text x="30" y="20" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,40) scale(1,-1)">CRC existe somente com EXPERIMENTAL_XICRC=1; padrão é 0.</text>
+			<polyline points="300 105, 300 70" style="stroke: rgb(19%,36%,47%); stroke-linecap: butt; stroke-width: 1; fill: None; fill-rule: evenodd;"/>
+			<polygon points="300 70, 297 77, 303 77" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(19%,36%,47%); fill-rule: evenodd;"/>
+			<text x="310" y="83" style="font-family: DejaVu Sans; font-size: 9px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,166) scale(1,-1)">result_q[31:0]</text>
+		</g>
+	</g>
+</svg>

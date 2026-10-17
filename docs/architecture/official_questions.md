@@ -3,6 +3,11 @@
 Atualização 2026-10-13: existe um [contrato CRC interno provisório](crc_provisional.md)
 autorizado para desenvolvimento. Ele não encerra as perguntas abaixo.
 
+Revisão em **2026-10-17**: o usuário informou que a organização ainda não enviou
+os esclarecimentos nem o firmware oficial. P01–P04 continuam abertas; o material
+local não recebeu complemento. Isso não impede documentação, preparação de
+evidências próprias e desenho do datapath já implementado.
+
 Referências a páginas físicas de `Champion-chip-guia-fase-2.pdf` (arquivo de 24 páginas).
 
 1. **Xicrc — pp.12,14–15, tabelas 8 e 11.** As codificações de CRCB/CRCH/CRCW estão
@@ -24,6 +29,13 @@ Referências a páginas físicas de `Champion-chip-guia-fase-2.pdf` (arquivo de 
 Consulta pública feita em 2026-09-11 com termos ChampionCHIP/ChipInventor/Xicrc/
 firmware não encontrou complemento oficial. Isso não prova inexistência de
 material na plataforma restrita. O Ibex não resolve essas definições da competição.
+
+Nova consulta em 2026-10-17 ao [site oficial](https://championchipexperience.org/)
+e buscas por Xicrc/firmware/guia não localizaram complemento oficial público
+que resolvesse P01–P04. A wiki pública ChipInventor não pôde ser aberta pela
+ferramenta de consulta usada. Esses limites não comprovam ausência de material
+na plataforma. Implementações de outras equipes não substituem esclarecimento
+da organização nem foram usadas para escolher semântica de sistema.
 
 Após recebê-las: fechar CRC isolado → integração e regressão → sistema → 47/47 →
 firmware oficial → interface final e entregáveis → OpenLane → GDSII, mantendo

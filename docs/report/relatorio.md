@@ -1,6 +1,6 @@
 # CMOS RISC-V — Relatório técnico da Fase 2
 
-**Versão preliminar 0.1 — 15 de outubro de 2026**
+**Versão preliminar 0.2 — 17 de outubro de 2026**
 
 Equipe: CMOS. Integrantes, instituição e orientador: **a preencher pela equipe**.
 Repositório: cmosuea-arch/RV32-multicycle. Referência documental: commit `33c1722`.
@@ -255,56 +255,41 @@ inferidos apenas pela quantidade indicada no guia; permanecem pendentes.
 
 ### 3.1 Caminho de dados e controle
 
-A Figura 1 apresenta a organização funcional usada para leitura deste rascunho.
-O diagrama completo de desenvolvimento está em [R3], com muxes, registradores e
-conexões de controle. Sua figura final legível deverá ser incorporada à versão
-de submissão; diagramas por módulo no ChipInventor são uma pendência da seção 4.
+A Figura 1 está dividida em três painéis complementares: execução, memória/PC e
+controle. Os desenhos foram conferidos com o RTL em 17/10/2026. Uma rede repetida
+pelo mesmo nome representa o mesmo sinal; as ligações entre painéis usam essa
+convenção para manter a leitura no tamanho de página do relatório.
 
-```text
- PC -> mux endereco -> Address Decoder -> IMEM / DMEM
- ^                           |                |
- |                           +-- retorno -----+
- |                                |       |
- |                                v       v
- |                               IR      LSU (load)
- |                           /    |    \
- |                         RF  Immediate Decoder -> FSM
- |                      rs1/rs2    |       |        |
- |                         |      |       |   enables/oe/we
- |                +--------+------+-------+
- |                |        |      |       |
- |             mux A/B   Branch  MULT    CRC(*)
- |                |        |      |       |
- |               ALU       |      |       |
- |                +--------+------+-------+
- |                |                       |
- |      alvo / PC+4 / branch         mux resultado
- |                |                       |
- +-- next_pc_q <--+                    result_q
-                                         |  |
-                         endereco efetivo+  +-- LSU (store)
-                                         |
-                        resultado / load -> mux WB -> RF
- (*) CRC habilitado somente no perfil experimental.
-```
+![Figura F01-A: operandos, execução e writeback](../architecture/figures/datapath-execution.png)
 
-**Figura 1 — Organização funcional em texto, provisória.** Dados, endereços e
-instruções têm 32 bits. RF recebe índices de 5 bits; funct3 usa 3 bits;
-byte write usa 4 bits. Seletores ALU/MULT/CRC usam 4 bits. Clock/reset alcançam
-os elementos sequenciais. As conexões agrupadas representam seleção por muxes,
-não uma ligação elétrica direta entre todas as saídas.
+**Figura 1-A — Operandos, execução e retorno ao banco de registradores.**
+ALU, MULT e CRC recebem os sinais indicados; o CRC só existe com o parâmetro
+experimental habilitado. Fontes vetoriais e instruções de reprodução estão em [R3].
 
-O operando A da ALU seleciona rs1 ou PC; B seleciona rs2 ou imediato.
-O comparador usa rs1/rs2 para decidir branches. A ALU calcula resultados,
-endereços e alvos. JAL/JALR selecionam PC+4 para escrever o link;
-JALR zera o bit 0 do alvo. `result_q` guarda o resultado de execução ou endereço
-efetivo; `next_pc_q` guarda PC+4 ou alvo. O mux de writeback seleciona resultado
-ou dado formatado pela LSU.
+<!-- pagebreak -->
 
-`decoder` produz seleções a partir da instrução; `control_unit` sequencia os
-estados. A lógica de `riscv_core` combina esses sinais com o estado para gerar
-os enables de PC, IR, RF e memória. Os sinais `commit_*` expõem a aposentadoria
-aos testes, sem definir a pinagem final da competição.
+### 3.1 Caminho de dados e controle — memória e PC
+
+![Figura F01-B: próximo PC, LSU e memórias](../architecture/figures/datapath-memory.png)
+
+**Figura 1-B — Endereçamento e retorno de memória.** `alu_result`, `result_q`,
+`a` e `b` são as redes do painel A. `branch_taken` determina o branch junto ao
+decode. A LSU recebe a palavra lida, posiciona stores e produz o dado de load.
+O Address Decoder roteia os pedidos, protege a ROM e seleciona o retorno.
+O PC atualiza na aposentadoria e o IR captura somente em FETCH válido.
+
+<!-- pagebreak -->
+
+### 3.1 Caminho de dados e controle — sequenciamento e enables
+
+![Figura F01-C: decode, FSM, enables e observação](../architecture/figures/datapath-control.png)
+
+**Figura 1-C — Controle associado aos dois painéis de dados.** O decoder gera
+seleções e classes; a FSM recebe classificação/erros; a lógica do core produz
+enables e controles do barramento. A política FAULT é um diagnóstico CMOS.
+Os sinais `commit_*` são observação para verificação, sem definir a pinagem final.
+Os desenhos representam a implementação atual. Diagramas por módulo feitos no
+ChipInventor e revisão da interface final continuam pendentes.
 
 <!-- pagebreak -->
 
@@ -734,6 +719,7 @@ retificações ou instruções adicionais da plataforma da competição.
 São regras e decisões internas; não equivalem ao regulamento da organização.
 
 **[R3] Arquitetura.** [Datapath](../architecture/block_diagram.md),
+[figuras e reprodução](../architecture/figures/README.md),
 [interfaces](../architecture/interfaces.md),
 [mapa de memória](../architecture/memory_map.md) e
 [documentação dos módulos](../modules/).
