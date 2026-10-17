@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Create a formatted XLSX workbook from the ISA coverage CSV using stdlib only."""
+# XLSX é um ZIP de documentos XML: cria duas abas sem depender de pandas/openpyxl.
 from collections import OrderedDict
 import csv
 from pathlib import Path
@@ -22,6 +23,7 @@ LABELS = {
 
 
 def column_name(index):
+    # Converte índice começando em 1 para o nome Excel: A..Z, AA, AB...
     name = ''
     while index:
         index, remainder = divmod(index - 1, 26)
@@ -30,6 +32,7 @@ def column_name(index):
 
 
 def cell(reference, value, style=0, number=False):
+    # Texto preserva zeros das codificações binárias; números permitem percentuais.
     if number:
         return f'<c r="{reference}" s="{style}"><v>{value}</v></c>'
     text = escape(str(value))
@@ -38,6 +41,7 @@ def cell(reference, value, style=0, number=False):
 
 
 def row_xml(number, values, styles=None, numbers=None, height=None):
+    # Monta células da linha, aplicando estilo, tipo e altura quando informados.
     styles = styles or {}
     numbers = numbers or set()
     attrs = f' r="{number}"'
@@ -50,6 +54,7 @@ def row_xml(number, values, styles=None, numbers=None, height=None):
 
 
 def worksheet(rows, widths, freeze_row=1, autofilter=None, table=False):
+    # Configura largura, cabeçalho congelado, filtro e vínculo opcional com tabela Excel.
     max_row = len(rows)
     max_col = max(len(values) for values, _, _, _ in rows)
     dimension = f'A1:{column_name(max_col)}{max_row}'
@@ -72,12 +77,14 @@ def worksheet(rows, widths, freeze_row=1, autofilter=None, table=False):
 
 
 def zip_write(archive, name, content):
+    # Timestamp fixo evita mudar o XLSX só pelo horário em que foi gerado.
     info = ZipInfo(name, (2026, 1, 1, 0, 0, 0))
     info.compress_type = ZIP_DEFLATED
     archive.writestr(info, content.encode('utf-8'))
 
 
 def generate_xlsx(csv_path, output_path):
+    # Lê os registros existentes; exportar a planilha não executa testes novos.
     csv_path, output_path = Path(csv_path), Path(output_path)
     with csv_path.open(newline='', encoding='utf-8') as source:
         data = list(csv.DictReader(source))
@@ -88,6 +95,7 @@ def generate_xlsx(csv_path, output_path):
     for item in data:
         groups.setdefault(item['Categoria'], []).append(item)
 
+    # Aba Resumo: contagem/percentual por grupo e estado do firmware oficial.
     summary = [
         (['Cobertura ISA — ChampionCHIP'], {1: 5}, set(), 26),
         (['Categoria', 'Implementadas', 'Esperadas', 'Cobertura'], {1: 1, 2: 1, 3: 1, 4: 1}, set(), 22),
@@ -108,6 +116,7 @@ def generate_xlsx(csv_path, output_path):
         (['Observação', 'O firmware próprio não substitui a validação oficial.'], {1: 3}, set(), 30),
     ]
 
+    # Aba Instruções: todos os campos do CSV, com cores para PASS e PENDENTE.
     detail = [(headers, {index: 1 for index in range(1, len(headers) + 1)}, set(), 30)]
     for item in data:
         values = [item[header] for header in headers]
@@ -133,6 +142,7 @@ def generate_xlsx(csv_path, output_path):
  <tableStyleInfo name="TableStyleMedium2" showFirstColumn="0" showLastColumn="0" showRowStripes="1" showColumnStripes="0"/>
 </table>'''
 
+    # Partes e relacionamentos do formato Office Open XML conectam abas, tabela e estilos.
     content_types = '''<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
  <Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>
@@ -202,6 +212,7 @@ def generate_xlsx(csv_path, output_path):
 <Properties xmlns="http://schemas.openxmlformats.org/officeDocument/2006/extended-properties"
  xmlns:vt="http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes"><Application>CMOS coverage generator</Application></Properties>'''
 
+    # Empacota XMLs e metadados no arquivo que Excel/LibreOffice reconhecem como XLSX.
     with ZipFile(output_path, 'w') as archive:
         for name, content in [
             ('[Content_Types].xml', content_types), ('_rels/.rels', root_rels),

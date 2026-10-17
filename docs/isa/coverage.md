@@ -44,7 +44,7 @@ Slots de sistema são pendências, não nomes oficiais de instruções.
 | `OR` | `0110011` | `110` | `0000000` | PASS | PASS | PASS | 74 |
 | `AND` | `0110011` | `111` | `0000000` | PASS | PASS | PASS | 74 |
 
-**Evidências:** [tb_decoder](../../results/history/pre-guided-20261017/logs/tb_decoder.log), [tb_alu](../../results/history/pre-guided-20261017/logs/tb_alu.log), [tb_isa](../../results/history/pre-guided-20261017/logs/tb_isa.log).
+**Evidências:** [tb_decoder](../../results/logs/tb_decoder.log), [tb_alu](../../results/logs/tb_alu.log), [tb_isa](../../results/logs/tb_isa.log).
 
 ## Aritmética e lógica — imediatos
 
@@ -63,7 +63,7 @@ Slots de sistema são pendências, não nomes oficiais de instruções.
 | `SRLI` | `0010011` | `101` | `0000000` | PASS | PASS | PASS | 38 |
 | `SRAI` | `0010011` | `101` | `0100000` | PASS | PASS | PASS | 38 |
 
-**Evidências:** [tb_decoder](../../results/history/pre-guided-20261017/logs/tb_decoder.log), [tb_imm_ext](../../results/history/pre-guided-20261017/logs/tb_imm_ext.log), [tb_alu](../../results/history/pre-guided-20261017/logs/tb_alu.log), [tb_isa](../../results/history/pre-guided-20261017/logs/tb_isa.log).
+**Evidências:** [tb_decoder](../../results/logs/tb_decoder.log), [tb_imm_ext](../../results/logs/tb_imm_ext.log), [tb_alu](../../results/logs/tb_alu.log), [tb_isa](../../results/logs/tb_isa.log).
 
 ## Imediatos superiores
 
@@ -75,7 +75,7 @@ Slots de sistema são pendências, não nomes oficiais de instruções.
 | `LUI` | `0110111` | — | — | PASS | PASS | PASS | 6 |
 | `AUIPC` | `0010111` | — | — | PASS | PASS | PASS | 6 |
 
-**Evidências:** [tb_decoder](../../results/history/pre-guided-20261017/logs/tb_decoder.log), [tb_imm_ext](../../results/history/pre-guided-20261017/logs/tb_imm_ext.log), [tb_pc](../../results/history/pre-guided-20261017/logs/tb_pc.log), [tb_isa](../../results/history/pre-guided-20261017/logs/tb_isa.log).
+**Evidências:** [tb_decoder](../../results/logs/tb_decoder.log), [tb_imm_ext](../../results/logs/tb_imm_ext.log), [tb_pc](../../results/logs/tb_pc.log), [tb_isa](../../results/logs/tb_isa.log).
 
 ## Desvios condicionais
 
@@ -91,7 +91,7 @@ Slots de sistema são pendências, não nomes oficiais de instruções.
 | `BLTU` | `1100011` | `110` | — | PASS | PASS | PASS | 7 |
 | `BGEU` | `1100011` | `111` | — | PASS | PASS | PASS | 7 |
 
-**Evidências:** [tb_decoder](../../results/history/pre-guided-20261017/logs/tb_decoder.log), [tb_branch_comp](../../results/history/pre-guided-20261017/logs/tb_branch_comp.log), [tb_isa](../../results/history/pre-guided-20261017/logs/tb_isa.log).
+**Evidências:** [tb_decoder](../../results/logs/tb_decoder.log), [tb_branch_comp](../../results/logs/tb_branch_comp.log), [tb_isa](../../results/logs/tb_isa.log).
 
 ## Saltos
 
@@ -103,7 +103,7 @@ Slots de sistema são pendências, não nomes oficiais de instruções.
 | `JAL` | `1101111` | — | — | PASS | PASS | PASS | 4 |
 | `JALR` | `1100111` | `000` | — | PASS | PASS | PASS | 4 |
 
-**Evidências:** [tb_decoder](../../results/history/pre-guided-20261017/logs/tb_decoder.log), [tb_pc](../../results/history/pre-guided-20261017/logs/tb_pc.log), [tb_imm_ext](../../results/history/pre-guided-20261017/logs/tb_imm_ext.log), [tb_isa](../../results/history/pre-guided-20261017/logs/tb_isa.log).
+**Evidências:** [tb_decoder](../../results/logs/tb_decoder.log), [tb_pc](../../results/logs/tb_pc.log), [tb_imm_ext](../../results/logs/tb_imm_ext.log), [tb_isa](../../results/logs/tb_isa.log).
 
 ## Leitura de memória
 
@@ -118,7 +118,7 @@ Slots de sistema são pendências, não nomes oficiais de instruções.
 | `LBU` | `0000011` | `100` | — | PASS | PASS | PASS | 31 |
 | `LHU` | `0000011` | `101` | — | PASS | PASS | PASS | 21 |
 
-**Evidências:** [tb_decoder](../../results/history/pre-guided-20261017/logs/tb_decoder.log), [tb_lsu](../../results/history/pre-guided-20261017/logs/tb_lsu.log), [tb_dmem](../../results/history/pre-guided-20261017/logs/tb_dmem.log), [tb_isa](../../results/history/pre-guided-20261017/logs/tb_isa.log).
+**Evidências:** [tb_decoder](../../results/logs/tb_decoder.log), [tb_lsu](../../results/logs/tb_lsu.log), [tb_dmem](../../results/logs/tb_dmem.log), [tb_isa](../../results/logs/tb_isa.log).
 
 ## Escrita de memória
 
@@ -131,7 +131,7 @@ Slots de sistema são pendências, não nomes oficiais de instruções.
 | `SH` | `0100011` | `001` | — | PASS | PASS | PASS | 4 |
 | `SW` | `0100011` | `010` | — | PASS | PASS | PASS | 35 |
 
-**Evidências:** [tb_decoder](../../results/history/pre-guided-20261017/logs/tb_decoder.log), [tb_lsu](../../results/history/pre-guided-20261017/logs/tb_lsu.log), [tb_dmem](../../results/history/pre-guided-20261017/logs/tb_dmem.log), [tb_isa](../../results/history/pre-guided-20261017/logs/tb_isa.log).
+**Evidências:** [tb_decoder](../../results/logs/tb_decoder.log), [tb_lsu](../../results/logs/tb_lsu.log), [tb_dmem](../../results/logs/tb_dmem.log), [tb_isa](../../results/logs/tb_isa.log).
 
 ## Multiplicação — Zmmul
 
@@ -145,7 +145,7 @@ Slots de sistema são pendências, não nomes oficiais de instruções.
 | `MULHSU` | `0110011` | `010` | `0000001` | PASS | PASS | PASS | 74 |
 | `MULHU` | `0110011` | `011` | `0000001` | PASS | PASS | PASS | 74 |
 
-**Evidências:** [tb_decoder](../../results/history/pre-guided-20261017/logs/tb_decoder.log), [tb_multiplier](../../results/history/pre-guided-20261017/logs/tb_multiplier.log), [tb_isa](../../results/history/pre-guided-20261017/logs/tb_isa.log).
+**Evidências:** [tb_decoder](../../results/logs/tb_decoder.log), [tb_multiplier](../../results/logs/tb_multiplier.log), [tb_isa](../../results/logs/tb_isa.log).
 
 ## CRC — Xicrc
 
@@ -177,6 +177,6 @@ Slots de sistema são pendências, não nomes oficiais de instruções.
 
 ¹ Execuções são aposentadorias verificadas no teste próprio por instrução, incluindo instruções auxiliares que preparam operandos.
 PASS representa os testes disponíveis, não prova formal nem certificação da competição.
-A tag identifica o marco RTL; Manifesto preservado junto aos caminhos da matriz: [regression.json](../../results/history/pre-guided-20261017/logs/regression.json). Confira a identificação da rodada antes de combinar logs de exercícios individuais.
+A tag identifica o marco RTL; Manifesto preservado junto aos caminhos da matriz: [regression.json](../../results/logs/regression.json). Confira a identificação da rodada antes de combinar logs de exercícios individuais.
 Cada tag incremental conserva os logs da respectiva regressão. Esta tabela é atualizada automaticamente pela regressão.
 Para apenas reformatar os resultados existentes: `python3 scripts/regression/coverage.py --render-only`.

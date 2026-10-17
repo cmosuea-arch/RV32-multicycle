@@ -8,6 +8,7 @@ from pathlib import Path
 
 
 def main():
+    # Acumula ausências e imprime o caminho real para detectar ferramentas antigas no PATH.
     failed = []
     print(f'Python: {sys.version.split()[0]} ({sys.executable})')
     if sys.version_info < (3, 9):
@@ -51,6 +52,7 @@ def main():
             except (OSError, subprocess.TimeoutExpired) as error:
                 print(error)
                 failed.append('compilação RV32I_Zmmul/ILP32')
+    # Código de saída não zero faz make doctor falhar; nenhuma instalação é feita aqui.
     if failed:
         print('AMBIENTE INCOMPLETO: ' + ', '.join(failed))
         print('Execute bash scripts/setup/install.sh; confira também o PATH exibido.')

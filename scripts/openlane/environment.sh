@@ -25,6 +25,7 @@ docker info >/dev/null 2>&1 || {
     exit 1
 }
 
+# Somente install acessa o registry; outros modos exigem a imagem já disponível.
 if [[ "$action" == install ]]; then
     docker pull "$image"
     action=check
@@ -56,6 +57,7 @@ case "$action" in
             -lc 'bash scripts/openlane/check.sh'
         ;;
     smoke)
+        # O exemplo roda em /tmp do contêiner; não é o layout do processador CMOS.
         exec docker run "${common_args[@]}" "$image" \
             -lc 'cd /tmp && bash /home/designer/shared/cmos-riscv/scripts/openlane/librelane.sh --smoke-test'
         ;;

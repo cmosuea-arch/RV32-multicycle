@@ -3,6 +3,7 @@ from binascii import crc_hqx
 
 
 def crc_model(accumulator, data, op):
+    # op escolhe quantos bytes baixos consumir; código inválido deve devolver zero.
     size = {0: 1, 1: 2, 2: 4}.get(op)
     if size is None:
         return 0
@@ -11,5 +12,6 @@ def crc_model(accumulator, data, op):
 
 
 def check_reference():
+    # Confere duas respostas conhecidas antes de usar a biblioteca como referência.
     assert crc_hqx(b'123456789', 0xffff) == 0x29b1
     assert crc_hqx(b'123456789', 0) == 0x31c3

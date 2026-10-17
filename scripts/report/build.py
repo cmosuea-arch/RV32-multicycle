@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Exporta o rascunho Markdown para PDF, sem executar testes ou alterar evidências."""
+# Ferramenta editorial separada da regressão: lê texto/figuras já existentes.
 import argparse
 from html import escape
 from pathlib import Path
@@ -48,6 +49,7 @@ def inline(token):
 
 
 def main():
+    # Permite escolher Markdown, destino PDF e diretório das fontes pelo terminal.
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--source', type=Path,
                         default=ROOT / 'docs/report/relatorio.md')
@@ -81,6 +83,7 @@ def main():
                              leading=15, spaceBefore=7, spaceAfter=8,
                              keepWithNext=True),
     }
+    # Markdown vira tokens; cada bloco vira um elemento ReportLab na sequência story.
     tokens = MarkdownIt('commonmark').enable('table').parse(args.source.read_text())
     story = []
     i = 0
@@ -134,6 +137,7 @@ def main():
                 elif item.type == 'tr_close':
                     rows.append(row)
                 i += 1
+            # Distribui a largura restante sem cortar a maior palavra de cada coluna.
             weights = [max(12, n) for n in lengths]
             remaining = WIDTH - sum(minimums)
             if remaining < 0:
@@ -158,6 +162,7 @@ def main():
             raise ValueError(f'Bloco Markdown não suportado: {tok.type}')
 
     def page_frame(canvas, doc):
+        # Callback chamado em cada página para cabeçalho, versão e numeração.
         canvas.saveState()
         canvas.setFont('Body', 8)
         canvas.setFillColor(colors.HexColor('#50616f'))

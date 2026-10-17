@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Run existing self-checking testbenches and retain reproducible logs."""
+# O Makefile escolhe o modo; este executor prepara entradas, compila, simula e registra.
 import argparse
 from datetime import datetime, timezone
 import hashlib
@@ -47,6 +48,7 @@ def lint(rtl, logs):
 
 def main():
     # Os modos selecionam uma bancada, uma suíte ou todos os testes disponíveis.
+    # Modos são exclusivos; --with-lint pode acompanhar uma execução de testes.
     parser = argparse.ArgumentParser()
     mode = parser.add_mutually_exclusive_group()
     mode.add_argument('--lint-only', action='store_true')
@@ -77,6 +79,7 @@ def main():
     if (full or args.suite == 'integration' or args.test) and programs.exists():
         run([sys.executable, str(programs)], logs / 'programs.log')
     firmware = ROOT / 'scripts/sim/build_firmware.py'
+    # GCC só é necessário nos modos que incluem uma bancada de firmware.
     needs_firmware = full or args.wave or args.suite == 'integration' or selected_test == 'tb_firmware'
     if needs_firmware and firmware.exists():
         run([sys.executable, str(firmware)], logs / 'firmware.log')
@@ -105,10 +108,12 @@ def main():
         # -s escolhe o top; vvp executa somente a simulação elaborada para ele.
         name = tb.stem
         exe = build / name
+        # iverilog elabora o circuito em um executável de simulação, não em hardware.
         diagnostics = run(['iverilog', '-g2012', '-Wall', '-s', name, '-o', str(exe),
                            *rtl, str(tb)], logs / f'{name}.compile.log')
         if diagnostics.strip():
             raise RuntimeError(f'{name}: compilation diagnostics: {diagnostics}')
+        # vvp avança o tempo simulado; o TB compara resultados e pode encerrar com erro.
         output = run(['vvp', str(exe), *(['+WAVE'] if args.wave else [])],
                      logs / (f'{name}.wave.log' if args.wave else f'{name}.log'))
         if 'PASS' not in output:
@@ -126,6 +131,7 @@ def main():
         for folder in ('rtl', 'tb', 'scripts', 'firmware'):
             files += [p for p in (ROOT / folder).rglob('*')
                       if p.is_file() and '__pycache__' not in p.parts]
+        # O manifesto identifica os arquivos desta rodada; PASS não valida firmware oficial.
         manifest = {
             'status': 'PASS', 'utc': datetime.now(timezone.utc).isoformat(),
             'testbenches': passed, 'lint': 'PASS' if args.with_lint else 'NOT_RUN',
@@ -140,6 +146,7 @@ def main():
 if __name__ == '__main__':
     try:
         main()
+    # Propaga a falha ao Make e invalida um manifesto que ainda estava em RUNNING.
     except (RuntimeError, OSError) as error:
         summary = ROOT / 'results/logs/regression.json'
         if summary.exists() and json.loads(summary.read_text()).get('status') == 'RUNNING':

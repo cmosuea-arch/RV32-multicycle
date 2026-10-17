@@ -1,7 +1,10 @@
 `timescale 1ns/1ps
+// Reconstrói o imediato de 32 bits a partir dos campos espalhados na instrução.
 module imm_ext(input logic [31:0] instr_i, output logic [31:0] imm_o);
     function automatic [31:0] extend(input [31:0] ins);
         begin
+        // O opcode identifica I/S/B/U/J. Repetir ins[31] faz extensão de sinal.
+        // B e J incluem o bit zero implícito; U reserva os 12 bits inferiores.
         case (ins[6:0])
             7'h03,7'h13,7'h67: extend={{20{ins[31]}},ins[31:20]};
             7'h23: extend={{20{ins[31]}},ins[31:25],ins[11:7]};

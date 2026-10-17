@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Write coverage only after a successful regression; official firmware separate."""
+# CSV é a matriz rastreável; Markdown e XLSX são apresentações dos mesmos registros.
 import csv
 import argparse
 import json
@@ -19,6 +20,7 @@ def write_coverage():
     if not enabled.issubset(counts):
         # Exige presença no trace modelado; a comparação desse trace é feita em tb_isa.
         raise RuntimeError('coverage includes instructions absent from trace')
+    # Relaciona cada grupo da ISA a módulos e logs que sustentam seus estados.
     headers=['Categoria','Instrução','Opcode','Funct3','Funct7','Módulo principal',
              'Teste unitário','Teste integrado','Regressão','Firmware oficial',
              'Commit','Evidência','Observação']
@@ -33,6 +35,7 @@ def write_coverage():
         for category,names in CATEGORIES.items():
             for name in names:
                 op,f3,f7=fields(name)
+                # CRC provisório e slots de sistema não entram como cobertura oficial.
                 passed=name in enabled
                 state='PASS' if passed else 'PENDENTE'
                 writer.writerow([category,name,f'{op:07b}' if op is not None else '',
@@ -49,6 +52,7 @@ def render_coverage():
     """Render the recorded CSV without rerunning tests or changing their results."""
     with (ROOT/'docs/isa/coverage.csv').open(newline='') as f:
         rows=list(csv.DictReader(f))
+    # Agrupa as linhas para gerar resumo percentual e tabelas por categoria.
     groups={}
     for row in rows:
         groups.setdefault(row['Categoria'],[]).append(row)
@@ -59,12 +63,15 @@ def render_coverage():
             'Multiplication':'Multiplicação — Zmmul','CRC':'CRC — Xicrc'}
 
     def passed(row):
+        # Conta como implementada somente se os três níveis de teste estão PASS.
         return all(row[field]=='PASS' for field in ('Teste unitário','Teste integrado','Regressão'))
 
     def percent(n,total):
+        # Formata o percentual para leitura em português, sem alterar a contagem.
         return f'{100*n/total:.2f}%'.replace('.',',') if total else '—'
 
     def code(value):
+        # Campos vazios viram travessão; codificações presentes usam fonte de código.
         return f'`{value}`' if value else '—'
 
     total=len(rows)
@@ -76,6 +83,7 @@ def render_coverage():
            'As codificações abaixo estão em binário; **—** indica campo não aplicável ou ainda não definido.','',
            '## Resumo por categoria','',
            '| Categoria | Implementadas | Cobertura |','|---|---:|---:|']
+    # Primeiro o resumo; depois as tabelas detalhadas com módulos, logs e pendências.
     for category,items in groups.items():
         count=sum(passed(row) for row in items)
         lines.append(f'| {labels.get(category,category)} | {count}/{len(items)} | {percent(count,len(items))} |')
@@ -122,6 +130,7 @@ def render_coverage():
 
 
 if __name__=='__main__':
+    # --render-only preserva o CSV e só refaz suas apresentações Markdown/Excel.
     parser=argparse.ArgumentParser()
     parser.add_argument('--render-only',action='store_true',help='format existing CSV without changing recorded results')
     args=parser.parse_args()

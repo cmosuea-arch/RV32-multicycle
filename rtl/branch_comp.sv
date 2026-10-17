@@ -1,9 +1,12 @@
 `timescale 1ns/1ps
+// Calcula somente a condição do branch; o alvo é calculado pela ALU do core.
 module branch_comp(input logic [31:0] a_i,b_i,input logic [2:0] funct3_i,output wire taken_o);
     function automatic compare(input [31:0] a,b,input [2:0] f);
+        // funct3 seleciona BEQ/BNE/BLT/BGE/BLTU/BGEU diretamente da instrução.
         case(f)
             0: compare=a==b;
             1: compare=a!=b;
+            // As versões signed interpretam o bit 31 como sinal; as demais não.
             4: compare=$signed(a)<$signed(b);
             5: compare=$signed(a)>=$signed(b);
             6: compare=a<b;

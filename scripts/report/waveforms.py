@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Valida a captura VCD do smoke próprio e exporta janelas reais em SVG/PNG."""
+# Usa a captura real de make wave; não inventa transições nem executa nova simulação.
 import argparse
 from bisect import bisect_left, bisect_right
 import gzip
@@ -18,6 +19,7 @@ from reportlab.pdfbase.ttfonts import TTFont
 
 ROOT = Path(__file__).resolve().parents[2]
 CORE = 'tb_firmware.dut.core.'
+# Lista das redes obrigatórias, nomes de exibição e larguras esperadas no VCD.
 ROWS = [
     ('clk_i', 'clk', 1), ('rst_i', 'reset', 1), ('state', 'FSM', 3),
     ('current_pc', 'PC [31:0]', 32), ('instruction', 'instrução [31:0]', 32),
@@ -40,6 +42,7 @@ def load_vcd(path):
             line = raw.strip()
             if not line:
                 continue
+            # Cabeçalho associa identificadores VCD a redes e define a escala de tempo.
             if header:
                 if line.startswith('$timescale'):
                     declaration = line
@@ -65,6 +68,7 @@ def load_vcd(path):
                 elif line.startswith('$enddefinitions'):
                     header = False
                 continue
+            # Corpo contém timestamps e mudanças; só guardamos as redes selecionadas.
             if line.startswith('#'):
                 timestamp = int(line[1:])
                 if timestamp < last:
@@ -100,6 +104,7 @@ def load_vcd(path):
 
 
 def sample(events, name, time, before=False):
+    # Busca binária obtém o último valor, incluindo ou excluindo o instante da borda.
     history = events[name]
     times = [t for t, _ in history]
     idx = (bisect_left(times, time) if before else bisect_right(times, time)) - 1
@@ -107,6 +112,7 @@ def sample(events, name, time, before=False):
 
 
 def number(bits):
+    # X/Z podem ser desenhados, mas não servem como valores válidos de verificação.
     if any(c in bits for c in 'xz'):
         raise ValueError(f'Valor indefinido em amostra de verificação: {bits}')
     return int(bits, 2)
@@ -122,6 +128,7 @@ def verify(events, log):
         raise ValueError('Reset não foi liberado')
     cycles, retired, writes = 0, 0, []
     previous_clock = 'x'
+    # Reconta ciclos/commits e valida a escrita da assinatura contra o log do TB.
     for time, clock in events['clk_i']:
         rising = previous_clock == '0' and clock == '1'
         previous_clock = clock
@@ -144,10 +151,12 @@ def verify(events, log):
 
 
 def label(d, x, y, text, size=10, color='#223e50'):
+    # Aplica a mesma fonte e cor aos rótulos das figuras.
     d.add(String(x, y, text, fontName='Wave', fontSize=size, fillColor=HexColor(color)))
 
 
 def value_label(bits, name):
+    # FSM usa letras dos estados; buses usam hexadecimal; indefinidos mantêm X/Z.
     if name == 'state' and not any(c in bits for c in 'xz'):
         return {0: 'F', 1: 'D', 2: 'E', 3: 'W', 4: 'M', 5: 'FAULT'}.get(int(bits, 2), '?')
     return bits.upper() if any(c in bits for c in 'xz') else f'{int(bits, 2):0{(len(bits)+3)//4}x}'
@@ -171,6 +180,7 @@ def draw(events, scale, start, end, title, subtitle, marker=None):
         d.add(Line(x, 80, x, top + 15, strokeColor=HexColor('#dce4e9'), strokeWidth=0.5))
         label(d, min(max(x - 15, x0), x1 - 42), 510, f'{time*scale:.0f}', 9)
     label(d, 12, 510, 'Tempo de simulação (ns)', 9)
+    # Divide cada linha em intervalos constantes: patamares para bits e caixas para buses.
     for i, (name, display, width) in enumerate(ROWS):
         y = top - i * row_h
         label(d, 12, y - 4, display, 10.5)
@@ -211,6 +221,7 @@ def draw(events, scale, start, end, title, subtitle, marker=None):
 
 
 def main():
+    # Recebe captura/log, valida ambos e recorta as janelas de boot e assinatura.
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--vcd', type=Path, default=ROOT/'results/waveforms/smoke.vcd')
     parser.add_argument('--log', type=Path, default=ROOT/'results/logs/tb_firmware.wave.log')
@@ -242,6 +253,7 @@ def main():
         subprocess.run(['gs','-q','-dSAFER','-dBATCH','-dNOPAUSE','-sDEVICE=png16m','-r180',
                         f'-sOutputFile={args.output/(name+".png")}',str(intermediate)],check=True)
         figures[name] = {'start_ns': start*scale, 'end_ns': end*scale}
+    # Hashes vinculam as imagens à captura, ao log e à versão deste renderizador.
     summary = {'status': 'PASS', 'scope': 'own smoke firmware; RTL simulation; not official firmware',
                **result, 'signature_edge_ns': edge*scale, 'timescale_ns_per_tick': scale,
                'end_ns': last*scale, 'windows': figures,

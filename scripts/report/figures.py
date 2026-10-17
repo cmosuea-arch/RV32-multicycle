@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Desenha o datapath documentado; não extrai automaticamente nem modifica o RTL."""
+# Os três painéis são desenhos autorais; sua correspondência com o RTL exige revisão.
 from pathlib import Path
 import subprocess
 
@@ -17,12 +18,14 @@ PURPLE = '#705285'
 
 
 def text(d, x, y, lines, size=11, color=BLUE):
+    # Divide o texto em linhas e posiciona cada uma no desenho vetorial.
     for i, line in enumerate(lines.split('\n')):
         d.add(String(x, y - i * (size + 4), line, fontName='Diagram',
                      fontSize=size, fillColor=HexColor(color)))
 
 
 def box(d, x, y, w, h, title, lines, fill='#edf5fa', color=BLUE):
+    # Padroniza os blocos: retângulo, título e descrição interna.
     d.add(Rect(x, y, w, h, rx=6, ry=6, fillColor=HexColor(fill),
                strokeColor=HexColor(color), strokeWidth=1))
     text(d, x + 10, y + h - 18, title, 12, color)
@@ -30,6 +33,7 @@ def box(d, x, y, w, h, title, lines, fill='#edf5fa', color=BLUE):
 
 
 def arrow(d, points, label='', at=None, color=BLUE):
+    # Desenha o trajeto, calcula a ponta pelo último segmento e acrescenta o rótulo.
     d.add(PolyLine([c for p in points for c in p], strokeColor=HexColor(color),
                    strokeWidth=1, fillColor=None))
     x, y = points[-1]
@@ -45,6 +49,7 @@ def arrow(d, points, label='', at=None, color=BLUE):
 
 
 def canvas(title, subtitle):
+    # Cria a área comum dos painéis, com fundo e títulos nas mesmas posições.
     d = Drawing(600, 660)
     d.add(Rect(0, 0, 600, 660, fillColor=white, strokeColor=None))
     text(d, 16, 638, title, 15)
@@ -53,6 +58,7 @@ def canvas(title, subtitle):
 
 
 def execution():
+    # Painel A: fontes de operandos, unidades de execução e seleção do writeback.
     d = canvas('F01-A — Operandos, execução e writeback',
                'Painéis A–C usam redes nomeadas: mesmo nome significa o mesmo fio.')
     box(d, 20, 535, 245, 60, 'IR → instruction[31:0]',
@@ -90,6 +96,7 @@ def execution():
 
 
 def memory():
+    # Painel B: próximo PC, LSU, barramento e conexão das duas memórias.
     d = canvas('F01-B — Próximo PC, LSU e memórias',
                'Redes alu_result, result_q, a e b vêm do painel A; enables no painel C.')
     box(d, 20, 520, 260, 75, 'Alvo e seleção do próximo PC',
@@ -127,6 +134,7 @@ def memory():
 
 
 def control():
+    # Painel C: decoder, estados, enables, falhas e sinais de observação.
     d = canvas('F01-C — Decode, FSM, enables e observação',
                'Controles associados às redes de dados dos painéis A e B; estado não é dado de WB.')
     box(d, 20, 495, 260, 100, 'Decoder — instruction[31:0]',
@@ -151,6 +159,7 @@ def control():
 
 
 def main():
+    # Exporta cada painel em SVG e PNG; Ghostscript rasteriza o PDF intermediário.
     pdfmetrics.registerFont(TTFont('Diagram', FONT))
     OUT.mkdir(parents=True, exist_ok=True)
     for name, drawing in [('datapath-execution', execution()),

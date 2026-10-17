@@ -16,6 +16,7 @@ for arg in "$@"; do
     esac
 done
 if (( pull )); then
+    # Só atualiza código com árvore limpa e upstream; --ff-only recusa divergências.
     [[ -z "$(git -C "$root" status --porcelain)" ]] || {
         echo 'Checkout com alterações. Revise e registre seu trabalho antes de usar --pull.' >&2; exit 1;
     }

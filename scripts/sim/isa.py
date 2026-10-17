@@ -1,4 +1,6 @@
 """Confirmed instruction encodings. Unspecified system slots have no opcode."""
+# Tabela compartilhada pelos geradores e pela cobertura: nome -> campos da instrução.
+# Em R/I, o último número é o seletor interno da ALU, não um campo da ISA.
 R = {'ADD':(0,0,1),'SUB':(0,32,2),'SLL':(1,0,6),'SLT':(2,0,9),
      'SLTU':(3,0,10),'XOR':(4,0,5),'SRL':(5,0,7),'SRA':(5,32,8),
      'OR':(6,0,4),'AND':(7,0,3)}
@@ -35,6 +37,7 @@ def encode(name, rd=3, rs1=1, rs2=2, imm=0):
     opcode,f3,f7=fields(name)
     if name in R or name in MULT or name in CATEGORIES['CRC']:
         return (f7<<25)|(rs2<<20)|(rs1<<15)|(f3<<12)|(rd<<7)|opcode
+    # Formatos I/LOAD/JALR usam imediato de 12 bits; shifts reservam bits para funct7.
     if name in I or name in LOAD or name=='JALR':
         if name in ('SLLI','SRLI','SRAI'): imm=(imm&31)|(f7<<5)
         return (encode_imm('I',imm,rd,rs1,rs2,f3)&~127)|opcode

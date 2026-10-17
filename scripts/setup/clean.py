@@ -24,6 +24,7 @@ def inventory(path):
 
 
 def main():
+    # Lista apenas diretórios de saídas conhecidos; fontes e evidências não são alvos.
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--dry-run', action='store_true', help='lista saídas sem mover arquivos')
     args = parser.parse_args()
@@ -43,12 +44,14 @@ def main():
         return
     for path in paths:
         print(f'Arquivar: {path.relative_to(ROOT)}')
+    # --dry-run mostra a seleção e termina antes de criar o arquivo de backup.
     if args.dry_run:
         print('Prévia: nenhum arquivo movido.')
         return
     stamp = datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S%fZ')
     archive = ROOT / 'results/archive' / stamp
     archive.mkdir(parents=True, exist_ok=False)
+    # O manifesto registra o inventário e distingue backup completo de erro parcial.
     manifest = {'status': 'IN_PROGRESS', 'utc': stamp, 'scope': 'workspace cleanup; no tests run',
                 'entries': []}
     meta = archive / 'manifest.json'

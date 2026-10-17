@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Vetores e programa CRC separados da cobertura oficial de 41 instruções."""
+# crc.vec testa o bloco isolado; crc.hex/trace/memory.vec testam sua integração no core.
 import random
 from crc_model import crc_model, check_reference
 from programs import Program
@@ -12,10 +13,12 @@ def main():
     rng=random.Random(0xc16)
     pairs=[(a,b) for a in EDGES for b in EDGES]
     pairs += [(rng.getrandbits(32),rng.getrandbits(32)) for _ in range(1000)]
+    # Repetibilidade: limites explícitos mais casos aleatórios com semente fixa.
     with (OUT/'crc.vec').open('w') as f:
         for op in range(16):
             for a,b in pairs:
                 f.write(f'{a:08x} {b:08x} {op:x} {crc_model(a,b,op):08x}\n')
+    # O modelo arquitetural permite CRC apenas neste programa experimental.
     p=Program(experimental_crc=True)
     for name in ('CRCB','CRCH','CRCW'):
         for a,b in pairs[:144]+pairs[-32:]:
@@ -34,6 +37,7 @@ def main():
         p.constant(4,0x10010000)
         p.emit('SW',0,4,1,imm=4 if grouped else 0)
         p.emit('LW',5,4,imm=4 if grouped else 0)
+    # Salva ROM/trace e confere o CRC conhecido também nos registradores e na RAM.
     p.save('crc',65536)
     assert p.memory[0x10010000]==0xb1 and p.memory[0x10010001]==0x29
     assert p.regs[5]==0x29b1

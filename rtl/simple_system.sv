@@ -1,5 +1,6 @@
 `timescale 1ns/1ps
 // Experimento CMOS: capacidades fixas e programa embutido na ROM durante a síntese.
+// Top reduzido: ROM de 2 KiB, RAM de 1 KiB e saídas para indicar término do firmware.
 module simple_system #(
     parameter ROM_FILE="build/simple.hex"
 )(
@@ -13,6 +14,7 @@ module simple_system #(
     wire commit_valid;
     wire [31:0] commit_pc,commit_instr,commit_data;
     wire [4:0] commit_rd;
+    // Reutiliza o mesmo core com CRC provisório habilitado; não certifica Xicrc oficial.
     riscv_core #(.EXPERIMENTAL_XICRC(1)) core(
         clk_i,rst_i,rdata,bus_fault,address,wdata,oe,we,bw,
         fault_o,commit_valid,commit_pc,commit_instr,commit_data,commit_rd);
@@ -22,6 +24,8 @@ module simple_system #(
     imem #(.WORDS(512),.INIT_FILE(ROM_FILE)) instruction_memory(mem_address,imem_oe,idata);
     dmem #(.WORDS(256)) data_memory(clk_i,mem_address,dmem_oe,dmem_we,dmem_bw,mem_data,ddata);
     // Observa uma escrita real na RAM; byte/halfword não encerram o programa.
+    // A primeira word na assinatura fixa done; success indica o valor esperado.
+    // Ambos retêm o resultado até reset; o firmware pode continuar no loop final.
     always @(posedge clk_i) begin
         if(rst_i) begin done_o<=0; success_o<=0; end
         else if(!done_o && dmem_we && mem_address==32'h100103f0 && dmem_bw==4'hf) begin

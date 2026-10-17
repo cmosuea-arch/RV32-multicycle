@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Síntese lógica genérica e teste da netlist; não executa fluxo físico/GDSII."""
+# Entrada: RTL + build/simple.hex. Saída: netlist Verilog/JSON, logs e manifesto.
 import hashlib
 import json
 from pathlib import Path
@@ -11,6 +12,7 @@ ROOT=Path(__file__).resolve().parents[2]
 
 
 def run(args,log):
+    # Limita o tempo e registra stdout/stderr antes de propagar erros ao Makefile.
     try:
         p=subprocess.run(args,cwd=ROOT,capture_output=True,text=True,timeout=180)
     except subprocess.TimeoutExpired as error:
@@ -31,6 +33,8 @@ def main():
     if not (ROOT/'build/simple.hex').is_file():
         raise RuntimeError('execute make simple-firmware primeiro')
     rtl=sorted(str(p.relative_to(ROOT)) for p in (ROOT/'rtl').glob('*.sv'))
+    # Lê módulos sem elaborar, escolhe o top, sintetiza/achata hierarquia e exporta.
+    # As células são genéricas: este comando não fornece PDK, placement ou routing.
     flow='; '.join([
         'read_verilog -sv -defer '+' '.join(rtl),
         'hierarchy -check -top simple_system',
@@ -39,6 +43,7 @@ def main():
         'write_verilog -noattr build/simple_netlist.v',
         'write_json build/simple_netlist.json'])
     run(['yosys','-p',flow],logs/'simple_synth.log')
+    # Inspeciona a estrutura produzida: memórias mapeadas e ausência de estado inicial.
     top=json.loads((ROOT/'build/simple_netlist.json').read_text())['modules']['simple_system']
     cells=top.get('cells',{})
     if top.get('memories') or any('$mem' in c['type'] for c in cells.values()):
@@ -53,6 +58,7 @@ def main():
     for name in ('done_o','success_o','fault_o'):
         if not all(isinstance(bit,int) for bit in top['ports'][name]['bits']):
             raise RuntimeError(f'saída constante inesperada: {name}')
+    # Compila somente a netlist com seu TB; os arquivos RTL originais não entram aqui.
     run(['iverilog','-g2012','-s','tb_simple_netlist','-o','build/tb_simple_netlist',
          'build/simple_netlist.v','scripts/synth/tb_simple_netlist.sv'],logs/'simple_netlist.compile.log')
     output=run(['vvp','build/tb_simple_netlist'],logs/'simple_netlist.log')
@@ -60,6 +66,7 @@ def main():
         raise RuntimeError('netlist sem PASS')
     version=run(['yosys','-V'],logs/'yosys_version.log').strip()
     files=rtl+['build/simple.hex','build/simple_netlist.v','scripts/synth/simple.py','scripts/synth/tb_simple_netlist.sv']
+    # O manifesto vincula os resultados aos hashes desta ROM, RTL e netlist.
     summary={'status':'PASS','scope':'generic synthesis; no PDK/timing/physical signoff',
              'yosys':version,'cells':len(cells),'cell_types':counts,'netlist_simulation':'PASS',
              'sha256':{p:hashlib.sha256((ROOT/p).read_bytes()).hexdigest() for p in files}}

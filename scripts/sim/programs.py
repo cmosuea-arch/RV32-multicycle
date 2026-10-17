@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Create per-instruction programs and architectural retirement expectations."""
+# Gera programas diretamente das codificações da ISA, sem compilador C ou simulador RTL.
 from pathlib import Path
 import json
 import random
@@ -12,6 +13,7 @@ BASE=0x00400000
 
 
 class Program:
+    # Reúne ROM, estado arquitetural de referência e evidências esperadas pelo TB.
     def __init__(self, experimental_crc=False):
         self.experimental_crc=experimental_crc
         self.words=[]
@@ -51,6 +53,7 @@ class Program:
                 rd=0; value=0
             elif name=='JAL': value=pc+4; next_pc=pc+imm
             elif name=='JALR': value=pc+4; next_pc=((a+signed(imm,12))&MASK)&~1
+            # Memória do modelo é byte a byte; a ROM também pode ser lida por load.
             elif name in LOAD:
                 addr=(a+signed(imm,12))&MASK
                 size={'LB':1,'LBU':1,'LH':2,'LHU':2,'LW':4}[name]
@@ -74,12 +77,14 @@ class Program:
                 from crc_model import crc_model
                 value=crc_model(a,b,fields(name)[1])
             else: raise ValueError(name)
+            # x0 não muda; cada item do trace descreve PC, instrução, destino e valor.
             if rd: self.regs[rd]=value
             self.trace.append((pc,self.words[index],rd,self.regs[rd]))
             self.counts[name]=self.counts.get(name,0)+1
             pc=next_pc&MASK
 
     def constant(self,rd,value):
+        # Monta qualquer constante em 28 instruções ADD/ADDI, sem usar LUI como apoio.
         value &= MASK
         self.emit('ADDI',rd,0,imm=(value>>24))
         for shift in (16,8,0):
@@ -98,9 +103,11 @@ class Program:
 
 def main():
     OUT.mkdir(exist_ok=True)
+    # Só as instruções declaradas em enabled.json entram no programa baseline.
     enabled=json.loads((ROOT/'docs/isa/enabled.json').read_text())
     rng=random.Random(4711)
     p=Program()
+    # Cada grupo recebe casos de borda, alias de registradores, desvios ou offsets.
     for name in enabled:
         if name in R or name in MULT:
             pairs=[(a,b) for a in EDGES[:10] for b in [0,1,31,32,0xffffffff,0x80000000]]
@@ -169,6 +176,7 @@ def main():
                 p.constant(2,0x87654321); p.emit(name,0,1,2,imm=offset); p.emit('LW',3,1)
             p.constant(1,0x10011ffc); p.emit(name,0,1,2); p.emit(name,0,1,2,imm=-4)
     p.save()
+    # Varre todas as combinações opcode/funct3/funct7, incluindo instruções ilegais.
     with (OUT/'decoder.vec').open('w') as f:
         for opcode in range(128):
             for f3 in range(8):
@@ -176,6 +184,8 @@ def main():
                     inst=(f7<<25)|(2<<20)|(1<<15)|(f3<<12)|(3<<7)|opcode
                     matches=[name for name in enabled if fields(name)[0]==opcode
                              and fields(name)[1] in (None,f3) and fields(name)[2] in (None,f7)]
+                    # Empacota controles no mesmo formato lido por tb_decoder.
+                    # Bit 0 indica ilegal; bits 13:10 guardam o seletor da ALU.
                     ctrl=1
                     if matches:
                         name=matches[0]

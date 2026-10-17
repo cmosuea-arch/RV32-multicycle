@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Independent integer models; deterministic vectors consumed by SV benches."""
+# Este script calcula entradas/esperados; os TBs aplicam as entradas ao RTL e comparam.
 from pathlib import Path
 import random
 
@@ -37,6 +38,7 @@ def main():
             for a, b in pairs:
                 expected = alu_model(a, b, op) if op < 11 else 0
                 f.write(f'{a:08x} {b:08x} {op:x} {expected:08x}\n')
+    # Cada linha contém instrução montada e imediato esperado, incluindo sinal/limites.
     with (OUT / 'imm.vec').open('w') as f:
         for fmt, bits, step in [('I',12,1),('S',12,1),('B',13,2),('U',32,4096),('J',21,2)]:
             vals = [0, step, -step, -(1 << (bits-1)), (1 << (bits-1))-step]
@@ -47,11 +49,13 @@ def main():
                 inst = encode_imm(fmt, value)
                 f.write(f'{inst:08x} {value & MASK:08x}\n')
         f.write('ffffffff 00000000\n')
+    # Varre as condições signed/unsigned e códigos inválidos do comparador de branch.
     with (OUT/'branch.vec').open('w') as f:
         for code in range(8):
             for a,b in pairs:
                 expected={0:a==b,1:a!=b,4:signed(a)<signed(b),5:signed(a)>=signed(b),6:a<b,7:a>=b}.get(code,False)
                 f.write(f'{a:08x} {b:08x} {code:x} {int(expected):x}\n')
+    # Para cada tamanho/offset, prevê load, store, byte enables e flags de falha.
     with (OUT/'lsu.vec').open('w') as f:
         for store in (0,1):
             for code in range(8):
@@ -70,6 +74,7 @@ def main():
                             else:
                                 ld=int.from_bytes(mem.to_bytes(4,'little')[offset:offset+size], 'little', signed=code in (0,1))&MASK
                         f.write(f'{0x10010000+offset:08x} {data:08x} {mem:08x} {code:x} {store:x} {ld:08x} {sd:08x} {bw:x} {int(bad):x} {int(not valid):x}\n')
+    # Produto Python tem precisão ilimitada: recorta a metade baixa/alta para RV32.
     with (OUT/'multiplier.vec').open('w') as f:
         for op in range(16):
             for a,b in pairs:
