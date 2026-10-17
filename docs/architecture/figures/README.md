@@ -50,5 +50,5 @@ build/report-venv/bin/python scripts/report/build.py
 Execute na raiz. A fonte editável é `scripts/report/figures.py`; SVG e PNG são
 versionados para visualização imediata. PDFs vetoriais intermediários ficam
 em `build/`, ignorados pelo Git. A prévia do relatório incorpora os três painéis
-nas páginas 6–8. O gerador do PDF aceita figuras PNG/JPEG locais em parágrafos
+nas páginas 5–7. O gerador do PDF aceita figuras PNG/JPEG locais em parágrafos
 próprios, mantendo proporção e limitando as dimensões à página.

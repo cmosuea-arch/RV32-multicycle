@@ -49,10 +49,12 @@ O [laboratório](../labs/rtl-to-gds/README.md) possui oito aulas, com
 Consulte [synthesis.md](synthesis.md) para saídas e limites.
 
 Pendências para retomar: [architecture/official_questions.md](architecture/official_questions.md).
-O [relatório da Fase 2](report/README.md) possui versão preliminar v0.3 em Markdown/PDF,
-com 19 páginas, figuras do datapath/controle em três painéis e dois waveforms reais
-do firmware próprio, com logs/VCD/hashes arquivados.
-Os requisitos foram conferidos no guia e as pendências estão explícitas. Diagramas ChipInventor,
+O [relatório da Fase 2](report/README.md) possui versão preliminar v0.4 em Markdown/PDF,
+com 12 páginas (antes 19), figuras do datapath/controle e waveform próprio de
+término. O boot e demais logs/VCD/hashes continuam arquivados; há oito páginas
+disponíveis para diagramas e resultados finais.
+Os requisitos foram conferidos no guia. Os diagramas ChipInventor estão com
+outro colaborador; as figuras,
 resultados físicos, evidência do firmware oficial e vídeo ainda faltam para
 fechar a submissão. Em 17/10 apenas o firmware próprio foi reexecutado para captura;
 a regressão completa continua referida à rodada histórica identificada acima.
@@ -63,3 +65,7 @@ Em 17/10 o usuário confirmou que os esclarecimentos e o firmware ainda não
 foram enviados pela organização. As pendências oficiais permanecem abertas;
 a revisão atual concluiu as figuras do datapath e as evidências visuais próprias,
 sem alterar RTL. Registro: [firmware-wave](../results/experiments/firmware-wave/README.md).
+
+Revisão editorial v0.4: descrições/testes consolidados em tabelas, sem reduzir
+fontes ou executar novos testes. A execução do projeto fica para a etapa
+posterior acordada com o usuário.

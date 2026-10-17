@@ -3,6 +3,7 @@
 import argparse
 from html import escape
 from pathlib import Path
+import re
 import tempfile
 from urllib.parse import unquote
 
@@ -112,7 +113,7 @@ def main():
             story.append(PageBreak())
             i += 1
         elif tok.type == 'table_open':
-            rows, row, lengths = [], [], []
+            rows, row, lengths, minimums = [], [], [], []
             i += 1
             while tokens[i].type != 'table_close':
                 item = tokens[i]
@@ -122,13 +123,23 @@ def main():
                     col = len(row)
                     if len(lengths) <= col:
                         lengths.append(0)
+                        minimums.append(0)
                     lengths[col] = max(lengths[col], min(len(item.content), 52))
+                    # Reserva espaço para nomes de módulos/TBs e cabeçalhos inteiros.
+                    plain = re.sub(r'[`*]', '', item.content)
+                    minimums[col] = max(minimums[col], 12 + max(
+                        (pdfmetrics.stringWidth(word, 'Body', cell.fontSize)
+                         for word in plain.split()), default=0))
                     row.append(Paragraph(inline(item), cell))
                 elif item.type == 'tr_close':
                     rows.append(row)
                 i += 1
             weights = [max(12, n) for n in lengths]
-            widths = [WIDTH * n / sum(weights) for n in weights]
+            remaining = WIDTH - sum(minimums)
+            if remaining < 0:
+                raise ValueError('Tabela contém palavras longas demais para a página')
+            widths = [minimum + remaining * n / sum(weights)
+                      for minimum, n in zip(minimums, weights)]
             table = Table(rows, colWidths=widths, repeatRows=1, hAlign='LEFT')
             table.setStyle(TableStyle([
                 ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#e1ecf2')),
@@ -152,7 +163,7 @@ def main():
         canvas.setFillColor(colors.HexColor('#50616f'))
         canvas.drawString(46, A4[1] - 28, 'CMOS RISC-V | ChampionCHIP — Fase 2')
         canvas.drawRightString(A4[0] - 46, A4[1] - 28, 'PRELIMINAR — NÃO SUBMETER')
-        canvas.drawString(46, 27, 'Relatório de andamento | v0.3 | 17/10/2026')
+        canvas.drawString(46, 27, 'Relatório de andamento | v0.4 | 17/10/2026')
         canvas.drawRightString(A4[0] - 46, 27, str(doc.page))
         canvas.restoreState()
 

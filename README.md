@@ -18,8 +18,9 @@ e prévia PDF, organizadas conforme o guia da competição. A
 [lista de conferência](docs/report/conformidade.md) identifica os requisitos e
 as figuras/resultados ainda necessários para a submissão. A ordem de trabalho
 está no [roteiro de conclusão](docs/completion_roadmap.md); o datapath atual
-já está desenhado em três painéis. A prévia atual tem 19 páginas e inclui os
-[waveforms reais do firmware próprio](results/experiments/firmware-wave/README.md).
+já está desenhado em três painéis. A prévia sucinta tem 12 páginas, inclui o
+[waveform real de término](results/experiments/firmware-wave/README.md) e deixa
+espaço para os diagramas ChipInventor, preparados por outro colaborador.
 
 ## Comece pelo laboratório
 

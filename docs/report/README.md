@@ -54,13 +54,33 @@ com pypdf e só substitui o PDF de destino se o total for no máximo 20. Formato
 Markdown ainda não suportados causam erro explícito, evitando perda silenciosa
 de conteúdo. Cabeçalho/rodapé identificam esta versão como preliminar.
 
-O PDF é versionado para leitura direta e deve ser regenerado após editar o
-texto. A versão 0.3 possui 19 páginas, incluindo os três painéis do datapath,
-duas imagens reais de waveform e referências. Resta uma página de margem;
-será necessário reorganizar/compactar conteúdo para os resultados finais.
-Inserir os 17 diagramas de módulo
-exigirá composição compacta e revisão editorial; a margem não garante que
-todas as figuras futuras caibam sem reorganizar o texto.
+O PDF é versionado e deve ser regenerado após editar o texto. A versão 0.4
+reduziu o relatório de 19 para **12 páginas**, mantendo os seis tópicos exigidos,
+44 codificações (41 baseline + 3 experimentais), os 17 módulos, o datapath e o
+waveform de término. O corpo e as tabelas mantêm os tamanhos de fonte anteriores.
+Comandos detalhados, aulas, inventários e evidências completas ficam referenciados
+no repositório. A imagem de boot F20-A permanece como apoio fora do PDF.
+
+## Reserva editorial para a entrega
+
+Os diagramas por módulo estão com outro colaborador. A reserva abaixo é um
+planejamento; as oito páginas livres não foram adicionadas como páginas vazias.
+
+| Conteúdo | Reserva de páginas adicionais |
+|---|---|
+| Diagramas ChipInventor dos 17 módulos, agrupados por função | Até 5 |
+| Resultados físicos e imagem do GDSII | Até 1 |
+| Waveform/log do firmware oficial | Até 1 |
+| Margem para revisão | 1 |
+
+O relatório atual ocupa 12 páginas; esse planejamento chega ao limite de 20.
+Inserir os diagramas próximos às tabelas das seções 4.1/4.2. Pinos e larguras
+precisam permanecer legíveis: se um painel exigir mais espaço, redistribuir
+texto/figuras. A quantidade acima não garante encaixe de imagens ainda não
+recebidas. Evitar repetir a descrição do módulo na legenda.
+
+Nesta revisão houve somente edição, conferência e exportação do PDF. A execução
+funcional/física fica para a etapa posterior combinada com a equipe.
 
 As figuras F20-A/B e seus logs/VCD/hashes estão em
 [results/experiments/firmware-wave](../../results/experiments/firmware-wave/README.md).
