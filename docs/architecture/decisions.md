@@ -42,10 +42,16 @@ O experimento não encerra requisitos do top final nem do firmware oficial.
 
 | ID | Lacuna | Evidência | Impacto |
 |---|---|---|---|
-| P01 | CRC: polinômio, reflexão/ordem de bits, seed, papel de rs1/rs2, xor final, bits altos de rd | PDF pp.12,14–15: somente CRC8/16/32 e resultado [15:0] | bloqueia 3 Xicrc |
+| P01 | CRC: papel de rs1/rs2, aplicação da seed, ordem dos bytes e bits altos de rd | Mensagem de 20/10 confirma CCITT-FALSE e tamanhos; PDF pp.12,14–15 não fecha operandos | bloqueia homologação das 3 Xicrc |
 | P02 | nomes e comportamento das 3 instruções sistema/sincronização | PDF p.2: apenas quantidade | bloqueia categoria; não presumir nomes pela contagem |
-| P03 | firmware oficial e critérios de término | PDF p.4: distribuição pela plataforma | bloqueia M9+ |
+| P03 | arquivo do firmware oficial e critérios de término | Mensagem de 19/10: testes assembly para IMEM, publicação prevista após autorização | bloqueia M9+ |
 | P04 | pinos UART/GPIO e interface final de submissão | PDF pp.9–10: figura 12 pinos, tabela apenas clk/rst | top físico pendente |
 
 A especificação RISC-V oficial complementa semântica e codificação das instruções
 padronizadas; não resolve decisões exclusivas da competição.
+
+Revisão de 20/10/2026: [esclarecimentos recebidos](clarifications_20261020.md).
+Mantemos o RTL e os parâmetros atuais: o algoritmo CRC foi identificado, mas
+faltam exemplos/pseudocódigo dos operandos. Não fixar `0xFFFF` em toda instrução
+sem confirmar se a inicialização é por mensagem ou por operação. Os programas
+próprios já são convertidos em palavras carregadas na IMEM; o oficial não chegou.

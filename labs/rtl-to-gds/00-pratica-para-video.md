@@ -136,9 +136,11 @@ ressíntese nesse experimento.
 ## Etapa 7 — Fluxo físico e fechamento futuro
 
 A [aula 8](08-introducao-openlane.md) verifica ferramentas/PDK e explica o
-percurso físico. O exemplo LibreLane valida o ambiente. Ainda precisamos de
-configuração/restrições do processador, execução do projeto, resultados físicos
-e validação oficial para fechar a submissão.
+percurso físico. O exemplo LibreLane valida o ambiente. A configuração/restrições
+do `simple_system` estão [preparadas para sua execução](../../openlane/simple_system/README.md).
+Ainda precisamos da rodada do projeto, resultados físicos revisados e validação
+oficial para fechar a submissão. Em 20/10, a execução da síntese ficou reservada
+ao usuário; estudar as receitas com `make -n` não inicia as ferramentas.
 
 **Explique, quando os resultados existirem:** mapeamento, floorplan, placement,
 CTS, roteamento, área/densidade, timing, DRC/LVS e GDSII. Identifique o top,

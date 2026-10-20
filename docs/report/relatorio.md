@@ -1,6 +1,6 @@
 # CMOS RISC-V — Relatório técnico da Fase 2
 
-**Versão preliminar 0.4 — 17 de outubro de 2026**
+**Versão preliminar 0.5 — 20 de outubro de 2026**
 
 Equipe: CMOS. Integrantes, instituição e orientador: **a preencher**.
 Repositório: cmosuea-arch/RV32-multicycle. RTL da captura: `7ddc6bf`.
@@ -18,7 +18,8 @@ conforme o Block Guide ChampionCHIP: RV32I, Zmmul e Xicrc, com meta de
 comparador de branch, multiplicador, LSU e controle. `riscv_top` conecta o núcleo
 a IMEM, DMEM e decoder de endereços. A configuração padrão verifica **41/47
 instruções (87,23%)**. CRCB/CRCH/CRCW estão implementadas sob contrato experimental
-CMOS, habilitado por `EXPERIMENTAL_XICRC=1`; a confirmação oficial está pendente.
+CMOS, habilitado por `EXPERIMENTAL_XICRC=1`; CCITT-FALSE foi informado em 20/10,
+mas falta confirmar operandos e ordem dos bytes [R2].
 
 A execução segue `FETCH → DECODE → EXECUTE → WRITEBACK`. Loads/stores acrescentam
 MEMORY para a DMEM síncrona. O PC atualiza na aposentadoria; reset síncrono ativo
@@ -71,12 +72,12 @@ processador ainda aguardam conclusão [R3–R6].
 | Upper Immediate | 2 | 2 | 100% | LUI, AUIPC |
 | Sistema / Sincronização | 3 | 0 | 0% | Definições oficiais pendentes |
 | Multiplication | 4 | 4 | 100% | MUL, MULH, MULHSU, MULHU |
-| CRC | 3 | 0 | 0% | Confirmação oficial pendente |
+| CRC | 3 | 0 | 0% | Contrato dos operandos pendente |
 | **Total** | **47** | **41** | **87,23%** | **Baseline integrada e verificada** |
 
 **Perfil experimental:** três operações adicionais, CRCB/CRCH/CRCW, passam no
-contrato CMOS. A cobertura de conformidade permanece 41/47 até a confirmação
-oficial do algoritmo. Nenhuma instrução foi validada pelo firmware oficial.
+contrato CMOS. A cobertura de conformidade permanece 41/47 até confirmar
+operandos/bytes das instruções. Nenhuma instrução foi validada pelo firmware oficial.
 
 A contagem exige decode, execução integrada e regressão, com evidência por
 instrução em [R3]. Os três nomes/códigos de sistema não foram presumidos apenas
@@ -160,11 +161,12 @@ LUI forma o imediato U; AUIPC soma esse imediato ao PC da instrução.
 | CRCH | 0110011 | 001 | 1000000 |
 | CRCW | 0110011 | 010 | 1000000 |
 
-O guia confirma esses códigos, mas não detalha todo o algoritmo. O contrato
-CMOS usa CRC-16/0x1021, acumulador em rs1[15:0], 1/2/4 bytes baixos de rs2
-em ordem little-endian, MSB primeiro em cada byte, sem reflexão/XOR final e
-resultado estendido com zeros. A semente vem do software. Exemplo:
-ASCII `123456789`, seed `0xffff`, resultado `0x29b1` [R2, R3].
+Mensagem atribuída à organização, recebida em 20/10, identifica CCITT-FALSE
+com 8/16/32 bits de dados e resultado de 16 bits. O contrato CMOS usa `0x1021`,
+rs1[15:0] como acumulador, bytes baixos de rs2 primeiro, sem reflexão/XOR final
+e resultado estendido com zeros. Software inicia em `0xffff`; ASCII `123456789`
+produz `0x29b1`. O algoritmo coincide com o informado; operandos, inicialização
+por instrução e ordem dos bytes ainda precisam ser confirmados [R2, R3].
 
 <!-- pagebreak -->
 
@@ -306,6 +308,8 @@ usa assinatura em `0x100103f0`, ROM 2 KiB e RAM 1 KiB, e passou em RTL/netlist [
 
 **Pendente de recebimento e execução.** Registrar versão/hash do programa,
 commit RTL, protocolo de sucesso, etapa atingida, log sem erros e waveform F21.
+Mensagem de 19/10, encaminhada em 20/10, informa testes assembly para a IMEM,
+com publicação após autorização. O fluxo próprio já gera palavras para a ROM.
 Os resultados próprios são evidência complementar. Pendências de Xicrc,
 sistema/sincronização e interface final estão registradas em [R2].
 
@@ -339,6 +343,7 @@ requisitos: [conformidade.md](conformidade.md).
 **[R2] Arquitetura e método.** [AGENTS.md](../../AGENTS.md),
 [interfaces](../architecture/interfaces.md), [mapa](../architecture/memory_map.md),
 [decisões](../architecture/decisions.md), [pendências oficiais](../architecture/official_questions.md),
+[esclarecimentos de 20/10](../architecture/clarifications_20261020.md),
 [módulos](../modules/), [datapath](../architecture/block_diagram.md) e
 [fontes das figuras](../architecture/figures/README.md).
 

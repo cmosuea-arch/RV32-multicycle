@@ -10,6 +10,8 @@ usa um circuito de exemplo; nosso simple_system chegou à síntese lógica gené
 Percurso didático: [aula 7 — síntese](../../labs/rtl-to-gds/07-sintese.md) e
 [aula 8 — ambiente físico](../../labs/rtl-to-gds/08-introducao-openlane.md).
 Comandos de síntese do sistema: [synthesis.md](../synthesis.md).
+Configuração experimental para execução manual:
+[openlane/simple_system](../../openlane/simple_system/README.md).
 
 Versões verificadas em 2026-09-15:
 
@@ -30,6 +32,8 @@ KLayout, ngspice, xschem, OpenVAF, CACE e CVC-RV.
 ## Uso
 
 Com Docker Desktop aberto e a integração desta distribuição WSL habilitada:
+execute os alvos abaixo no **terminal WSL**, na raiz do clone. Eles iniciam o
+contêiner automaticamente; não precisam de Docker instalado dentro da imagem.
 
 ```sh
 make setup-openlane
@@ -67,3 +71,13 @@ registrados em `results/openlane/environment-smoke.md`.
 Essa validação comprova o ambiente. O fluxo físico do `riscv_top` continua
 aguardando ISA completa, firmware oficial, definição da interface física e uma
 estratégia sintetizável para IMEM/DMEM, conforme `AGENTS.md`.
+
+## Configuração preparada em 20/10/2026
+
+`simple-openlane-synth`, `simple-openlane-floorplan` e `simple-openlane` foram
+adicionados ao Makefile para exploração progressiva do sistema pequeno. As
+receitas, escolhas e saídas estão no [roteiro do experimento](../../openlane/simple_system/README.md).
+O usuário executará a síntese. Não há rodada SKY130A do sistema concluída nesta
+preparação, nem área/timing/layout aprovados para registrar como resultado.
+Os pré-requisitos de submissão final continuam separados do experimento com
+firmware próprio e contrato CRC atual.

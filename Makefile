@@ -12,7 +12,8 @@ PYTHON ?= $(if $(wildcard .venv/bin/python),.venv/bin/python,python3)
 .PHONY: help clean setup update doctor setup-openlane \
         tb unit integration smoke lint test regression \
         firmware run wave simple-firmware simple-system simple-synth \
-        openlane-env-check openlane-env-smoke openlane-shell
+        openlane-env-check openlane-env-smoke openlane-shell \
+        simple-openlane-synth simple-openlane-floorplan simple-openlane
 
 # Ajuda gerada a partir das descrições após ##; $$ passa um $ literal ao awk.
 help: ## Lista os comandos disponíveis e sua finalidade.
@@ -95,3 +96,14 @@ openlane-env-smoke: ## Executa o circuito de exemplo do LibreLane até GDSII.
 
 openlane-shell: ## Abre um terminal interativo no ambiente físico Docker.
 	./scripts/openlane/environment.sh shell
+
+# 6. Experimento físico com firmware próprio; execute no WSL, com Docker disponível.
+# Cada alvo recria/testa a ROM e a netlist genérica antes de congelar as entradas.
+simple-openlane-synth: simple-synth ## Mapeia o simple_system para células SKY130A.
+	$(PYTHON) scripts/openlane/run_simple.py --stage synth
+
+simple-openlane-floorplan: simple-synth ## Executa síntese e floorplan experimentais.
+	$(PYTHON) scripts/openlane/run_simple.py --stage floorplan
+
+simple-openlane: simple-synth ## Inicia o fluxo experimental completo até verificações/GDSII.
+	$(PYTHON) scripts/openlane/run_simple.py --stage full

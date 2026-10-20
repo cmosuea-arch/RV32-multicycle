@@ -1,21 +1,21 @@
 # Roteiro de conclusão e submissão
 
-Atualizado em **2026-10-17**. Acompanhamento da ordem acordada com a equipe.
+Atualizado em **2026-10-20**. Acompanhamento da ordem acordada com a equipe.
 Baseline: **41/47 (87,23%)**. CRC experimental: três operações adicionais.
 O fechamento oficial depende das definições registradas em
 [official_questions.md](architecture/official_questions.md).
 
 | Ordem | Entrega | Estado / próximo resultado verificável |
 |---|---|---|
-| 1 | Definições oficiais | Aguardando esclarecimentos CRC/sistema/top e firmware; usuário confirmou ausência de envio em 17/10 |
-| 2 | CRC oficial, até 44/47 | Implementação provisória testada; falta confrontar contrato oficial e repetir verificações após ajustes |
+| 1 | Definições oficiais | Mensagens recebidas: CCITT-FALSE e testes assembly para IMEM; faltam operandos/ordem dos bytes CRC, sistema/top e arquivo do firmware |
+| 2 | CRC oficial, até 44/47 | Algoritmo atual coincide com o informado usando seed FFFF; confirmar exemplos de rs1/rs2/rd antes de homologar o contrato |
 | 3 | Sistema/sincronização, até 47/47 | Aguardando nomes, códigos e semântica oficiais |
 | 4 | Top final | Integração atual funcional; fechar pinos/periféricos/capacidades e implementação das memórias |
-| 5 | Firmware oficial | Aguardando arquivo/protocolo; executar até o final e guardar logs/waveforms |
+| 5 | Firmware oficial | Testes assembly para IMEM, publicação prevista após autorização; falta arquivo/protocolo, execução e logs/waveforms |
 | 6 | Congelamento RTL | Regressão final, evidências, cobertura e tag da versão de entrega |
 | 7 | Desenhos | Datapath+controle atuais prontos no relatório; diagramas ChipInventor com outro colaborador |
-| 8 | Fluxo físico | Configuração/restrições, mapeamento, layout, verificações, área/densidade e GDSII |
-| 9 | Relatório final | v0.4 sucinta com 12 páginas; oito disponíveis para diagramas/resultados; completar autoria, figuras ChipInventor e resultados oficiais/físicos |
+| 8 | Fluxo físico | Configuração experimental preparada para execução manual; faltam rodada concluída, revisão e resultados finais |
+| 9 | Relatório final | v0.5 com esclarecimentos de 20/10; manter reserva de diagramas/resultados e completar autoria e resultados oficiais/físicos |
 | 10 | Vídeo | Produzir 5–7 minutos, disponibilizar no YouTube e conferir os seis temas do guia |
 | 11 | Submissão | Conferir regras atuais e reunir PDF, GDSII, GL, config.json, código/TBs e link do vídeo |
 
@@ -46,6 +46,22 @@ e executar aquele programa.
 
 Critérios detalhados da entrega: [report/conformidade.md](report/conformidade.md).
 Situação técnica e evidências: [status.md](status.md).
+
+## Esclarecimentos de 20/10
+
+O [registro recebido](architecture/clarifications_20261020.md) reduz P01: o
+algoritmo é CCITT-FALSE, mas ainda não há vetores/pseudocódigo dos operandos.
+O usuário confirmou não dispor desses detalhes. O firmware próprio já é
+convertido em instruções da IMEM, como solicitado; não é necessário aguardar
+o programa oficial para continuar verificando a implementação própria.
+Isso não encerra a validação oficial nem altera a contagem de conformidade.
+
+Por orientação do usuário em 20/10, a síntese será executada por ele. Foram
+preparados o [formulário CRC](architecture/crc_official_confirmation.md), o
+[recebimento do firmware](../firmware/official/receipt.md) e o
+[roteiro de síntese física experimental](../openlane/simple_system/README.md).
+Uma tentativa automatizada anterior não produziu resultado final; não há nova
+síntese SKY130A aprovada nesta preparação.
 
 ## Prática guiada no workspace atual
 

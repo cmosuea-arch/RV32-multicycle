@@ -64,5 +64,9 @@ de equivalência para todas as entradas.
 O próximo passo experimental é definir configuração LibreLane, clock/restrições,
 área e estratégia de memórias, e avaliar o mapeamento físico. Ver
 [aula 8 — OpenLane](../labs/rtl-to-gds/08-introducao-openlane.md).
+Os arquivos e comandos do próximo experimento já estão
+[preparados para execução manual](../openlane/simple_system/README.md), sem
+rodada mapeada concluída. O usuário pode estudar `make -n simple-openlane-synth`
+antes de executá-lo; esse alvo também recompila e valida a netlist genérica.
 Os marcos finais da competição continuam dependentes da ISA, firmware e interface
 oficiais, conforme [status](status.md).

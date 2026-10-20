@@ -10,3 +10,15 @@
 
 Consultadas em 2026-09-11. Implementação própria. Guias ChampionCHIP têm prioridade
 para arquitetura/entregáveis; os padrões esclarecem semântica da ISA.
+
+## Complemento recebido em 20/10/2026
+
+- Mensagens atribuídas à organização, transcritas pelo usuário, de 19/10
+  (firmware assembly para IMEM) e 20/10 (CRC-16-CCITT-FALSE, 8/16/32 bits de dados).
+  [Registro, limites e comparação com a implementação](clarifications_20261020.md).
+- PDF local relido: mesmo arquivo de 24 páginas, SHA-256
+  `3107f22f7153aca25ea8f472be4dff7474b5c6b9b5b1f0d490da190f5e85ab41`.
+  O Block Guide já integra esse arquivo; não foi recebida nova edição.
+- [CRC RevEng — IBM-3740/CCITT-FALSE](https://reveng.sourceforge.io/crc-catalogue/16.htm#crc.cat.crc-16-ibm-3740)
+  e [Python binascii.crc_hqx](https://docs.python.org/3/library/binascii.html#binascii.crc_hqx),
+  consultados em 20/10 para conferir os parâmetros e o modelo independente.

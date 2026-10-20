@@ -100,7 +100,8 @@ make simple-synth
 
 Esses comandos foram estudados na [aula 7](07-sintese.md): o segundo faz síntese
 genérica e executa firmware na netlist. A configuração LibreLane do sistema
-é a próxima etapa experimental e ainda não está no repositório.
+está em [openlane/simple_system](../../openlane/simple_system/README.md), preparada
+para você executar. Ela ainda não tem rodada mapeada concluída/validada.
 Os contratos abaixo orientam o avanço (itens 1–4 já tratados no experimento):
 
 1. **Top e interface:** clock, reset, sucesso/falha e quais sinais de observação
@@ -128,6 +129,34 @@ O experimento serve ao aprendizado autorizado nesta sequência. A entrega
 final continua seguindo [AGENTS.md](../../AGENTS.md): ISA 47/47, firmware oficial,
 interface final e regressão antes de declarar os marcos físicos da competição.
 
+## Preparação para sua execução
+
+Leia [config.json](../../openlane/simple_system/config.json),
+[constraints.sdc](../../openlane/simple_system/constraints.sdc) e
+[run_simple.py](../../scripts/openlane/run_simple.py). A configuração começa
+com clock de 100 ns e ocupação de 35%, como escolhas de exploração. O reset
+síncrono permanece temporizado; os testes funcionais não definem a frequência
+máxima física.
+
+No WSL, veja as receitas sem iniciar síntese:
+
+```bash
+make -n simple-openlane-synth
+make -n simple-openlane-floorplan
+make -n simple-openlane
+```
+
+Quando decidir executar, comece com `make simple-openlane-synth`. Ele verifica
+primeiro a netlist genérica e depois inicia uma cópia identificada dos arquivos
+no Docker. Após ler o resultado, as próximas receitas permitem chegar ao
+floorplan ou solicitar uma rodada completa. Cada receita inicia uma rodada nova.
+O [roteiro da configuração](../../openlane/simple_system/README.md) explica as
+saídas, a conferência de hashes e os limites de cada PASS.
+
+O contrato CRC atual é mantido durante essa preparação. A confirmação restante
+será registrada no [formulário CRC](../../docs/architecture/crc_official_confirmation.md);
+se ela exigir alterações, será preciso repetir testes e síntese da nova versão.
+
 ## Exercício e critério de conclusão
 
 Explique a diferença entre `make smoke` e `make openlane-env-smoke`.
@@ -135,3 +164,5 @@ O primeiro simula quatro integrações do nosso RTL; o segundo executa fisicamen
 um circuito de exemplo do ambiente. `make simple-synth` sintetiza nosso sistema
 experimental e testa a netlist, conforme a aula anterior. Ao terminar, identifique
 qual circuito e qual propriedade cada um dos três comandos valida.
+Antes de iniciar o experimento mapeado, explique também quais fontes entram no
+config.json, onde está a ROM e por que um PASS na etapa synth não aprova layout/signoff.

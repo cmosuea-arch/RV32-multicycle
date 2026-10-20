@@ -60,7 +60,7 @@ simuladas ou ilustrativas apresentadas como waveforms reais.
 |---|---|---|
 | 41/47 e codificações | `docs/isa/coverage.csv` | Contagem funcional da baseline; firmware oficial pendente |
 | 31 TBs e lint PASS | `results/experiments/simple/regression.json` | Rodada de 13/10 local, 14/10 UTC; hashes identificam arquivos |
-| CRC próprio PASS | `results/experiments/crc/` | Contrato CMOS; algoritmo oficial não confirmado |
+| CRC próprio PASS | `results/experiments/crc/` | CCITT-FALSE identificado em 20/10; contrato de operandos/bytes ainda não confirmado |
 | 598 aposentadorias, 2579 ciclos e SW em 25795 ns | `results/experiments/firmware-wave/` | Smoke próprio reexecutado; VCD e TB conferem a escrita; não é benchmark geral |
 | 32922 células e dois boots na netlist | `results/experiments/simple/simple_synth.json`, `simple_netlist.log` | Yosys genérico, sem PDK/timing/área física |
 | Ambiente físico aprovado | `results/openlane/environment-smoke.md` | Somente circuito de exemplo LibreLane |
@@ -71,7 +71,7 @@ o fechamento da entrega deve registrar uma rodada nova no commit final.
 
 ## Organização das páginas
 
-Versão 0.4: **12 páginas**, liberando oito dentro do limite. A revisão removeu
+Versão 0.5: **12 páginas**, liberando oito dentro do limite. A revisão 0.4 removeu
 repetições e detalhes didáticos do PDF; descrições de módulos e testes foram
 concentradas em tabelas. Os tamanhos de fonte foram preservados.
 
@@ -128,3 +128,9 @@ foi reexecutado, sem nova regressão completa ou implementação física.
 Revisão editorial 0.4: texto reduzido e tabelas consolidadas, PDF de 19 para
 12 páginas; janela de boot preservada no repositório. Nenhum teste ou fluxo
 físico foi reexecutado. Diagramas ChipInventor a cargo do colaborador responsável.
+
+Revisão editorial 0.5, 20/10/2026: incorporadas as mensagens encaminhadas pelo
+usuário. A variante CRC e a forma geral do firmware estão identificadas; faltam
+contrato dos operandos/bytes e arquivo/protocolo oficial. Registro rastreável em
+[clarifications_20261020.md](../architecture/clarifications_20261020.md).
+Sem alteração RTL, nova regressão ou fluxo físico nesta revisão.

@@ -1,0 +1,38 @@
+{
+  "DESIGN_NAME": "simple_system",
+  "VERILOG_FILES": [
+    "dir::rtl/address_decoder.sv",
+    "dir::rtl/alu.sv",
+    "dir::rtl/branch_comp.sv",
+    "dir::rtl/control_unit.sv",
+    "dir::rtl/crc.sv",
+    "dir::rtl/decoder.sv",
+    "dir::rtl/dmem.sv",
+    "dir::rtl/imem.sv",
+    "dir::rtl/imm_ext.sv",
+    "dir::rtl/ir.sv",
+    "dir::rtl/lsu.sv",
+    "dir::rtl/multiplier.sv",
+    "dir::rtl/pc.sv",
+    "dir::rtl/regfile.sv",
+    "dir::rtl/riscv_core.sv",
+    "dir::rtl/simple_system.sv"
+  ],
+  "CLOCK_PORT": "clk_i",
+  "CLOCK_PERIOD": 100,
+  "FP_CORE_UTIL": 35,
+  "PL_TARGET_DENSITY_PCT": 45,
+  "SYNTH_STRATEGY": "AREA 0",
+  "CLOCK_UNCERTAINTY_CONSTRAINT": 0.5,
+  "CLOCK_TRANSITION_CONSTRAINT": 0.2,
+  "IO_DELAY_CONSTRAINT": 20,
+  "OUTPUT_CAP_LOAD": 20,
+  "PNR_SDC_FILE": "dir::openlane/simple_system/constraints.sdc",
+  "SIGNOFF_SDC_FILE": "dir::openlane/simple_system/constraints.sdc",
+  "LINTER_DISABLE_WARNINGS": [
+    "DECLFILENAME", "EOFNEWLINE", "UNUSEDSIGNAL", "UNUSEDPARAM"
+  ],
+  "LINTER_DISABLE_WARNINGS_BLACKBOX": [
+    "UNDRIVEN", "UNUSEDSIGNAL", "TIMESCALEMOD"
+  ]
+}

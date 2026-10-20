@@ -35,6 +35,7 @@ Durante WRITEBACK o endereço efetivo e `oe` do load são mantidos, preservando 
 seleção do dado lido. FAULT retém estado até reset e desativa efeitos colaterais.
 Os operandos são estáveis enquanto IR não muda; RF só escreve em WRITEBACK.
 
-CRC: [contrato interno provisório](crc_provisional.md), sem confirmação oficial.
+CRC: [contrato interno provisório](crc_provisional.md). A mensagem de 20/10
+identifica CCITT-FALSE; operandos e ordem dos bytes ainda não foram confirmados.
 Decoder/core/top possuem `EXPERIMENTAL_XICRC=0` por padrão; com valor 1, CRC usa
 rs1 como acumulador, rs2 como dados e o resultado de EXECUTE para writeback.

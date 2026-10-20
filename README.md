@@ -7,11 +7,15 @@ firmware próprio, automação Python/Make e documentação arquitetural.
 **Baseline: 41/47 instruções (87,23%)**, com 14 testbenches unitários e 17 de
 integração na regressão atual. Há também três instruções CRC sob um
 [contrato provisório CMOS](docs/architecture/crc_provisional.md), habilitado
-no `simple_system`, com firmware próprio e síntese lógica genérica. Confirmação
-oficial do CRC, sistema/sincronização, firmware oficial e interface física final
+no `simple_system`, com firmware próprio e síntese lógica genérica. A mensagem
+recebida em 20/10 identifica CRC-16-CCITT-FALSE, usado no algoritmo atual;
+contrato dos operandos CRC, sistema/sincronização, firmware oficial e interface física final
 continuam pendentes. O projeto completo ainda
 não está concluído. Consulte [o estado detalhado](docs/status.md) e
 [as definições oficiais necessárias](docs/architecture/official_questions.md).
+O [registro de 20/10](docs/architecture/clarifications_20261020.md) também informa
+que o firmware oficial será um teste assembly para a IMEM, ainda não recebido.
+Nosso fluxo próprio já converte programas em palavras carregadas nessa memória.
 
 O [relatório técnico da Fase 2](docs/report/README.md) já possui redação inicial
 e prévia PDF, organizadas conforme o guia da competição. A
@@ -196,7 +200,9 @@ e PDK. O wrapper e o verificador estão neste clone, sem dependência do diretó
 O smoke usa
 arquivos temporários no contêiner, descartados ao sair. Ainda não há GDSII do
 processador nem configuração física final. O `simple_system` já possui RTL,
-firmware, testbench e síntese genérica; ainda não há configuração OpenLane dele.
+firmware, testbench e síntese genérica; sua
+[configuração experimental](openlane/simple_system/README.md) está preparada
+para execução manual, ainda sem rodada mapeada concluída.
 
 ## Próximos passos
 
@@ -205,14 +211,19 @@ de 2 KiB e RAM de 1 KiB, com saídas done/success/fault. O CRC provisório é op
 no core e ativo nesse experimento. Consulte a [matriz experimental](docs/isa/experimental_crc.md)
 e as [evidências](results/experiments/simple/README.md).
 
-O próximo passo experimental é preparar restrições e configuração física,
+O próximo passo experimental é o usuário executar a configuração preparada,
 avaliar área/timing e a estratégia de memórias em SKY130A. A síntese genérica
 e seu teste não substituem essas etapas. Veja o percurso na
 [aula 8](labs/rtl-to-gds/08-introducao-openlane.md).
 
 A conclusão do processador da competição mantém outra lista de requisitos:
-confirmar o algoritmo Xicrc e adaptar a implementação, se necessário, até
+confirmar o contrato dos operandos/bytes Xicrc e adaptar a implementação, se necessário, até
 44/47 oficiais; confirmar as três instruções de sistema/sincronização até 47/47; validar
 o firmware oficial; fechar interface e top físico; congelar/taguear RTL e executar
 o fluxo final conforme [AGENTS.md](AGENTS.md). Diagramas ChipInventor, fechamento
 do relatório preliminar e vídeo também permanecem entregáveis pendentes.
+
+Para receber as definições restantes, use o
+[formulário CRC](docs/architecture/crc_official_confirmation.md) e o
+[checklist do firmware oficial](firmware/official/receipt.md). O RTL mantém o
+contrato atual enquanto a equipe obtém o retorno dos responsáveis.

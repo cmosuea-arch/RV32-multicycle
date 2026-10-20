@@ -7,9 +7,9 @@ project_dir="$(cd -- "$script_dir/../.." && pwd -P)"
 image="${UNICCASS_DOCKER_IMAGE:-isaiassh/unic-cass-tools:1.1.0}"
 action="${1:-check}"
 case "$action" in
-    install|check|smoke|shell) ;;
-    -h|--help) echo "Uso: $0 {install|check|smoke|shell}"; exit 0 ;;
-    *) echo "Uso: $0 {install|check|smoke|shell}" >&2; exit 2 ;;
+    install|check|smoke|shell|flow) ;;
+    -h|--help) echo "Uso: $0 {install|check|smoke|shell|flow [opções LibreLane]}"; exit 0 ;;
+    *) echo "Uso: $0 {install|check|smoke|shell|flow [opções LibreLane]}" >&2; exit 2 ;;
 esac
 if [[ "$(uname -m)" != x86_64 ]]; then
     echo 'A imagem padrão foi validada somente em Linux x86_64 (nativo ou WSL2).' >&2
@@ -64,8 +64,14 @@ case "$action" in
     shell)
         exec docker run -it "${common_args[@]}" "$image"
         ;;
+    flow)
+        # Argumentos seguem como argumentos, sem interpolar texto do usuário no shell.
+        shift
+        exec docker run "${common_args[@]}" "$image" \
+            -lc 'exec bash scripts/openlane/librelane.sh "$@"' bash "$@"
+        ;;
     *)
-        echo "Uso: $0 {check|smoke|shell}" >&2
+        echo "Uso: $0 {check|smoke|shell|flow}" >&2
         exit 2
         ;;
 esac

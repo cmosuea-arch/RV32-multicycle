@@ -2,7 +2,8 @@
 
 ## Objetivo
 Executar CRCB/CRCH/CRCW no [contrato CMOS provisório](../architecture/crc_provisional.md).
-Compatibilidade oficial Xicrc ainda não confirmada.
+Mensagem recebida em 20/10 identifica CCITT-FALSE e dados de 8/16/32 bits;
+compatibilidade completa do contrato de operandos Xicrc ainda não confirmada.
 
 ## Entradas
 `a_i[31:0]`: acumulador; `b_i[31:0]`: dados; `op_i[3:0]`: 0/1/2 para byte/half/word.
@@ -53,4 +54,10 @@ Commit que introduz este módulo e `results/experiments/crc/regression.json`;
 o manifesto identifica os conteúdos por SHA256.
 
 ## Pendências
-P01 oficial aberta. Timing/área ainda não medidos; não marcar M7 oficial DONE.
+P01 parcialmente esclarecida: algoritmo coincide com CCITT-FALSE quando o
+software inicia em `0xFFFF`. Falta confrontar papel de rs1/rs2, aplicação da seed,
+ordem dos bytes e bits altos de rd com vetores/pseudocódigo. Veja
+[comparação de 20/10](../architecture/clarifications_20261020.md).
+O [formulário de confirmação](../architecture/crc_official_confirmation.md)
+organiza a resposta futura e a sequência de testes, sem alterar o RTL atual.
+Timing/área física ainda não medidos; não marcar M7 oficial DONE.

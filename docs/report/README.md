@@ -10,6 +10,13 @@ identificadas. Em 17/10 o firmware próprio foi reexecutado isoladamente para
 produzir as figuras reais de waveform; os logs existentes foram preservados.
 Não houve nova regressão completa nem implementação física.
 
+Revisão **0.5, 20/10/2026**: mensagens da organização encaminhadas pelo usuário
+identificam CCITT-FALSE para CRCB/CRCH/CRCW e testes assembly carregados na IMEM.
+O algoritmo atual coincide quando a seed é `0xFFFF`; operandos/bytes ainda
+carecem de confirmação. O firmware oficial ainda não foi recebido. A revisão
+atualiza texto/PDF e preserva as evidências históricas, sem alterar RTL ou
+executar nova regressão. [Registro completo](../architecture/clarifications_20261020.md).
+
 ## Fonte normativa consultada
 
 Foi lido o [PDF local da competição](../../Champion-chip-guia-fase-2.pdf),
