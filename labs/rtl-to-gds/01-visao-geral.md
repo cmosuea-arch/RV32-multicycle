@@ -1,8 +1,11 @@
 # 1 — Visão geral do ambiente
 
-[Índice](README.md) · [Próxima: testes unitários](02-testes-unitarios.md)
+[Anterior: arquitetura RISC-V](00-arquitetura-riscv.md) · [Índice](README.md) · [Próxima: testes unitários](02-testes-unitarios.md)
 
 ## Objetivo
+
+Use a [aula 0](00-arquitetura-riscv.md) como base para reconhecer os blocos e
+o caminho de uma instrução. Agora vamos ligá-los às ferramentas de verificação.
 
 Identificar quem descreve o circuito, quem o estimula e quem decide se o resultado
 está correto. RTL e testbench podem ser desenvolvidos juntos a partir do contrato

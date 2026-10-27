@@ -5,6 +5,9 @@ O perfil funcional possui **47 tipos de instrução** sob o
 FENCE, ECALL e EBREAK têm testes próprios. Comece pela visão do sistema e abra
 os blocos conforme os sinais aparecerem. A execução guiada está no
 [laboratório](../labs/rtl-to-gds/README.md).
+Se os papéis dos blocos ainda forem novos, leia primeiro a
+[aula de arquitetura RISC-V](../labs/rtl-to-gds/00-arquitetura-riscv.md): ela
+explica o datapath e o controle antes de acompanhar as instanciações no código.
 
 ## Ordem de leitura do hardware
 

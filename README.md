@@ -29,6 +29,10 @@ espaço para os diagramas ChipInventor, preparados por outro colaborador.
 
 ## Comece pelo laboratório
 
+Comece pela [aula 0 — arquitetura RISC-V](labs/rtl-to-gds/00-arquitetura-riscv.md):
+papel e ligações dos blocos, datapath/controle e execução de instruções no nosso
+core multiciclo. Ela prepara a leitura do RTL e dos testes.
+
 Para acompanhar as conexões entre RTL, testbench, Python, firmware e Make,
 use o [guia de leitura do código](docs/code_guide.md). Ele também explica a
 diferença entre core, top, simple_system, aposentadoria e trap.
@@ -43,6 +47,7 @@ sucintos nos blocos de código que acompanham as explicações.
 
 | Aula | Tema |
 |---|---|
+| [0 — Arquitetura RISC-V](labs/rtl-to-gds/00-arquitetura-riscv.md) | composição do processador, ligações dos blocos e caminho de instruções |
 | [1 — Visão geral](labs/rtl-to-gds/01-visao-geral.md) | circuito, testbench, referência e ferramentas |
 | [2 — Testes unitários](labs/rtl-to-gds/02-testes-unitarios.md) | ALU manual com Icarus/vvp e demais blocos |
 | [3 — Integração](labs/rtl-to-gds/03-testes-integracao.md) | conexões, core, ISA e firmware próprio |

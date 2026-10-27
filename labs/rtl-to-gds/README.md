@@ -5,15 +5,21 @@ blocos conectados, core executando programas e automação que registra os resul
 O exemplo contínuo é a ALU. Primeiro vamos simulá-la manualmente e reconhecer
 os mesmos passos nos scripts Python e no Makefile. Em seguida executamos firmware
 no core e sintetizamos o sistema pequeno, antes de estudar a preparação física.
+A [aula 0 — arquitetura RISC-V](00-arquitetura-riscv.md) fornece a base: papel
+dos blocos, conexões do datapath/controle e caminho de uma instrução pelo core.
 
 Para a atividade acompanhada e a preparação do vídeo, comece por
 [prática guiada para o vídeo](00-pratica-para-video.md). Usaremos o workspace
-atual, com saídas limpas e avanço por etapas conforme você executar.
+atual e avançaremos por etapas conforme você executar. O roteiro começa com uma
+[sequência completa de comandos até a síntese lógica](00-pratica-para-video.md#sequência-completa-até-a-síntese-lógica),
+incluindo os critérios de avanço e a simulação da netlist. A limpeza é opcional;
+o registro de saídas limpas descreve a preparação inicial da prática.
 
 ## Percurso
 
 | Ordem | Aula | Ao terminar, você conseguirá… |
 |---|---|---|
+| 0 | [Arquitetura RISC-V](00-arquitetura-riscv.md) | explicar os blocos, as ligações e a execução multiciclo antes de ler RTL/testes |
 | 1 | [Visão geral](01-visao-geral.md) | distinguir circuito, estímulo, referência e ferramenta |
 | 2 | [Testes unitários](02-testes-unitarios.md) | gerar vetores, compilar, simular e interpretar uma comparação |
 | 3 | [Testes de integração](03-testes-integracao.md) | acompanhar dados entre módulos e programas no core |
@@ -86,7 +92,8 @@ O [simple_system](../../docs/modules/simple_system.md) já possui RTL, firmware,
 TB e síntese genérica histórica. A configuração física está preparada; a nova execução fica com o usuário.
 O smoke test do LibreLane valida o ambiente com um circuito de exemplo.
 
-Comece pela [aula 1](01-visao-geral.md). Para consulta rápida dos comandos, use
+Comece pela [aula 0](00-arquitetura-riscv.md), depois siga para a
+[aula 1](01-visao-geral.md). Para consulta rápida dos comandos, use
 o [roteiro operacional](../../docs/testing_roadmap.md).
 
 ## Validação deste material
@@ -105,8 +112,10 @@ síntese foram executados em cópia isolada: teste RTL, síntese automática,
 síntese manual e simulação das duas netlists PASS. Links e prévias dos comandos
 Make foram conferidos; os logs locais do usuário foram preservados.
 
-A revisão da documentação e da navegação das oito aulas foi concluída em
-2026-10-15, preservando as datas das execuções registradas.
+A revisão inicial da navegação das oito aulas foi concluída em 2026-10-15.
+Em 27/10 foi acrescentada a aula 0 de arquitetura, totalizando nove aulas, com
+as numerações anteriores preservadas. Esse acréscimo é documental; as datas
+das execuções acima continuam identificando suas respectivas rodadas.
 
 Registro histórico da primeira versão das aulas:
 
