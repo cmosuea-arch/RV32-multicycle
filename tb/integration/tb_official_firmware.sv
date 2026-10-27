@@ -8,8 +8,10 @@ module tb_official_firmware;
     wire fault,valid;
     wire [31:0] cpc,ci,cd;
     wire [4:0] rd;
+    // build_official.py fornece ROM, tags de tipos e PCs/contagens esperados em meta.
     reg [31:0] expected_rom[0:511],meta[0:5];
     reg [5:0] tags[0:511];
+    // A imagem oficial contém 44 tipos; FENCE/ECALL/EBREAK têm bancada própria.
     reg [43:0] seen=0;
     integer cycles,n=0,crc_count=0,loops=0,index;
     reg finished=0;
@@ -39,6 +41,7 @@ module tb_official_firmware;
                 seen[tags[index]-1]=1;
                 if(ci[6:0]==7'h33 && ci[31:25]==7'h40) crc_count=crc_count+1;
                 if(rd==4) begin
+                    // Zero só aprova na escrita do PC final, nunca pela leitura de x4 no reset.
                     if(cpc==meta[2] || cd!==0) $fatal(1,"official FAIL x4=%h pc=%h",cd,cpc);
                     if(cpc!==meta[0] || ci!==32'h00000213 || finished)
                         $fatal(1,"unexpected official x4 write");
@@ -48,6 +51,7 @@ module tb_official_firmware;
                         $fatal(1,"official terminal loop not reached");
                     loops=loops+1;
                 end
+                // Depois do NBA, confirma o dado realmente armazenado no Register File.
                 #1;
                 if(finished && dut.core.register_file.regs[4]!==0)
                     $fatal(1,"official x4 not stored");

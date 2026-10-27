@@ -2,6 +2,7 @@
 module tb_decoder;
     // Compara os sinais de controle com CRC desabilitado e habilitado.
     reg [31:0] instr;
+    // programs.py produz instrução + controles: bit 14 é trap_request, bit 0 é illegal.
     reg [14:0] expected;
     wire [3:0] alu_op;
     wire a_pc,b_imm,reg_we,branch,jal,jalr,load,store_op,mul,illegal;
@@ -16,7 +17,7 @@ module tb_decoder;
         experimental_control[4],experimental_control[3],experimental_control[2],
         experimental_control[1],experimental_control[0],experimental_crc,without_trap);
     initial begin
-        // O perfil padrão contém 47 instruções; o segundo decoder desabilita CRC.
+        // O perfil padrão contém 47 tipos; o segundo mantém 44, removendo apenas CRC.
         fd=$fopen("build/decoder.vec","r"); n=0;
         if(!fd) $fatal(1,"missing decoder vectors");
         while(!$feof(fd)) begin
@@ -33,6 +34,7 @@ module tb_decoder;
                 $fatal(1,"decode instr=%h got=%h expected=%h",instr,{alu_op,a_pc,b_imm,reg_we,branch,jal,jalr,load,store_op,mul,illegal},expected);
             n=n+1;
         end
+        // Além da varredura de campos, há duas palavras SYSTEM e 64 vizinhas de um bit.
         if(n!=131138) $fatal(1,"incomplete decode sweep");
         $display("PASS decoder: 131138 words, exact SYSTEM and neighbors, Xicrc enabled and disabled"); $finish;
     end

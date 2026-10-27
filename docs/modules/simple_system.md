@@ -11,7 +11,7 @@ Parâmetro `ROM_FILE`, padrão `build/simple.hex`.
 ## Saídas
 - `done_o`: primeira escrita SW no endereço de assinatura foi observada.
 - `success_o`: essa assinatura foi 0x600dc0de; interpretar somente com done.
-- `fault_o`: erro do core, retido até reset.
+- `fault_o`: erro do core OU trap solicitado ECALL/EBREAK, retido até reset.
 
 Não há timeout interno; TB impõe 10000 ciclos. Após done, firmware permanece
 em loop e o clock do core continua ativo. Done/success ficam retidos até reset.
@@ -48,7 +48,7 @@ flowchart LR
  RAM --> CORE
  BUS --> MON[monitor SW em 0x100103f0]
  MON --> DONE[done / success]
- CORE --> FAULT[fault]
+ CORE --> FAULT[fault: erro ou trap terminal]
 ```
 
 ## Casos especiais e memórias
@@ -60,28 +60,31 @@ Isso não comprova viabilidade de área/timing em SKY130A; macros e capacidades
 finais precisam de avaliação própria.
 
 O smoke original usa assinatura 0x10011ff0, fora desta RAM. Use `simple.hex`.
-Não há UART/GPIO nem instruções de sistema presumidas.
+Não há UART/GPIO. FENCE/ECALL/EBREAK seguem o [EEI CMOS](../architecture/system.md);
+um trap não produz uma assinatura de sucesso.
 
 ## Testbench
 `tb_simple_system` e `scripts/synth/tb_simple_netlist.sv`.
 
 ## Casos testados
 Boot com RAM indefinida, reboot em RAM suja, reset cancelando SW de assinatura,
-retenção de saídas, SB sem término, assinatura ruim, instrução ilegal e recuperação.
+retenção de saídas, SB sem término, assinatura ruim, instrução ilegal, ECALL,
+EBREAK e recuperação, em nove cenários.
 Firmware testa dados/BSS/pilha, MUL, escritas parciais e CRCB/CRCH/CRCW.
 Netlist: dois boots observando somente pinos, sem acesso interno à ROM/RAM.
 
 ## Resultado
-[Evidências e limites](../../results/experiments/simple/README.md).
+RTL atual: [rodada de 47 instruções](../../results/experiments/isa-47-20261027/README.md).
+Síntese e netlist históricas: [evidências e limites](../../results/experiments/simple/README.md).
 
 ## Integração
-Parte da regressão de 44 instruções e dos testes de firmware próprio.
+Parte da regressão de 47 tipos no EEI CMOS e dos testes de firmware próprio.
 
 ```bash
 make simple-firmware  # compila e gera a ROM
 make simple-system    # simula RTL, reset e falhas
 make simple-synth     # síntese Yosys e teste da netlist genérica
-make regression       # baseline + CRC + simple_system + lint
+make regression       # 33 TBs: ISA, CRC, sistema, firmwares e lint
 ```
 
 Síntese verifica ausência de memória não mapeada, inicialização de registradores
@@ -90,8 +93,8 @@ Passo a passo: [aula 7](../../labs/rtl-to-gds/07-sintese.md).
 Consulta de comandos e saídas: [síntese](../synthesis.md).
 
 ## Commit validado
-Commit que inclui este documento e `results/experiments/simple/regression.json`;
-os hashes do manifesto identificam os conteúdos testados.
+RTL no marco `isa-47-v1` (`d76fc2c`); síntese em registro histórico separado.
+Os hashes de cada manifesto identificam exatamente seus conteúdos testados.
 
 ## Pendências
 Síntese da versão atual e execução da configuração física preparada, área/timing

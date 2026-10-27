@@ -6,7 +6,7 @@ module control_unit(
     input logic trap_i
 );
     localparam [2:0] FETCH=0,DECODE=1,EXECUTE=2,WRITEBACK=3,MEMORY=4,FAULT=5,TRAP=6;
-    // Reset síncrono ativo em 1 tem prioridade; FAULT só é abandonado por reset.
+    // Reset síncrono ativo em 1 recupera FETCH de qualquer estado, inclusive terminais.
     always @(posedge clk_i) begin
         if(rst_i) state_o<=FETCH;
         // Estados terminais preservam o motivo mesmo se outras entradas mudarem.
@@ -16,6 +16,7 @@ module control_unit(
             FETCH: state_o<=DECODE;
             // Decode valida a instrução antes de permitir sua execução.
             DECODE: if(illegal_i) state_o<=FAULT; else state_o<=EXECUTE;
+            // ECALL/EBREAK não passam por WRITEBACK; TRAP preserva o PC solicitante.
             EXECUTE: if(trap_i) state_o<=TRAP;
                      else if(load_i||store_i) state_o<=MEMORY;
                      else state_o<=WRITEBACK;

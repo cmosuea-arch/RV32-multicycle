@@ -10,6 +10,8 @@ module imem #(
     // Subtrai a base e divide por quatro para indexar palavras de 32 bits.
     wire [31:0] index=(address_i-BASE)>>2;
     integer i;
+    // Na simulação carrega a ROM; na síntese do simple_system define suas constantes.
+    // Trocar INIT_FILE não é um mecanismo de programação do chip em execução.
     initial begin
         // Fontes de inicialização exclusivas: evita zeros sobrepondo a ROM na síntese.
         // Quando há arquivo, ele deve conter WORDS palavras (geradores fazem padding).

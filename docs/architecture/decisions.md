@@ -11,7 +11,8 @@ Data: 2026-09-11. Baseline inicial: `baseline-v1`.
    latência; não há pipeline, stalls externos, CSRs, debug ou arquitetura Ibex.
 4. Acessos desalinhados, endereços não mapeados, escrita na ROM e instruções não
    suportadas produzem FAULT persistente sem writeback/escrita. É diagnóstico
-   interno CMOS, NÃO implementação de traps privilegiados ou ECALL/EBREAK.
+   interno CMOS, distinto do pedido de trap de ECALL/EBREAK no [EEI CMOS](system.md).
+   Não há arquitetura privilegiada/CSRs; TRAP retém PC e motivo até reset.
    Branch não tomado não falha pelo alinhamento de um alvo não utilizado.
 5. Sinais commit_* expõem aposentadoria para TB; não são interface oficial de
    pinos. Top de integração é provisório. UART/GPIO do desenho do guia carecem
@@ -22,12 +23,17 @@ Data: 2026-09-11. Baseline inicial: `baseline-v1`.
 7. Não usar uma instrução de sistema fictícia para terminar os testes. Firmware
    próprio escreve uma assinatura na DMEM e permanece em loop; TB detecta a
    assinatura. Testes por instrução observam commit_valid e timeout.
+   ECALL/EBREAK usam trap_o/PC/motivo e não entram como aposentadorias no trace.
 8. Não iniciar o fluxo físico do processador antes de ISA e firmware oficial
    validados, conforme AGENTS.md §33. A instalação e o smoke test do ambiente
    LibreLane são preparação de infraestrutura e não alteram esse marco. Lint
    não equivale a síntese física nem a GDSII.
 
 ## Pendências oficiais
+
+Estado atual em 27/10: CRC e firmware publicados validados; sistema implementado
+sob o EEI CMOS. P04 (interface final) segue aberta. Os parágrafos datados abaixo
+preservam a sequência das decisões anteriores; não descrevem o perfil atual.
 
 Decisão adicional em 2026-10-13: por autorização do usuário, desenvolver o
 [CRC provisório CMOS](crc_provisional.md), habilitado por `EXPERIMENTAL_XICRC`.
@@ -42,7 +48,7 @@ O experimento não encerra requisitos do top final nem do firmware oficial.
 
 | ID | Lacuna | Evidência | Impacto |
 |---|---|---|---|
-| P01 | Resolvida para a revisão publicada | Contrato implementado; unidade, core e firmware oficial PASS | Perfil padrão ampliado para 44/47 |
+| P01 | Resolvida para a revisão publicada | Contrato implementado; unidade, core e firmware oficial PASS | Xicrc acrescentou três tipos; perfil atual tem 47/47 após sistema |
 | P02 | Implementadas no EEI CMOS | [Contrato e limites](system.md); FENCE ordenada, ECALL/EBREAK com PC e motivo | 47/47 funcionais; eventual protocolo adicional da competição deve ser conferido |
 | P03 | Resolvida para a revisão publicada | Imagem completa, x4 final e loop verificados; log/VCD arquivados | Firmware oficial PASS em RTL; sem declaração de signoff |
 | P04 | pinos UART/GPIO e interface final de submissão | PDF pp.9–10: figura 12 pinos, tabela apenas clk/rst | top físico pendente |

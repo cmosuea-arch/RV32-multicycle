@@ -13,6 +13,7 @@ import coverage
 
 class CoverageEvidence(unittest.TestCase):
     def setUp(self):
+        # Monta evidências mínimas num diretório temporário; não executa CPU ou síntese.
         self.temp=tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
         self.root=Path(self.temp.name)
@@ -35,12 +36,14 @@ class CoverageEvidence(unittest.TestCase):
         (self.root/path).write_text(json.dumps(value))
 
     def publish(self):
+        # Usa o validador real; omite só a exportação visual para concentrar nas evidências.
         self.write('results/logs/official_firmware.json',self.official)
         self.write('results/logs/system.json',self.system)
         with patch.object(coverage,'render_coverage'):
             coverage.write_coverage(self.tests)
 
     def test_47_implemented_does_not_claim_47_in_official_firmware(self):
+        # 47 PASS funcionais devem coexistir com apenas 44 PASS na coluna de firmware.
         self.publish()
         with (self.root/'docs/isa/coverage.csv').open() as source:
             rows=list(csv.DictReader(source))

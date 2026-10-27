@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 module tb_control_unit;
-    // Confere a ordem da FSM: FETCH=0, DECODE=1, EXECUTE=2, WRITEBACK=3, MEMORY=4, FAULT=5.
+    // Confere FETCH=0, DECODE=1, EXECUTE=2, WRITEBACK=3, MEMORY=4, FAULT=5, TRAP=6.
     // Clock de 10 ns; entradas mudam na descida, estado é conferido após a subida.
     reg clk=0; always #5 clk=~clk;
     reg rst=1,illegal=0,load=0,store_op=0,fault=0,trap_request=0;
@@ -29,6 +29,7 @@ module tb_control_unit;
         @(negedge clk); rst=1; fault=0; next_state(0);
         @(negedge clk); rst=0; trap_request=1;
         next_state(1); next_state(2); next_state(6);
+        // Após entrar em TRAP, mudar as entradas não pode trocar o motivo por FAULT.
         @(negedge clk); trap_request=0; fault=1; next_state(6); next_state(6);
         @(negedge clk); rst=1; next_state(0);
         @(negedge clk); rst=0; fault=0; trap_request=1; illegal=1;

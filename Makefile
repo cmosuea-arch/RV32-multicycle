@@ -1,6 +1,9 @@
 # Execute na raiz do projeto. Consulte os comandos com: make help
 # Para estudar a receita sem executá-la: make -n run
 # Execute um comando por vez: os testes compartilham build/ e results/logs/.
+# Fluxo de simulação: receita -> run.py -> geradores -> Icarus/vvp -> logs.
+# Fluxo de síntese: receita -> synth/simple.py -> Yosys -> teste da netlist.
+# O percurso entre arquivos está explicado em docs/code_guide.md.
 
 # Mantém make sem argumentos equivalente a make test, mesmo com help no início.
 .DEFAULT_GOAL := test
@@ -36,6 +39,7 @@ doctor: ## Confere ferramentas, versões e compilador RISC-V.
 
 # 2. Testar os circuitos. O Python prepara entradas, chama Icarus/vvp e salva logs.
 # TB é o nome do módulo de teste, sem caminho: make tb TB=tb_alu
+# unit/integration selecionam suítes; test/regression também publicam a matriz ISA.
 tb: ## Executa uma bancada: make tb TB=tb_alu
 	$(if $(strip $(TB)),,$(error Informe a bancada: make tb TB=tb_alu))
 	$(PYTHON) scripts/regression/run.py --test "$(TB)"
@@ -75,6 +79,7 @@ wave: ## Executa o firmware no RTL e grava a forma de onda VCD.
 	$(PYTHON) scripts/regression/run.py --wave
 
 # Imagem oficial: download explícito e verificado; os testes seguintes funcionam offline.
+# A imagem exercita 44 tipos; make system verifica as três instruções restantes.
 official-fetch: ## Obtém a revisão oficial fixada por SHA-256 e gera a imagem IMEM.
 	$(PYTHON) scripts/sim/build_official.py --fetch
 
@@ -101,7 +106,8 @@ simple-synth: simple-firmware ## Faz síntese lógica Yosys e simula a netlist g
 
 
 # 5. Ambiente físico em Docker: prepare Docker no host antes de setup-openlane.
-# O smoke abaixo usa o exemplo do LibreLane. O fluxo físico do processador é futuro.
+# O smoke abaixo usa o exemplo do LibreLane. Os alvos da seção 6 usam nosso sistema.
+# Ambos são comandos de execução; consultar help ou usar -n não inicia o fluxo.
 setup-openlane: ## Baixa a imagem com LibreLane/PDK e verifica o ambiente.
 	bash scripts/openlane/environment.sh install
 

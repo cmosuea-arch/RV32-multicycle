@@ -34,8 +34,9 @@ unit:
 
 Make também pode trabalhar com dependências, usando a forma
 `alvo: dependencias`. No arquivo atual, os alvos são ações sem grafo de dependências
-por arquivo. A exceção explícita é `simple-synth: simple-firmware`, que primeiro
-recompila o programa usado na síntese. `.PHONY` evita que um arquivo chamado `unit` impeça a
+por arquivo. `simple-synth: simple-firmware` recompila o programa antes da síntese;
+os três alvos `simple-openlane*` dependem de `simple-synth`, que também simula a
+netlist antes do Docker. `.PHONY` evita que um arquivo chamado `unit` impeça a
 receita. Cada chamada executa de novo; o Python controla a sequência interna.
 
 `PYTHON` é uma variável: o Makefile escolhe `.venv/bin/python` quando instalado,
@@ -73,7 +74,8 @@ espaços; `if` chama `error` quando o nome está vazio.
 | `make doctor` | verifica ferramentas e compilador | saída no terminal |
 | `make tb TB=tb_alu` | uma bancada | log da bancada |
 | `make unit` | 14 TBs unitários | logs individuais |
-| `make integration` | 17 TBs de integração, com firmware próprio | logs individuais |
+| `make integration` | 19 TBs de integração, com sistema e firmwares | logs individuais |
+| `make system` | FENCE e traps de ECALL/EBREAK | log e `system.json` |
 | `make smoke` | quatro integrações rápidas | logs individuais |
 | `make lint` | Verilator sem simulação | `lint.log` |
 | `make test` | todos os TBs, sem lint | manifesto com lint `NOT_RUN` e cobertura |
@@ -81,9 +83,16 @@ espaços; `if` chama `error` quando o nome está vazio.
 | `make firmware` | GCC e conversão da imagem | log de build, ELF e hex |
 | `make run` | compila e executa o firmware próprio no core | `tb_firmware.log` |
 | `make wave` | firmware no RTL com VCD | log e waveform |
+| `make official-fetch` | obtém/revalida a revisão fixada da imagem oficial | cache e inventário com READY |
+| `make official-image` | converte a imagem em cache, offline | ROM, tags e metadados |
+| `make official-run` | executa o firmware oficial no RTL | log e `official_firmware.json` |
+| `make official-wave` | executa a imagem oficial com VCD | log e `official.vcd` |
 | `make simple-firmware` | GCC gera programa experimental com CRC | `simple_build.log` e imagem ROM |
 | `make simple-system` | firmware no sistema pequeno | `tb_simple_system.log` |
 | `make simple-synth` | Yosys e simulação da netlist genérica | `simple_synth.json`, logs |
+| `make simple-openlane-synth` | valida a netlist e mapeia para SKY130A | resumo da etapa synth, sem signoff |
+| `make simple-openlane-floorplan` | valida a netlist e executa até floorplan | resumo da etapa floorplan |
+| `make simple-openlane` | valida a netlist e inicia o fluxo físico completo | run isolado; resultados exigem revisão |
 | `make openlane-env-check` | script shell → Docker → verificador | resultado no terminal |
 | `make setup-openlane` | baixa imagem e verifica o ambiente físico | resultado no terminal |
 | `make openlane-env-smoke` | script shell → Docker → exemplo físico | resultado no terminal |
@@ -113,6 +122,8 @@ make tb TB=tb_rf_alu
 ```
 
 O resultado deve ser o mesmo da execução direta feita na aula 3.
+As etapas de síntese/OpenLane da tabela são roteiro de execução do usuário;
+esta revisão dos comentários não as executa.
 
 ## Erros e execução sequencial
 

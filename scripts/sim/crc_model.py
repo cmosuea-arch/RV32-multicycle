@@ -3,6 +3,7 @@ from binascii import crc_hqx
 
 
 def crc_model(data, accumulator, op):
+    # Mesma ordem do RTL: data=rs1; accumulator=rs2. Ex.: (0x31323334, 0xffff, 2).
     # op escolhe quantos bytes baixos consumir; código inválido deve devolver zero.
     size = {0: 1, 1: 2, 2: 4}.get(op)
     if size is None:

@@ -7,6 +7,9 @@
 Identificar quem descreve o circuito, quem o estimula e quem decide se o resultado
 está correto. RTL e testbench podem ser desenvolvidos juntos a partir do contrato
 do bloco; a ordem de estudo aqui começa por um RTL que já existe.
+Para abrir o projeto de cima para baixo, acompanhe o
+[guia de leitura do código](../../docs/code_guide.md), começando pelos tops e
+seguindo as conexões no core antes de estudar cada componente isolado.
 
 ## Arquivos envolvidos
 

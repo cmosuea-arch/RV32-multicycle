@@ -79,7 +79,7 @@ reformatar uma matriz já registrada, sem alegar nova execução, existe:
 python3 scripts/regression/coverage.py --render-only
 ```
 
-Essa opção lê o CSV existente e recria Markdown/Excel. A tag `isa-41-v1` identifica
+Essa opção lê o CSV existente e recria Markdown/Excel. A tag `isa-47-v1` identifica
 o marco RTL da matriz atual; hashes e horário no manifesto identificam a rodada.
 O firmware oficial só recebe PASS quando tb_official_firmware conclui a imagem
 publicada. O firmware próprio, sozinho, não altera esse estado.
@@ -90,10 +90,14 @@ Na próxima aula, `make simple-synth` produz `simple_synth.log`, `simple_netlist
 e o resumo `simple_synth.json`. Esses arquivos verificam estrutura sintetizada e
 dois boots na netlist. Não publicam cobertura de ISA nem substituem a regressão RTL.
 
-O contrato CRC oficial foi incorporado ao perfil de 44 instruções. O firmware
-oficial também é executado com detecção do término real em x4. Consulte a
-[rodada de 27/10](../../results/experiments/crc-official-20261027/README.md)
+O perfil possui 47 tipos sob o EEI CMOS; a imagem oficial exercita 44 deles,
+com detecção do término real em x4. Os três de sistema usam evidência própria.
+Consulte a [rodada de 27/10](../../results/experiments/isa-47-20261027/README.md)
 para distinguir a evidência identificada dos logs de exercícios posteriores.
+Comentários também fazem parte dos bytes usados no SHA. Depois de revisá-los,
+um hash antigo não corresponde ao arquivo atual, mesmo com a lógica preservada.
+Não edite o manifesto antigo para fazê-lo coincidir: uma nova rodada produz
+seus próprios hashes.
 
 ## Se algo falhar
 

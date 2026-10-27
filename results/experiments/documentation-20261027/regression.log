@@ -1,0 +1,37 @@
+$ make regression PYTHON=python3
+python3 scripts/regression/run.py --with-lint
+PASS branch_pc: taken/not-taken and forward/backward redirects
+PASS core_crc: 32930 retirements, 2146 CRC, overlap/x0/stream/store/reset
+PASS core_faults: 12 invalid/control-flow faults, no side effects, reset recovery
+PASS core_smoke: ADD SUB ADDI, dependencies and x0 through FSM
+PASS core_system: FENCE=512 ECALL=256 EBREAK=256, precise terminal traps, no retirement/side effects, reset recovery
+PASS datapath: ALU operand mux and writeback
+PASS fetch: PC BASE..BASE+28, ROM, IR and immediate
+PASS firmware: signature 600dc0de, 598 retirements, 2579 cycles
+PASS ir_imm: captured instruction and stable execution operand
+PASS isa: 88794 retirements, 46 stores and 12 final bytes match Python
+PASS lsu_dmem: SW/SB/SH, byte preservation and load formatting
+PASS lsu_rf: effective address, signed/unsigned RF writeback and store lanes
+PASS memory_bus: ROM/RAM routing, byte writes and ROM protection
+PASS memory_faults: 12 misaligned/unmapped/ROM faults and reset cancellation
+PASS mult_rf: mixed/unsigned high product writeback
+PASS official_firmware: x4=00000000, 252 retirements, 1026 cycles, CRC=16, ISA=44, terminal loop verified
+PASS pc_alu: PC plus immediate redirect
+PASS rf_alu: source reads, overflow and dependent writeback
+PASS simple_system: 9 boot/reset/signature/fault checks, Xicrc firmware
+PASS address_decoder: 768 boundary/request/mask combinations
+PASS alu: 18304 vectors
+PASS branch_comp: 9152 signed/unsigned vectors
+PASS control_unit: stages, memory, illegal, fault, terminal TRAP and reset priority
+PASS crc: 18304 vectors, ASCII -> 29b1, official byte/half/word -> 1e82
+PASS decoder: 131138 words, exact SYSTEM and neighbors, Xicrc enabled and disabled
+PASS dmem: 256 address/mask combinations, read-first, hold and bounds
+PASS imem: initialized contents, sequential read, bounds and oe
+PASS imm_ext: 5102 I/S/B/U/J vectors plus opcode aliases
+PASS ir: 64 capture/hold pairs and reset
+PASS lsu: 8960 byte/half/word, signed/unsigned, masks and invalid vectors
+PASS multiplier: 18304 signed/mixed/unsigned high/low vectors
+PASS pc: sequential, hold, forward/backward targets, wrap and reset
+PASS regfile: 32 writes, 1024 dual reads, x0, enables and reset
+PASS lint (Verilator): riscv_top + simple_system
+PASS regression: 33 testbenches

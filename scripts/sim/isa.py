@@ -10,6 +10,7 @@ BRANCH = {'BEQ':0,'BNE':1,'BLT':4,'BGE':5,'BLTU':6,'BGEU':7}
 LOAD = {'LB':0,'LH':1,'LW':2,'LBU':4,'LHU':5}
 STORE = {'SB':0,'SH':1,'SW':2}
 MULT = {'MUL':0,'MULH':1,'MULHSU':2,'MULHU':3}
+# SYSTEM precisa da palavra inteira: opcode/funct3 sozinhos também abrangem CSRs.
 SYSTEM = {'ECALL':0x00000073,'EBREAK':0x00100073}
 CATEGORIES = {'Register':list(R),'Immediate':list(I),'Upper':['LUI','AUIPC'],
               'Branch':list(BRANCH),'Jump':['JAL','JALR'],'Load':list(LOAD),
@@ -19,7 +20,8 @@ CATEGORIES = {'Register':list(R),'Immediate':list(I),'Upper':['LUI','AUIPC'],
 
 
 def fields(name):
-    # Centraliza opcode/funct3/funct7; None indica campo ausente ou não definido.
+    # Centraliza os discriminadores; None indica campo não usado nesta tabela.
+    # Para ECALL/EBREAK, a palavra fixa em SYSTEM também deve ser conferida.
     if name in R: return 0x33,R[name][0],R[name][1]
     if name in I:
         return 0x13,I[name][0], (32 if name=='SRAI' else 0) if name.endswith('LI') or name=='SRAI' else None
@@ -37,6 +39,7 @@ def fields(name):
 def encode(name, rd=3, rs1=1, rs2=2, imm=0):
     # Monta uma palavra de instrução; sua execução é modelada em programs.py.
     from vectors import encode_imm
+    # SYSTEM ignora argumentos de registrador; FENCE permite variar campos reservados em TB.
     if name in SYSTEM: return SYSTEM[name]
     if name=='FENCE': return ((imm&0xfff)<<20)|(rs1<<15)|(rd<<7)|0x0f
     opcode,f3,f7=fields(name)
@@ -55,6 +58,7 @@ def encode(name, rd=3, rs1=1, rs2=2, imm=0):
 
 def identify(word):
     """Nome pela palavra completa; SYSTEM exige validar também imm12, rs1 e rd."""
+    # Primeiro valida SYSTEM por inteiro; só depois usa campos por classe da ISA.
     if word & 127 == 0x73:
         for name, encoding in SYSTEM.items():
             if word == encoding:

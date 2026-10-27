@@ -13,11 +13,12 @@ vira circuito; eles executam no computador de desenvolvimento.
 | [isa.py](../../scripts/sim/isa.py) | nome da instrução e operandos | campos e palavra binária; biblioteca importada |
 | [programs.py](../../scripts/sim/programs.py) | `enabled.json`, modelos e seed | `isa.hex`, `isa.trace`, `isa_counts.json`, `isa_memory.vec`, `decoder.vec` |
 | [build_firmware.py](../../scripts/sim/build_firmware.py) | C, startup e linker script | ELF, binário, ROM hex e disassembly |
-| [crc_model.py](../../scripts/sim/crc_model.py) | acumulador, dados e tamanho | referência CRC usando binascii, sem copiar o RTL |
+| [crc_model.py](../../scripts/sim/crc_model.py) | dados (rs1), acumulador (rs2) e tamanho | referência CRC usando binascii, sem copiar o RTL |
 | [crc_vectors.py](../../scripts/sim/crc_vectors.py) | contrato Xicrc oficial e acumulador | `crc.vec`, ROM/trace/contagens CRC separados da baseline |
 | [build_simple.py](../../scripts/sim/build_simple.py) | firmware/simple | `simple.elf`, `simple.hex`, mapa e disassembly |
+| [build_official.py](../../scripts/sim/build_official.py) | firmware.txt da revisão fixada | ROM, tags e metadados com estado READY |
 | [run.py](../../scripts/regression/run.py) | modo solicitado e arquivos do projeto | chamadas às ferramentas, logs e manifesto |
-| [coverage.py](../../scripts/regression/coverage.py) | instruções habilitadas e contagens | CSV e Markdown; chama o gerador Excel |
+| [coverage.py](../../scripts/regression/coverage.py) | perfil, trace, traps e firmware com hashes | CSV/Markdown/Excel após regressão completa |
 | [coverage_xlsx.py](../../scripts/regression/coverage_xlsx.py) | CSV | planilha formatada `.xlsx` |
 | [synth/simple.py](../../scripts/synth/simple.py) | RTL e `simple.hex` | netlist Yosys, teste com Icarus/vvp e resumo de síntese |
 
@@ -87,14 +88,20 @@ Para o sistema experimental, `make simple-firmware` gera `build/simple.hex` com
 512 palavras (2 KiB), e `make simple-system` também executa esse programa no RTL.
 Os linker scripts e endereços de assinatura dos dois programas são distintos.
 
+O oficial segue outro caminho: `make official-fetch` obtém uma imagem verificada
+por SHA; `build_official.py` converte os pares endereço/palavra sem remontar
+assembly. `make official-run` executa a imagem e verifica x4 final e o loop.
+READY significa conversão concluída; o PASS depende da simulação.
+
 ## Referência CRC e coordenação da síntese
 
 ```bash
-PYTHONPATH=scripts/sim python3 -c 'from crc_model import check_reference, crc_model; check_reference(); print(hex(crc_model(0xffff, 0x34333231, 2)))'
+PYTHONPATH=scripts/sim python3 -c 'from crc_model import check_reference, crc_model; check_reference(); print(hex(crc_model(0x31323334, 0xffff, 2)))'
 ```
 
-`check_reference()` confere os valores conhecidos de `123456789` com duas seeds.
-`crc_model()` processa os bytes de `1234` e devolve `0x5349`. O gerador usa essa
+`check_reference()` confere `123456789` com duas seeds e a mensagem oficial.
+`crc_model(data, accumulator, op)` processa os bytes ASCII 31 32 33 34 (`1234`)
+com seed FFFF, do mais significativo para o menos, e devolve `0x5349`. O gerador usa essa
 referência para alimentar `tb_crc` e o programa de `tb_core_crc`, sem alterar
 `enabled.json` nem a cobertura de conformidade.
 
@@ -114,8 +121,14 @@ Siga estas regiões no arquivo:
    individual também gera programas, mesmo para um teste que não os consome.
 4. Descoberta: encontra `tb_*.sv`, ordena e filtra por suíte/nome.
 5. Laço dos TBs: compila com `iverilog`, executa com `vvp`, exige a marca `PASS`.
-6. Fechamento: opcionalmente roda lint; em execução completa publica cobertura e
-   manifesto com hashes.
+6. Evidências: grava `system.json` para FENCE/traps e `official_firmware.json`
+   para a imagem publicada. Traps não entram no trace de aposentadorias.
+7. Fechamento: opcionalmente roda lint; em execução completa cruza as evidências
+   com o trace e publica cobertura e manifesto com hashes.
+
+Há 47 tipos habilitados: 45 aparecem no trace de `tb_isa`; ECALL/EBREAK têm
+eventos próprios de trap em `tb_core_system`. A imagem oficial exercita 44 tipos.
+Veja o [guia de leitura](../../docs/code_guide.md) para acompanhar esses caminhos.
 
 O lint elabora `riscv_top` e `simple_system` separadamente. A síntese genérica
 tem outro script e outro resumo: `simple_synth.json`, sem substituir `regression.json`.

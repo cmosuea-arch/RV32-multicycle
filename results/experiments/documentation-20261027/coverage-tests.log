@@ -1,0 +1,6 @@
+$ python3 scripts/regression/test_coverage.py
+.......
+----------------------------------------------------------------------
+Ran 7 tests in 0.028s
+
+OK

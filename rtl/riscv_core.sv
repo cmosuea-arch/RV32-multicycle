@@ -1,6 +1,7 @@
 `timescale 1ns/1ps
 // Datapath multiciclo sem memórias internas: usa um barramento para fetch e dados.
 // Os sinais commit permitem ao TB comparar cada instrução concluída com o modelo.
+// Leia junto de docs/architecture/system.md: FENCE aposenta; ECALL/EBREAK geram trap.
 module riscv_core #(
     parameter bit EXPERIMENTAL_XICRC=1
 )(
@@ -35,12 +36,14 @@ module riscv_core #(
     wire misaligned,lsu_invalid;
     // Load usa a leitura da DMEM; as demais escritas usam o resultado já registrado.
     wire [31:0] writeback_data=load?load_data:result_q;
+    // Só WRITEBACK conclui a instrução: TRAP mantém PC/RF e não produz aposentadoria.
     wire retire=(state==WRITEBACK)&&!rst_i;
     // Falhas são avaliadas no estado em que o endereço correspondente está válido.
     wire local_fault=((state==FETCH)&&(bus_fault_i || current_pc[1:0]!=0)) ||
                      ((state==EXECUTE)&&redirect&&redirect_target[1:0]!=0) ||
                      ((state==MEMORY)&&(bus_fault_i||misaligned||lsu_invalid));
     // A FSM define quando agir; o decoder define qual operação a instrução pede.
+    // trap_request é combinacional; trap_o só indica a entrada no estado terminal.
     control_unit control(clk_i,rst_i,illegal,load,store_op,local_fault,state,trap_request);
     decoder #(.EXPERIMENTAL_XICRC(EXPERIMENTAL_XICRC)) decode(
         instruction,alu_op,a_pc,b_imm,reg_we,branch,jal,jalr,load,store_op,mul,illegal,crc_op,trap_request);
@@ -77,11 +80,13 @@ module riscv_core #(
     assign we_o=!rst_i&&state==MEMORY&&store_op&&!misaligned&&!lsu_invalid;
     assign bw_o=we_o?store_bw:4'b0;
     assign fault_o=state==FAULT;
-    // Pedido terminal ao ambiente: PC/IR permanecem retidos, sem commit nem bus.
+    // Pedido terminal ao ambiente: PC/IR permanecem retidos, sem commit nem acesso.
+    // O bit 20 distingue as duas palavras SYSTEM já validadas pelo decoder.
     assign trap_o=!rst_i && state==TRAP;
     assign trap_ebreak_o=trap_o && instruction[20];
     assign trap_pc_o=trap_o?current_pc:32'b0;
     // Dados de commit só descrevem uma conclusão quando commit_valid_o está em 1.
+    // rd=0 também representa FENCE, branch e store, que não escrevem no RF.
     assign commit_valid_o=retire;
     assign commit_pc_o=current_pc;
     assign commit_instr_o=instruction;

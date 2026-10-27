@@ -15,9 +15,11 @@ CONFIG = Path('openlane/simple_system/config.json')
 MOUNT = Path('/home/designer/shared/cmos-riscv')
 STAGES = {'synth': 'Checker.NetlistAssignStatements',
           'floorplan': 'OpenROAD.Floorplan', 'full': None}
+# Etapas parciais podem terminar com PASS sem produzir GDSII; conferir stage_requested.
 
 
 def sha256(path):
+    # Vincula o run aos bytes exatos de cada entrada, inclusive seus comentários.
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
@@ -70,6 +72,7 @@ def prepare():
 
 
 def main():
+    # Preflight e cópia vêm antes do Docker; o fluxo só usa as entradas congeladas.
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--stage', choices=STAGES, default='synth')
     parser.add_argument('--jobs', type=int, default=2)

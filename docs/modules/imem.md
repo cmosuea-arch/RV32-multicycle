@@ -36,4 +36,5 @@ Tag block-imem-v1.
 Atualização de síntese: commit do simple_system e evidências em
 `results/experiments/simple/`, incluindo execução da netlist com ROM embutida.
 ## Pendências
-ROM física depende de firmware oficial e fluxo físico; ChipInventor pendente.
+A imagem oficial já foi validada no RTL. Implementação física da ROM e
+diagramas ChipInventor continuam pendentes.

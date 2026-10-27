@@ -91,6 +91,11 @@ o [roteiro operacional](../../docs/testing_roadmap.md).
 
 ## Validação deste material
 
+O [guia de leitura](../../docs/code_guide.md) foi incorporado à navegação e os
+comentários foram alinhados ao contrato atual. A
+[revisão editorial](../../results/experiments/documentation-20261027/README.md)
+confirmou receitas/lógica preservadas e 33 TBs/lint PASS em cópia isolada.
+
 A rodada atual registra [33 TBs/lint, 47/47 e firmware oficial PASS](../../results/experiments/isa-47-20261027/README.md).
 O registro histórico de 13/10 do sistema experimental aprovou 31 TBs/lint,
 síntese genérica e dois boots na netlist: [rodada do simple_system](../../results/experiments/simple/README.md).

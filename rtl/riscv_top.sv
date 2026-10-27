@@ -1,6 +1,7 @@
 `timescale 1ns/1ps
-// Integration top. Physical UART/GPIO pin contract remains unspecified.
+// Top de integração; UART/GPIO e pinagem física final ainda dependem da competição.
 // Integra core, decodificador de endereços, ROM e RAM com capacidades parametrizáveis.
+// commit_* descreve aposentadoria; trap_* entrega pedidos terminais ao ambiente CMOS.
 module riscv_top #(
     parameter integer IMEM_WORDS=1048576,DMEM_WORDS=2048,
     parameter IMEM_FILE="",
@@ -21,6 +22,7 @@ module riscv_top #(
     address_decoder #(.IMEM_WORDS(IMEM_WORDS),.DMEM_WORDS(DMEM_WORDS)) bus_decoder(
         address,wdata,oe,we,bw,idata,ddata,mem_address,mem_data,rdata,imem_oe,dmem_oe,dmem_we,dmem_bw,bus_fault);
     // IMEM responde combinacionalmente; DMEM usa o clock para leitura/escrita.
+    // Não há pedidos pendentes entre instruções: esse contrato sustenta FENCE serial.
     imem #(.WORDS(IMEM_WORDS),.INIT_FILE(IMEM_FILE)) instruction_memory(mem_address,imem_oe,idata);
     dmem #(.WORDS(DMEM_WORDS)) data_memory(clk_i,mem_address,dmem_oe,dmem_we,dmem_bw,mem_data,ddata);
 endmodule

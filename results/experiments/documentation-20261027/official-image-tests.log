@@ -1,0 +1,6 @@
+$ python3 scripts/sim/test_build_official.py
+.....
+----------------------------------------------------------------------
+Ran 5 tests in 0.003s
+
+OK

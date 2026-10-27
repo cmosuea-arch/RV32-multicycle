@@ -1,8 +1,9 @@
 # Xicrc — contrato implementado e verificado em 27/10/2026
 
 Fonte: [firmware oficial, revisão edc7d599](crc_official_20261027.md).
-O contrato histórico CMOS foi substituído. Evidências:
-[regressão e firmware oficial](../../results/experiments/crc-official-20261027/README.md).
+O contrato histórico CMOS foi substituído. Adequação em `isa-44-v1`;
+integração atual em `isa-47-v1`. Evidências:
+[47/47 e firmware oficial](../../results/experiments/isa-47-20261027/README.md).
 
 | Instrução | Opcode | Funct7 | Funct3 | Dados de rs1 |
 |---|---|---|---|---|
@@ -34,9 +35,11 @@ tamanho selecionado, com o acumulador fornecido.
 
 `EXPERIMENTAL_XICRC` mantém o nome histórico por compatibilidade. Seu padrão em
 decoder/core/top agora é **1**, com o contrato oficial. Valor 0 desabilita CRC e
-preserva o perfil de 41 instruções; a varredura do decoder testa as duas escolhas.
-`enabled.json` contém as **44/47 instruções (93,62%)** verificadas. As três de
-sistema/sincronização continuam pendentes; não foram presumidas pelo firmware.
+mantém os outros 44 tipos, incluindo FENCE/ECALL/EBREAK; a varredura do decoder
+testa as duas escolhas. O perfil padrão em `enabled.json` contém **47/47 (100%)**
+sob o [EEI CMOS](system.md). O firmware publicado exercita 44 tipos, sem as três
+instruções de sistema, que possuem testes próprios. Antes de implementar sistema,
+desabilitar CRC deixava 41 instruções; essa contagem é histórica.
 
 ## Verificação
 
@@ -44,12 +47,14 @@ sistema/sincronização continuam pendentes; não foram presumidas pelo firmware
   ASCII 123456789 → 29B1 e mensagem oficial → 1E82 em byte/halfword/word.
 - Core CRC: 32.930 aposentadorias, 2.146 operações CRC, aliases de registradores,
   x0, seis mensagens/agrupamentos na RAM, load/store e reset.
-- ISA integrada: 88.727 aposentadorias comparadas com o modelo arquitetural.
+- ISA integrada: 88.794 aposentadorias comparadas com o modelo arquitetural.
 - Firmware oficial: 252 aposentadorias, 1.026 ciclos, 16 CRCs e 44 tipos exercitados;
   escrita final de x4=0 e três aposentadorias do loop final confirmadas.
-- Teste negativo: o mesmo firmware rejeitou o bloco CRC anterior em x4=FFFFFFFF.
-- Regressão: 32 TBs e lint dos dois tops PASS. Síntese não executada nesta revisão.
+- Teste negativo na [rodada CRC](../../results/experiments/crc-official-20261027/README.md):
+  o mesmo firmware rejeitou o bloco anterior em x4=FFFFFFFF.
+- Regressão do marco `isa-47-v1`: 33 TBs e lint dos dois tops PASS.
+  Síntese da versão atual não executada.
 
-Esses testes verificam os casos disponíveis, sem declarar prova formal, 47/47
-ou fechamento físico. A síntese histórica do simple_system é de outra versão;
+Os 47 tipos têm evidência funcional no ambiente documentado; isso não é prova
+formal ou fechamento físico. A síntese histórica do simple_system é de outra versão;
 o CRC e a ROM atuais precisam ser sintetizados novamente pelo usuário.

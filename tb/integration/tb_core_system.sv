@@ -25,6 +25,7 @@ module tb_core_system;
     endtask
 
     task prepare(input [31:0] requested_trap,input [31:0] fence);
+        // Seis instruções devem aposentar antes do trap; as duas posteriores são sentinelas.
         begin
             for(j=0;j<32;j=j+1) dut.instruction_memory.mem[j]=32'hffffffff;
             dut.instruction_memory.mem[0]=32'h100100b7; // lui x1,0x10010
@@ -41,6 +42,7 @@ module tb_core_system;
     endtask
 
     task run_to_trap(input reg expected_ebreak);
+        // Confere commits na borda e o estado após #1, quando as atualizações já ocorreram.
         begin
             retired=0; writes=0;
             @(negedge clk); rst=0;
@@ -62,6 +64,7 @@ module tb_core_system;
                         endcase
                         if(rd!==expected_rd || cd!==expected_value)
                             $fatal(1,"wrong commit effects at instruction %0d",retired);
+                        // FENCE só é aceita se o SW anterior já estiver visível na RAM.
                         if(retired==3) begin
                             if(writes!=1 || dut.data_memory.mem[0]!==32'h5a5 || dut.we || dut.oe)
                                 $fatal(1,"FENCE ordering or side effects");
@@ -70,6 +73,7 @@ module tb_core_system;
                         retired=retired+1;
                     end
                     #1;
+                    // O evento terminal é separado do trace: não incrementa retired.
                     if(trap) begin
                         if(retired!=6 || writes!=1 || ebreak!==expected_ebreak ||
                            trap_pc!==32'h00400018 || cpc!==trap_pc ||

@@ -10,6 +10,7 @@ static const u8 bytes[8] = {0x80, 0x7f, 0xff, 1, 0x12, 0x34, 0x56, 0x78};
 
 __attribute__((noinline)) static u32 kernel(u32 x, u32 y)
 {
+    /* noinline e locais volatile exercitam chamadas, pilha e load/store no core. */
     volatile u32 local[4];
     local[0] = x;
     local[1] = y;
@@ -20,6 +21,7 @@ __attribute__((noinline)) static u32 kernel(u32 x, u32 y)
 
 int main(void)
 {
+    /* Falhas retornam códigos DEAD; start.S publica o retorno em 0x10011ff0. */
     u32 sum = 0;
     if (initialized != 0x12345678u) return (int)0xdead0001u;
     for (u32 i = 0; i < 16; ++i) {
@@ -39,6 +41,7 @@ int main(void)
     byte[1] = 0x80;
     if (scratch[0] != 0x123480ddu) return (int)0xdead0005u;
 
+    /* Operações explícitas cobrem as três partes altas de Zmmul além do MUL em C. */
     u32 hi, mixed, uns;
     u32 a = 0xffffffffu, b = 0xffffffffu;
     __asm__ volatile ("mulh %0,%1,%2" : "=r"(hi) : "r"(a), "r"(b));

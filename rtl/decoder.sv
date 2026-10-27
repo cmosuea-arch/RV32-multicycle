@@ -1,6 +1,7 @@
 `timescale 1ns/1ps
 // Traduz opcode/funct3/funct7 em seletores do datapath e classes para a FSM.
 // EXPERIMENTAL_XICRC é o nome histórico do parâmetro; o padrão inclui Xicrc oficial.
+// trap_o pede à FSM o tratamento de SYSTEM; não indica que TRAP já está ativo.
 module decoder #(
     parameter bit EXPERIMENTAL_XICRC=1
 )(
@@ -72,9 +73,11 @@ module decoder #(
                 if(instr_i[14:12]>2) illegal_o=1;
             end
             // FENCE: todos os acessos anteriores já terminaram neste núcleo serial.
-            // fm/pred/succ e rs1/rd são ignorados; funct3 diferencia FENCE.I.
+            // fm/pred/succ e rs1/rd são ignorados: barreira completa, sem RF/store.
+            // funct3=001 é FENCE.I (Zifencei), fora deste perfil, portanto ilegal.
             7'h0f: if(instr_i[14:12]!=0) illegal_o=1;
             // ECALL/EBREAK solicitam trap preciso, sem enables de escrita.
+            // Conferir a palavra inteira evita aceitar CSRs ou SYSTEM malformada.
             7'h73: begin
                 if(instr_i==32'h00000073 || instr_i==32'h00100073) trap_o=1;
                 else illegal_o=1;

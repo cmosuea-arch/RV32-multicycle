@@ -9,6 +9,10 @@ oficial PASS. O PDF inclui a figura F21 real, conferida com log/VCD, mantendo
 12 páginas e espaço para diagramas/resultados físicos.
 [Evidências da rodada](../../results/experiments/isa-47-20261027/README.md).
 A síntese da nova versão não foi executada, conforme orientação do usuário.
+Os comentários e as aulas receberam uma
+[revisão editorial posterior](../../results/experiments/documentation-20261027/README.md),
+sem alterar a implementação, as figuras ou o PDF v0.7. O guia detalhado para
+acompanhar os arquivos fica em [code_guide.md](../code_guide.md).
 
 O documento descreve arquitetura, desenvolvimento incremental, RTL, testes,
 automação, firmware e síntese lógica. As rodadas de referência permanecem

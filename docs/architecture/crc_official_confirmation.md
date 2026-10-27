@@ -54,5 +54,5 @@ make regression
 
 O protocolo do programa completo e seu recebimento estão em
 [firmware/official/receipt.md](../../firmware/official/receipt.md).
-A síntese permanece reservada ao usuário. P02 (sistema/sincronização) e a
-interface final continuam questões separadas da definição de CRC.
+A síntese permanece reservada ao usuário. P02 foi implementada sob o
+[EEI CMOS](system.md) no marco `isa-47-v1`; a interface final continua pendente.

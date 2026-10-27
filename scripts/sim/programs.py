@@ -15,6 +15,7 @@ BASE=0x00400000
 class Program:
     # Reúne ROM, estado arquitetural de referência e evidências esperadas pelo TB.
     def __init__(self, experimental_crc=False):
+        # Nome histórico: True habilita o modelo do contrato CRC oficial, sem alterar a ISA.
         self.experimental_crc=experimental_crc
         self.words=[]
         self.trace=[]
@@ -104,7 +105,8 @@ class Program:
 
 def main():
     OUT.mkdir(exist_ok=True)
-    # Só as instruções declaradas em enabled.json entram no programa baseline.
+    # O perfil lista 47 tipos; o trace sequencial cobre os 45 que aposentam.
+    # Os dois traps terminais são verificados pela bancada tb_core_system.
     enabled=json.loads((ROOT/'docs/isa/enabled.json').read_text())
     rng=random.Random(4711)
     p=Program(experimental_crc=any(name in CATEGORIES['CRC'] for name in enabled))
@@ -190,6 +192,8 @@ def main():
     # Varre todas as combinações opcode/funct3/funct7, incluindo instruções ilegais.
     with (OUT/'decoder.vec').open('w') as f:
         def vector(inst):
+            # Esperado de 15 bits: bit 14=pedido de trap, 13:10=ALU, bit 0=ilegal.
+            # Os demais bits seguem a concatenação de controles em tb_decoder.
             try:
                 name=identify(inst)
             except ValueError:

@@ -21,6 +21,7 @@ module simple_system #(
         core_fault,commit_valid,commit_pc,commit_instr,commit_data,commit_rd,
         core_trap,trap_ebreak,trap_pc);
     // Interface reduzida sinaliza também o encerramento por trap, sem indicar sucesso.
+    // done/success só vêm da assinatura; fault não deve ser interpretado como término OK.
     assign fault_o=core_fault || core_trap;
     address_decoder #(.IMEM_WORDS(512),.DMEM_WORDS(256)) bus_decoder(
         address,wdata,oe,we,bw,idata,ddata,mem_address,mem_data,rdata,

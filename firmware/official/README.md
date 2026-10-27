@@ -7,7 +7,7 @@ Revisão consultada: `edc7d5990d2185942081ee8a6899aa603cc91569`.
 - [source.json](source.json) registra URLs fixas, SHA-256 e características da imagem.
 - [receipt.md](receipt.md) registra formato, entrada e protocolo de término conhecidos.
 - [Análise do CRC](../../docs/architecture/crc_official_20261027.md) registra as
-  diferenças que precisam ser corrigidas no projeto antes da validação.
+  diferenças identificadas na análise inicial e corrigidas em `isa-44-v1`.
 
 O repositório upstream contém `firmware.s`, `firmware.txt` e o README de integração.
 O README recomenda usar a imagem completa de `firmware.txt` na validação funcional;

@@ -1,6 +1,7 @@
 `timescale 1ns/1ps
 module tb_core_faults;
     // Injeta instruções inválidas, alvos desalinhados e falha de fetch no core baseline.
+    // ECALL/EBREAK válidas geram TRAP em outra bancada; aqui entram SYSTEM malformadas.
     reg clk=0; always #5 clk=~clk;
     wire trap,trap_ebreak;
     wire [31:0] trap_pc;

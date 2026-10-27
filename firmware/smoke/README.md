@@ -10,10 +10,12 @@ Checksum esperado é calculado independentemente em Python na compilação.
 
 ```sh
 make firmware
-make test
+make run
 make wave
 ```
 
 Evidências: results/logs/firmware_build.log, smoke.disasm, tb_firmware.log.
 Waveform reproduzível: results/waveforms/smoke.vcd.
-**Não é o firmware oficial ChampionCHIP; sua validação continua pendente.**
+Este é o smoke próprio. O [firmware oficial](../official/README.md) também foi
+integrado e passou, com outro protocolo de término: x4 final e loop, sem usar
+a assinatura na DMEM deste programa.

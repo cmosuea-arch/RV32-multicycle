@@ -81,6 +81,7 @@ def main():
         run([sys.executable, str(generator)], logs / 'vectors.log')
         run([sys.executable, str(ROOT/'scripts/sim/crc_vectors.py')], logs / 'crc_vectors.log')
     programs = ROOT / 'scripts/sim/programs.py'
+    # programs.py também cria decoder.vec, necessário à suíte unitária do decoder.
     if (full or args.suite in ('unit','integration') or args.test) and programs.exists():
         run([sys.executable, str(programs)], logs / 'programs.log')
     firmware = ROOT / 'scripts/sim/build_firmware.py'
@@ -96,6 +97,7 @@ def main():
         (logs/'official_firmware.json').write_text(json.dumps({'status': 'RUNNING'})+'\n')
         run([sys.executable, str(ROOT/'scripts/sim/build_official.py')], logs/'official_image.log')
     needs_system = full or args.suite == 'integration' or selected_test == 'tb_core_system'
+    # Evidência de trap é separada: gerar ECALL/EBREAK não equivale a aposentá-las.
     if needs_system:
         (logs/'system.json').write_text(json.dumps({'status':'RUNNING'})+'\n')
     benches = sorted((ROOT / 'tb').glob('**/tb_*.sv'))
@@ -136,6 +138,7 @@ def main():
         print('\n'.join(line for line in output.splitlines() if 'PASS' in line))
         passed.append(name)
         if name == 'tb_core_system':
+            # O TB verifica os efeitos; o executor registra contagens e hashes dessa rodada.
             line=next(line for line in output.splitlines() if line.startswith('PASS core_system:'))
             match=re.search(r'FENCE=(\d+) ECALL=(\d+) EBREAK=(\d+),',line)
             if not match or any(int(n)!=expected for n,expected in zip(match.groups(),(512,256,256))):
@@ -148,6 +151,7 @@ def main():
                    'sha256':{p:hashlib.sha256((ROOT/p).read_bytes()).hexdigest() for p in files}}
             (logs/'system.json').write_text(json.dumps(proof,indent=2)+'\n')
         if name == 'tb_official_firmware':
+            # PASS oficial vale só para os 44 tipos da imagem fixada, sem incluir SYSTEM.
             image = json.loads((build/'official_image.json').read_text())
             files = [*rtl, str(tb.relative_to(ROOT)), 'scripts/sim/build_official.py',
                      'firmware/official/source.json', 'scripts/sim/isa.py',
@@ -165,6 +169,7 @@ def main():
     print(f'PASS regression: {len(benches)} testbenches')
     if full and (ROOT / 'scripts/regression/coverage.py').exists():
         # Os hashes identificam o conteúdo verificado, inclusive scripts e firmware.
+        # write_coverage exige TBs desta rodada e cruza trace, traps e firmware oficial.
         from coverage import write_coverage
         write_coverage(passed)
         files = [ROOT / 'docs/isa/enabled.json', ROOT / 'Makefile']

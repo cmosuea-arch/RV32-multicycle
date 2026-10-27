@@ -1,6 +1,7 @@
 `timescale 1ns/1ps
 module tb_isa;
     // Executa o programa ISA e compara cada instrução com o trace arquitetural do Python.
+    // O trace cobre 45 tipos que aposentam; os traps são conferidos em tb_core_system.
     reg clk=0; always #5 clk=~clk;
     wire trap,trap_ebreak;
     wire [31:0] trap_pc;

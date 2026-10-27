@@ -3,7 +3,7 @@
 **Histórico substituído em 27/10.** O contrato oficial foi implementado e as três
 instruções agora pertencem ao perfil padrão de [47/47](coverage.md). Veja
 [crc.md](../architecture/crc.md) e a
-[rodada atual](../../results/experiments/crc-official-20261027/README.md).
+[rodada atual](../../results/experiments/isa-47-20261027/README.md).
 O conteúdo abaixo descreve a implementação anterior, sem misturar as evidências.
 
 Esta matriz complementa `coverage.csv`, sem declarar conformidade oficial.
@@ -24,8 +24,8 @@ Commit do bloco: `05fd114`. Evidências de unidade/core:
 [CRC](../../results/experiments/crc/README.md). Firmware e regressão posterior:
 [simple_system](../../results/experiments/simple/README.md), identificados por SHA256.
 
-`EXPERIMENTAL_XICRC=0` é o padrão em decoder/core/riscv_top; simple_system usa 1.
-Firmware oficial e homologação das três instruções: **PENDENTES**.
+Na versão histórica abaixo, `EXPERIMENTAL_XICRC=0` era o padrão e o firmware
+oficial estava pendente. Hoje o padrão é 1, com contrato oficial e firmware PASS.
 
 Atualização de 20/10/2026: a mensagem encaminhada identifica CRC-16-CCITT-FALSE
 para as três operações, em acordo com o algoritmo atual com seed `0xFFFF`.
@@ -35,4 +35,5 @@ Os resultados acima continuam históricos do contrato CMOS; esta revisão não
 executou nova regressão nem promoveu as três linhas à matriz oficial.
 Recebimento dos detalhes e promoção do contrato seguem o
 [formulário/checklist CRC](../architecture/crc_official_confirmation.md).
-Esse registro foi preenchido com a fonte de 27/10; falta executar a adequação.
+Esse registro foi preenchido com a fonte de 27/10. A adequação foi executada em
+`isa-44-v1`; o fechamento posterior de sistema está em `isa-47-v1`.

@@ -51,7 +51,8 @@ lógica sequencial, saídas não constantes e PASS na simulação da netlist.
 Timeout: 180 segundos por processo. O fluxo tem resumo próprio e não atualiza
 `results/logs/regression.json` nem a cobertura de ISA.
 
-Na [rodada de referência](../results/experiments/simple/README.md): 32922 células
+Na [rodada histórica](../results/experiments/simple/README.md), anterior à
+correção CRC e aos traps: 32922 células
 genéricas com Yosys 0.39+124, firmware de 608 bytes, dois boots aprovados.
 Os hashes e a versão da ferramenta delimitam essa evidência.
 
@@ -61,12 +62,14 @@ Não há biblioteca SKY130A, restrições de timing, parasitas, área física, D
 ou GDSII nesta síntese genérica. Simular dois boots também não é prova formal
 de equivalência para todas as entradas.
 
-O próximo passo experimental é definir configuração LibreLane, clock/restrições,
-área e estratégia de memórias, e avaliar o mapeamento físico. Ver
+O próximo passo experimental é executar e avaliar a configuração LibreLane já
+preparada, incluindo clock/restrições, área e estratégia de memórias. Ver
 [aula 8 — OpenLane](../labs/rtl-to-gds/08-introducao-openlane.md).
 Os arquivos e comandos do próximo experimento já estão
 [preparados para execução manual](../openlane/simple_system/README.md), sem
 rodada mapeada concluída. O usuário pode estudar `make -n simple-openlane-synth`
 antes de executá-lo; esse alvo também recompila e valida a netlist genérica.
-Os marcos finais da competição continuam dependentes da ISA, firmware e interface
-oficiais, conforme [status](status.md).
+ISA e firmware já têm validação RTL no ambiente documentado. Os marcos finais
+continuam dependendo da interface final, diagramas e resultados físicos,
+conforme [status](status.md). Os comandos acima são roteiro para o usuário;
+a síntese da versão atual não foi executada nesta revisão documental.

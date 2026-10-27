@@ -17,11 +17,11 @@ em [source.json](source.json). [Contrato extraído do CRC](../../docs/architectu
 | Dados constantes | Já incluídos na IMEM; também são acessados por loads |
 | Área BSS na fonte | test_ram: 16 bytes; dest_data: 12 bytes; conferir endereços durante a integração |
 | Contrato CRC | rs1=dados, rs2=CRC anterior, FFFF por software e bytes mais significativos primeiro |
-| Instruções de sistema | Não identificadas no código dessa revisão; lacuna de 47/47 continua separada |
+| Instruções de sistema | FENCE/ECALL/EBREAK ausentes desta imagem; implementadas e testadas separadamente sob o EEI CMOS |
 | Sucesso / falha | Escrita final de x4=0 / FFFFFFFF, seguida de loop |
 | PCs da escrita final na imagem | Sucesso 004003E8; falha 004003F0 |
-| Timeout do TB | A definir na integração, sem aceitar o estado de reset como sucesso |
-| Execução oficial / logs / waveform | PASS: 252 aposentadorias, 1026 ciclos, 16 CRCs; [rodada identificada](../../results/experiments/crc-official-20261027/README.md) |
+| Timeout do TB | 20000 ciclos; zero inicial de x4 não é sucesso |
+| Execução oficial / logs / waveform | PASS: 252 aposentadorias, 1026 ciclos, 16 CRCs e 44 tipos; [rodada identificada](../../results/experiments/isa-47-20261027/README.md) |
 
 ## Ordem de integração executada em 27/10
 
@@ -39,4 +39,6 @@ conferir endereços, seções e equivalência com a imagem publicada antes de su
 as palavras. A validação funcional e o mock de síntese são usos distintos no README.
 
 O TB confirma x4 no RF após a borda e exige três commits no loop final.
-A captura VCD foi reconciliada com o log; a figura está no relatório v0.6.
+A captura VCD foi reconciliada com o log; a figura está no relatório v0.7.
+O perfil integrado tem 47 tipos sob o [EEI CMOS](../../docs/architecture/system.md);
+o PASS deste firmware continua limitado às instruções que ele exercita.

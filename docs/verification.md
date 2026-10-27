@@ -72,6 +72,11 @@ Rodada atual: [47/47 e firmware oficial de 27/10](../results/experiments/isa-47-
 O teste negativo com o CRC anterior permanece na rodada histórica CRC/firmware.
 A síntese genérica de referência abaixo é histórica, anterior à correção do CRC.
 
+A [revisão documental posterior](../results/experiments/documentation-20261027/README.md)
+compara os comentários com a base funcional e registra nova regressão isolada,
+com 33 TBs/lint e firmware oficial PASS. Ela tem seus próprios hashes; a matriz
+e a tag `isa-47-v1` continuam identificando a rodada funcional original.
+
 Na preparação da prática de 17/10/2026, as saídas correntes foram limpas.
 Os [logs anteriores](../results/history/pre-guided-20261017/README.md) foram
 preservados e os caminhos abaixo serão recriados pelos próximos comandos.

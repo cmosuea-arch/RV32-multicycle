@@ -32,12 +32,14 @@ def write_coverage(passed_tests):
                                cwd=ROOT,capture_output=True,text=True,check=True)
         commit=revision.stdout.strip()+(' + worktree' if changes.stdout.strip() else '')
     system_names=set(CATEGORIES['Sistema/Sincronização'])
+    # A implementação tem 47 tipos, mas a imagem oficial só exercita os outros 44.
     if official.get('status')!='PASS' or set(official.get('instructions',[]))!=enabled-system_names:
         raise RuntimeError('official firmware execution does not cover its published 44-type inventory')
     if system.get('status')!='PASS' or system.get('trap_instructions_retired')!=0 or any(
             system.get('checks',{}).get(name,0)<=0 for name in system_names):
         raise RuntimeError('missing precise system/trap evidence')
     for proof in (official,system):
+        # Alterar até um comentário muda o hash: os logs antigos continuam históricos.
         if not proof.get('sha256'):
             raise RuntimeError('missing coverage evidence hashes')
         for name,expected in proof['sha256'].items():
@@ -46,6 +48,7 @@ def write_coverage(passed_tests):
     if not (enabled-set(SYSTEM)).issubset(counts) or any(counts.get(name,0)<=0 for name in enabled-set(SYSTEM)):
         # Exige presença no trace modelado; a comparação desse trace é feita em tb_isa.
         raise RuntimeError('coverage includes instructions absent from trace')
+    # ECALL/EBREAK são eventos de trap; FENCE deve constar no trace de aposentadorias.
     if set(SYSTEM).intersection(counts):
         raise RuntimeError('trap instructions must not be counted as retirements')
     # Relaciona cada grupo da ISA a módulos e logs que sustentam seus estados.
@@ -76,6 +79,7 @@ def write_coverage(passed_tests):
                     *(['tb_core_system'] if is_system else []),
                     *([] if name in SYSTEM else ['tb_isa']),
                     *([] if is_system else ['tb_official_firmware'])]))
+                # Não atribui PASS oficial a instruções ausentes da imagem publicada.
                 writer.writerow([category,name,f'{op:07b}' if op is not None else '',
                                  f'{f3:03b}' if f3 is not None else '',f'{f7:07b}' if f7 is not None else '',
                                  modules[category],state,state,state,'NÃO EXERCITADA' if is_system else state,

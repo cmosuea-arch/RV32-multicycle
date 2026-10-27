@@ -89,19 +89,22 @@ make tb TB=tb_isa
 make tb TB=tb_firmware
 make tb TB=tb_core_crc
 make tb TB=tb_simple_system
+make official-fetch      # primeira obtenção da revisão fixada
+make official-run
 ```
 
 `tb_isa` é a verificação integrada mais abrangente. `tb_firmware` usa o firmware
 próprio e a assinatura `0x600dc0de`; ele não substitui o firmware oficial.
 
-Para executar os 17 testbenches de integração em uma chamada:
+Para executar os 19 testbenches de integração em uma chamada:
 
 ```sh
 make integration
 ```
 
 Esse comando requer a toolchain `riscv64-unknown-elf-gcc`, pois inclui
-`tb_firmware`.
+os firmwares próprios. Também requer a imagem oficial em cache, preparada uma
+vez por clone com `make official-fetch`.
 
 ## 4. Firmware, smoke e waveform
 

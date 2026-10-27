@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Compila o firmware do simple_system e verifica os limites físicos da ROM."""
 # Compartilha diretórios/executor com build_firmware; usa outro programa e outra ROM.
+# O limite de 2 KiB é capacidade lógica; este script não mede área ou timing físico.
 from build_firmware import ROOT, BUILD, LOGS, command
 
 

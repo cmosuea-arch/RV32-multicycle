@@ -52,8 +52,9 @@ make official-run     # somente o teste oficial
 make official-wave    # nova captura do firmware oficial
 ```
 
-O cache original é ignorado pelo Git e sobrevive a make clean. Os resultados
-atuais foram obtidos em cópia isolada; os logs da prática foram preservados.
+O cache original é ignorado pelo Git e sobrevive a make clean. A adequação CRC
+usou inicialmente uma cópia isolada; o fechamento `isa-47-v1` possui rodada
+própria arquivada, com os hashes dos arquivos realmente executados.
 As evidências e tags anteriores continuam históricas e não substituem essa rodada.
 
 A síntese genérica antiga (32922 células/dois boots) é da versão anterior do CRC.
@@ -77,3 +78,13 @@ O relatório preliminar v0.7 incorpora 47/47, contrato EEI e execução oficial,
 para diagramas e resultados físicos. Fontes e lacunas:
 [questões oficiais](architecture/official_questions.md) e
 [roteiro de conclusão](completion_roadmap.md).
+
+## Revisão dos comentários e material de estudo
+
+O [guia de leitura](code_guide.md) conecta os arquivos, a sequência de execução
+e os protocolos dos três programas. Referências antigas nas aulas/contrato CRC
+foram corrigidas; registros históricos continuam identificados por data/tag.
+A [conferência editorial](../results/experiments/documentation-20261027/README.md)
+preservou a lógica de 35 arquivos e confirmou novamente 33 TBs/lint e firmware
+oficial PASS em cópia isolada, sem síntese ou alteração dos logs da prática.
+Os hashes dessa revisão ficam separados dos originais de `isa-47-v1`.

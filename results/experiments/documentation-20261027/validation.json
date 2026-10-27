@@ -1,0 +1,25 @@
+{
+  "status": "PASS",
+  "scope": "documentation and comments; unchanged functional logic; isolated RTL regression",
+  "utc": "2026-10-27T21:04:16.690274+00:00",
+  "functional_tag": "isa-47-v1",
+  "base_commit": "d76fc2c0862cd703e84b24a1e75c4c855c00b528",
+  "code_files_with_only_comments_changed": 35,
+  "make_dry_run_recipes_unchanged": 12,
+  "shell_scripts_syntax_checked": 5,
+  "testbenches": 33,
+  "lint": "PASS",
+  "official_firmware": "PASS",
+  "coverage": "47/47",
+  "source_hashes_verified_against_workspace": 94,
+  "synthesis_executed": false,
+  "sha256": {
+    "comments-check.json": "ac6668ce93dff0a0670ef4d96d579ed1fd6230b2c69faf9bdfc615b85b409659",
+    "coverage-tests.log": "b22dfe9476d3cb700a17e7d0c415a0b7bb5ebc454cb02017ee3bf8bfe8336a98",
+    "official-image-tests.log": "356cfa8788781acc14e858334733b5baf131353395269ff2b09fe680c327e1e7",
+    "official_firmware.json": "1f14b3d89d952f6bc375df2bb7eceb304f567478ee122d2ba10369f348d3ecda",
+    "regression.json": "898b06f73b63ba8c33d9178e9d59d885805dde47e6b0db504bcac8e00c3f6036",
+    "regression.log": "66002435d657e30bfa44d78327dfad8478bf13e31c70b24ae7027260c1dd314d",
+    "system.json": "fe023e27f4632e5d6f8d57c2694c36b4ad01919a2d96fbc595ce688a75129052"
+  }
+}

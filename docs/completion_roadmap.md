@@ -31,8 +31,8 @@ O fechamento oficial depende das definições registradas em
 - [ ] Receber do colaborador os diagramas por módulo no ChipInventor e incorporá-los.
 
 Os desenhos estão em [architecture/figures/](architecture/figures/README.md).
-Isso conclui a figura do datapath **da implementação atual**, sem encerrar
-a definição do RTL final ou das instruções pendentes.
+Isso conclui a figura do datapath **da implementação atual**. O perfil de 47 tipos
+já passa sob o EEI CMOS; a interface e os diagramas finais ainda faltam.
 
 Enquanto o item 1 aguarda a organização, podem avançar as figuras dos blocos
 estáveis, evidências próprias e autoria/redação. As imagens reais de waveform
@@ -66,7 +66,7 @@ síntese SKY130A aprovada nesta preparação.
 
 ## Revisão do firmware em 27/10
 
-O CRC foi corrigido e a imagem publicada passou no core. A regressão atual
+O CRC foi corrigido e a imagem publicada passou no core. A regressão desse incremento
 aprova 32 TBs/lint, o teste negativo rejeita o CRC anterior e o VCD oficial foi
 conferido com o log. Não houve síntese, conforme orientação do usuário. A imagem
 contém 44 tipos. Em seguida, sistema/sincronização foi implementado e validado
@@ -79,5 +79,6 @@ Por decisão do usuário em 17/10/2026, não será criada uma branch de entrega
 separada para a atividade. Build/logs/ondas foram arquivados para recomeçar a
 execução de forma acompanhada. O objetivo é compreender cada etapa e explicar
 o sistema no vídeo. Siga a [prática para o vídeo](../labs/rtl-to-gds/00-pratica-para-video.md).
-A preparação não executou testes; as próximas evidências serão geradas pelo usuário.
+A preparação inicial não executou testes; as rodadas posteriores estão arquivadas.
+As execuções guiadas do usuário gerarão seus próprios logs e ondas.
 As pendências oficiais e físicas da entrega continuam registradas acima.

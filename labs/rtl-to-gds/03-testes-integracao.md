@@ -58,6 +58,7 @@ Execute os comandos da tabela, de cima para baixo, na raiz do projeto:
 | `make tb TB=tb_memory_bus` | seleção ROM/RAM e proteção de escrita |
 | `make tb TB=tb_mult_rf` | produto e escrita da parte selecionada |
 | `make tb TB=tb_core_smoke` | ADD/SUB/ADDI percorrendo a FSM |
+| `make system` | FENCE ordenada e traps precisos ECALL/EBREAK |
 | `make tb TB=tb_core_faults` | instruções inválidas, efeitos bloqueados e reset |
 | `make tb TB=tb_memory_faults` | endereços inválidos/desalinhados e cancelamento |
 | `make tb TB=tb_isa` | programa e aposentadorias comparados ao modelo Python |
@@ -66,7 +67,7 @@ Execute os comandos da tabela, de cima para baixo, na raiz do projeto:
 | `make simple-system` | sistema pequeno: firmware com CRC, reset, sucesso e falha |
 | `make official-run` | imagem oficial, 44 tipos, x4 final e loop de término |
 
-Com `tb_rf_alu`, são os 18 testes da suíte. Antes da primeira execução oficial,
+Com `tb_rf_alu`, são os 19 testes da suíte. Antes da primeira execução oficial,
 use `make official-fetch` para obter a imagem fixada por SHA-256. Depois,
 `make integration` executa todos em ordem alfabética e prepara entradas offline.
 

@@ -81,6 +81,7 @@ module tb_simple_system;
         if(!fault || done || success) $fatal(1,"illegal instruction did not report fault");
         checks=checks+1;
         // A interface reduzida agrega traps em fault sem produzir assinatura/sucesso.
+        // Esses dois casos completam os nove cenários; reset restaura o protocolo de boot.
         for(i=0;i<2;i=i+1) begin
             reset_system();
             dut.instruction_memory.mem[0]=i==0?32'h00000073:32'h00100073;

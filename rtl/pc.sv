@@ -6,6 +6,7 @@ module pc #(parameter [31:0] RESET_PC=32'h00400000) (
     output logic [31:0] pc_o,plus4_o
 );
     // Reset síncrono ativo em 1; sem we, o PC não avança entre estados da instrução.
+    // No core, we vem da aposentadoria: FAULT e TRAP conservam o PC atual.
     always @(posedge clk_i)
         if(rst_i) pc_o <= RESET_PC;
         else if(we_i) pc_o <= next_i;

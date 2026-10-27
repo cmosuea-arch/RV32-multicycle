@@ -5,6 +5,9 @@
 [rodada de validação](../../results/experiments/crc-official-20261027/README.md)
 registram 44/47, 32 TBs/lint e firmware oficial PASS. As seções seguintes
 preservam a análise anterior às alterações.
+O fechamento posterior de sistema está no marco
+[isa-47-v1: 47/47 e 33 TBs/lint](../../results/experiments/isa-47-20261027/README.md);
+as contagens de 44/47 acima identificam apenas o incremento CRC.
 
 Fonte fornecida pelo usuário: repositório
 [CCX_Brasil_Edition_Firmware_Stage_2](https://github.com/championchip-experience-community/CCX_Brasil_Edition_Firmware_Stage_2).

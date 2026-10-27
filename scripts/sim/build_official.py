@@ -35,6 +35,7 @@ def parse_image(text, base, capacity=ROM_WORDS):
 
 
 def main():
+    # Entrada: cache verificado, cópia local ou download explícito; saída: ROM e metadados.
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--fetch', action='store_true', help='baixa a revisão fixada e renova o cache')
     parser.add_argument('--source', type=Path, help='importa uma cópia local do firmware.txt original')
@@ -53,6 +54,7 @@ def main():
     else:
         raise ValueError('Imagem oficial ausente: execute make official-fetch ou use --source firmware.txt.')
     digest = hashlib.sha256(data).hexdigest()
+    # Só atualiza cache/build depois de conferir o conteúdo da revisão fixada.
     if digest != source['sha256']:
         raise ValueError('SHA-256 do firmware oficial diverge da revisão fixada; não gerar ROM.')
     base = int(manifest['imem']['base'], 16)
@@ -79,12 +81,16 @@ def main():
     build = ROOT / 'build'
     build.mkdir(exist_ok=True)
     image = words + [0x00000013] * (ROM_WORDS - len(words))
+    # As palavras já vêm na ordem da IMEM; não aplicar troca de bytes ao texto oficial.
     (build / 'official.hex').write_text(''.join(f'{word:08x}\n' for word in image))
     tags = [enabled.index(name) + 1 for name in names] + [0] * (ROM_WORDS - count)
+    # Tag zero identifica constantes/padding, que não contam como instrução exercitada.
     (build / 'official_tags.hex').write_text(''.join(f'{tag:02x}\n' for tag in tags))
     crc_count = sum(name.startswith('CRC') for name in names)
+    # Ordem lida por tb_official_firmware: PCs sucesso/loop/falha, código, tipos e CRCs.
     meta = [success, success + 4, failure, count, len(enabled), crc_count]
     (build / 'official_meta.hex').write_text(''.join(f'{word:08x}\n' for word in meta))
+    # READY comprova a conversão; só a execução do testbench pode registrar PASS.
     result = {'status': 'READY', 'scope': 'image conversion; not firmware simulation',
               'commit': manifest['commit'], 'source_sha256': digest, 'base': base,
               'words': len(words), 'rom_words': ROM_WORDS, 'instruction_order': enabled,

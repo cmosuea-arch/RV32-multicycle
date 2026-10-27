@@ -14,6 +14,7 @@ module dmem #(
     integer lane;
     // Sem oe, data_o retém a leitura anterior. A RAM não é apagada por reset.
     // Se ler e escrever a mesma palavra na mesma borda, a leitura vê o valor anterior.
+    // O startup do firmware prepara .data/.bss; não presumir zero no primeiro boot.
     always @(posedge clk_i) begin
         if(oe_i) data_o<=valid?mem[index[IW-1:0]]:32'b0;
         if(we_i&&valid)

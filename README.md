@@ -29,6 +29,10 @@ espaço para os diagramas ChipInventor, preparados por outro colaborador.
 
 ## Comece pelo laboratório
 
+Para acompanhar as conexões entre RTL, testbench, Python, firmware e Make,
+use o [guia de leitura do código](docs/code_guide.md). Ele também explica a
+diferença entre core, top, simple_system, aposentadoria e trap.
+
 Para aprender a explicar o sistema no vídeo, siga a
 [atividade guiada](labs/rtl-to-gds/00-pratica-para-video.md) no workspace atual.
 Build/logs/ondas antigos foram arquivados; suas execuções produzirão as saídas novas.

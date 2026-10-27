@@ -21,6 +21,7 @@ module address_decoder #(
     assign dmem_we_o=we_i&&dmem_hit;
     assign dmem_bw_o=dmem_we_o?bw_i:4'b0;
     // O mux devolve a memória selecionada; escrita na ROM ou fora do mapa é falha.
+    // Esta falha de acesso é distinta do trap solicitado por ECALL/EBREAK no core.
     assign data_o=imem_oe_o?imem_data_i:dmem_oe_o?dmem_data_i:32'b0;
     assign fault_o=(oe_i||we_i)&&(!(imem_hit||dmem_hit)||(we_i&&imem_hit));
 endmodule
