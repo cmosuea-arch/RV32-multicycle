@@ -2,6 +2,8 @@
 module tb_official_firmware;
     // Executa a imagem publicada e só aceita a escrita final de x4 seguida do loop.
     reg clk=0; always #5 clk=~clk;
+    wire trap,trap_ebreak;
+    wire [31:0] trap_pc;
     reg rst=1;
     wire fault,valid;
     wire [31:0] cpc,ci,cd;
@@ -12,7 +14,7 @@ module tb_official_firmware;
     integer cycles,n=0,crc_count=0,loops=0,index;
     reg finished=0;
     riscv_top #(.IMEM_WORDS(512),.IMEM_FILE("build/official.hex"))
-        dut(clk,rst,fault,valid,cpc,ci,cd,rd);
+        dut(clk,rst,fault,valid,cpc,ci,cd,rd,trap,trap_ebreak,trap_pc);
     initial begin
         $readmemh("build/official.hex",expected_rom);
         $readmemh("build/official_tags.hex",tags);
@@ -25,7 +27,7 @@ module tb_official_firmware;
         @(posedge clk); #1; @(negedge clk); rst=0;
         for(cycles=1;cycles<=20000;cycles=cycles+1) begin
             @(posedge clk);
-            if(fault) $fatal(1,"official fault pc=%h instr=%h",cpc,ci);
+            if(fault || trap) $fatal(1,"official fault pc=%h instr=%h",cpc,ci);
             if(valid) begin
                 n=n+1;
                 if(cpc<32'h00400000 || cpc[1:0]!=0 ||

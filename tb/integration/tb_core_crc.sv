@@ -2,6 +2,8 @@
 module tb_core_crc;
     // Verifica Xicrc no core: decode, execução, writeback, dependências e memória.
     reg clk=0; always #5 clk=~clk;
+    wire trap,trap_ebreak;
+    wire [31:0] trap_pc;
     reg rst=1;
     wire fault,valid;
     wire [31:0] cpc,ci,cd;
@@ -10,7 +12,7 @@ module tb_core_crc;
     reg [4:0] erd;
     integer fd,status,n,cycles,crc_count,i;
     riscv_top #(.IMEM_WORDS(65536),.IMEM_FILE("build/crc.hex"),.EXPERIMENTAL_XICRC(1))
-        dut(clk,rst,fault,valid,cpc,ci,cd,rd);
+        dut(clk,rst,fault,valid,cpc,ci,cd,rd,trap,trap_ebreak,trap_pc);
     initial begin
         // ROM e trace CRC foram gerados separadamente da cobertura oficial da baseline.
         fd=$fopen("build/crc.trace","r");

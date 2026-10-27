@@ -4,15 +4,16 @@ Processador RISC-V de 32 bits, multiciclo, desenvolvido incrementalmente para a
 Fase 2 da ChampionCHIP. Este repositório reúne RTL, testbenches autoverificáveis,
 firmware próprio, automação Python/Make e documentação arquitetural.
 
-**Perfil atual: 44/47 instruções (93,62%)**, com 14 testbenches unitários,
-18 de integração e lint dos dois tops PASS. O CRC foi adequado ao
+**Perfil atual: 47/47 instruções (100%)**, com 14 testbenches unitários,
+19 de integração e lint dos dois tops PASS. O CRC foi adequado ao
 [contrato oficial](docs/architecture/crc.md): rs1=dados, rs2=CRC anterior e bytes
 mais significativos primeiro. O firmware oficial concluiu em RTL, com 252
-aposentadorias e 1026 ciclos; [logs/VCD e figura](results/experiments/crc-official-20261027/README.md)
+aposentadorias e 1026 ciclos; [logs/VCD e figura](results/experiments/isa-47-20261027/README.md)
 estão arquivados com hashes. O zero inicial de x4 não é aceito como sucesso.
 
-As três instruções de sistema/sincronização, a interface final e os resultados
-físicos continuam pendentes. O projeto completo ainda não está concluído.
+FENCE, ECALL e EBREAK foram implementadas e verificadas sob o
+[contrato de execução CMOS](docs/architecture/system.md). A interface final e
+os resultados físicos continuam pendentes. O projeto completo ainda não está concluído.
 Consulte [o estado detalhado](docs/status.md) e
 [as definições restantes](docs/architecture/official_questions.md).
 A origem do firmware está fixada por [revisão e SHA-256](firmware/official/source.json).
@@ -111,7 +112,7 @@ make help              # lista comandos e suas finalidades
 make clean             # arquiva build/logs/ondas para reiniciar uma prática
 make tb TB=tb_alu       # uma bancada, com preparação das entradas
 make unit              # 14 testbenches unitários, incluindo Xicrc
-make integration       # 18 integrações, incluindo o firmware oficial
+make integration       # 19 integrações, incluindo o firmware oficial
 make smoke             # quatro integrações rápidas, sem GCC RISC-V
 make lint              # análise estática com Verilator
 make test              # todos os TBs; manifesto registra lint NOT_RUN
@@ -143,7 +144,7 @@ RTL com referências e produz PASS ou erro; o Python registra e propaga esse res
 
 ## Verificação e firmware
 
-Uma regressão completa deve terminar com **32 TBs PASS e lint PASS** na versão
+Uma regressão completa deve terminar com **33 TBs PASS e lint PASS** na versão
 atual. O teste ISA compara 88.727 aposentadorias, 45 stores e 12 bytes finais com
 o modelo Python. O firmware próprio escreve `0x600dc0de` em `0x10011ff0`; sua
 baseline executa 598 aposentadorias em 2.579 ciclos.
@@ -213,7 +214,7 @@ para execução manual, ainda sem rodada mapeada concluída.
 O [simple_system](docs/modules/simple_system.md) executa firmware próprio em ROM
 de 2 KiB e RAM de 1 KiB, com saídas done/success/fault. O contrato Xicrc oficial é habilitado por padrão no core. Consulte a
 [matriz atual](docs/isa/coverage.md) e as
-[evidências](results/experiments/crc-official-20261027/README.md).
+[evidências](results/experiments/isa-47-20261027/README.md).
 
 O próximo passo experimental é o usuário executar a configuração preparada,
 avaliar área/timing e a estratégia de memórias em SKY130A. A síntese genérica
@@ -221,8 +222,7 @@ e seu teste não substituem essas etapas. Veja o percurso na
 [aula 8](labs/rtl-to-gds/08-introducao-openlane.md).
 
 A conclusão do processador da competição mantém outra lista de requisitos:
-confirmar as três instruções de sistema/sincronização até 47/47; fechar interface
-e top físico; congelar/taguear RTL e executar
+fechar interface e top físico; congelar/taguear RTL e executar
 o fluxo final conforme [AGENTS.md](AGENTS.md). Diagramas ChipInventor, fechamento
 do relatório preliminar e vídeo também permanecem entregáveis pendentes.
 

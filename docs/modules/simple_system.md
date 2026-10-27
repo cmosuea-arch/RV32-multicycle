@@ -95,5 +95,7 @@ os hashes do manifesto identificam os conteúdos testados.
 
 ## Pendências
 Síntese da versão atual e execução da configuração física preparada, área/timing
-e revisão das memórias. Sistema/sincronização e interface final continuam pendentes.
+e revisão das memórias. A interface final continua pendente. O core implementa o
+[EEI CMOS](../architecture/system.md); o sistema reduzido agrega trap em fault_o.
+A rodada atual verifica nove cenários, incluindo ECALL/EBREAK.
 A netlist histórica antecede a correção do CRC; não representa a versão atual.

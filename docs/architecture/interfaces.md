@@ -1,4 +1,4 @@
-# Contratos CMOS v1
+# Contratos CMOS v2 — traps do ambiente de execução
 
 Convenção: `snake_case`, módulos sem prefixo, entradas `_i`, saídas `_o`, estado
 registrado `_q`. Dados, instruções e endereços: 32 bits; índices RF: 5 bits.
@@ -18,11 +18,11 @@ Interfaces abaixo são decisões CMOS onde o guia não especifica portas complet
 | dmem | clk_i, address_i[31:0] absoluto, oe_i, we_i, bw_i[3:0], data_i[31:0] | data_o[31:0]; leitura/escrita síncronas; read-first |
 | address_decoder | address_i, data_i[31:0], oe_i, we_i, bw_i[3:0], imem_data_i/dmem_data_i[31:0] | mem_address_o, mem_data_o, data_o[31:0], imem_oe_o, dmem_oe_o, dmem_we_o, dmem_bw_o[3:0], fault_o |
 | multiplier | a_i/b_i[31:0], op_i[3:0] | result_o[31:0]; tabela 10 |
-| control_unit | clk_i, rst_i, illegal_i, load_i, store_i, fault_i | state_o[2:0] |
-| decoder | instr_i[31:0] | alu_op_o[3:0], a_pc_o, b_imm_o, reg_we_o, branch_o, jal_o, jalr_o, load_o, store_o, mul_o, illegal_o, crc_o |
+| control_unit | clk_i, rst_i, illegal_i, load_i, store_i, fault_i, trap_i | state_o[2:0]; TRAP=6 e FAULT=5 terminais |
+| decoder | instr_i[31:0] | alu_op_o[3:0], a_pc_o, b_imm_o, reg_we_o, branch_o, jal_o, jalr_o, load_o, store_o, mul_o, illegal_o, crc_o, trap_o (pedido ECALL/EBREAK) |
 | crc | a_i[31:0]=dados, b_i[15:0]=CRC anterior, op_i[3:0] | result_o[31:0]; CRC16/0x1021, bytes mais significativos primeiro |
-| riscv_core | clk_i, rst_i, data_i[31:0], bus_fault_i | address_o/data_o[31:0], oe_o, we_o, bw_o[3:0], fault_o, commit_valid_o, commit_pc_o/commit_instr_o/commit_data_o[31:0], commit_rd_o[4:0] |
-| riscv_top | clk_i, rst_i | sinais de observação fault_o e commit_*; instancia core, decoder de endereço e memórias |
+| riscv_core | clk_i, rst_i, data_i[31:0], bus_fault_i | address_o/data_o[31:0], oe_o, we_o, bw_o[3:0], fault_o, commit_valid_o, commit_pc_o/commit_instr_o/commit_data_o[31:0], commit_rd_o[4:0], trap_o, trap_ebreak_o, trap_pc_o[31:0] |
+| riscv_top | clk_i, rst_i | fault_o, commit_* e trap_*; instancia core, decoder de endereço e memórias |
 | simple_system | clk_i, rst_i | done_o, success_o, fault_o; experimento CRC, ROM 2 KiB/RAM 1 KiB |
 
 Seleção de operandos: A=rs1 ou PC; B=rs2 ou imediato. Resultado executado é
@@ -34,6 +34,13 @@ MEMORY entre EXECUTE e WRITEBACK; DMEM captura o pedido na borda final de MEMORY
 Durante WRITEBACK o endereço efetivo e `oe` do load são mantidos, preservando a
 seleção do dado lido. FAULT retém estado até reset e desativa efeitos colaterais.
 Os operandos são estáveis enquanto IR não muda; RF só escreve em WRITEBACK.
+
+FENCE usa o caminho de quatro ciclos, sem RF/store e com PC+4. Como não existem
+acessos pendentes, a ordem é preservada. ECALL/EBREAK vão de EXECUTE a TRAP,
+sem WRITEBACK/commit; PC fica na instrução solicitante. trap_o indica o nível,
+trap_ebreak_o diferencia ECALL=0/EBREAK=1 e trap_pc_o fornece o PC. Os dois últimos
+ficam zero fora de TRAP. Reset suprime os sinais e recupera FETCH. No simple_system,
+trap é agregado em fault_o. [Contrato completo e limites](system.md).
 
 CRC: [contrato oficial implementado](crc.md), validado com o firmware de 27/10.
 Decoder/core/top possuem `EXPERIMENTAL_XICRC=1` por padrão; o nome histórico foi

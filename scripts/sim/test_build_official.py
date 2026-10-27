@@ -29,11 +29,13 @@ class OfficialImage(unittest.TestCase):
             with self.subTest(text=text), self.assertRaises(ValueError):
                 build.parse_image(text, 0x400000)
 
-    def test_crc_inventory_and_unsupported_system(self):
-        for word, name in ((0x80000033, 'CRCB'), (0x80001033, 'CRCH'), (0x80002033, 'CRCW')):
+    def test_crc_and_exact_system_inventory(self):
+        for word, name in ((0x80000033, 'CRCB'), (0x80001033, 'CRCH'), (0x80002033, 'CRCW'),
+                           (0x00000073, 'ECALL'), (0x00100073, 'EBREAK'), (0x0ff0000f, 'FENCE')):
             self.assertEqual(build.identify(word), name)
-        with self.assertRaises(ValueError):
-            build.identify(0x00000073)
+        for word in (0x00200073, 0x00108073, 0x000000f3, 0x0000100f):
+            with self.subTest(word=hex(word)), self.assertRaises(ValueError):
+                build.identify(word)
 
     def test_untrusted_source_does_not_create_rom_or_cache(self):
         with tempfile.TemporaryDirectory() as temp:

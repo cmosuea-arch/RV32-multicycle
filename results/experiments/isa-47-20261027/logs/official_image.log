@@ -1,0 +1,2 @@
+$ /home/luixf/eda/uniccass-icdesign-tools/shared_xserver/cmos-riscv/.venv/bin/python /home/luixf/eda/uniccass-icdesign-tools/shared_xserver/cmos-riscv/scripts/sim/build_official.py
+READY official image: 259/512 words, 44 instruction types, commit edc7d599

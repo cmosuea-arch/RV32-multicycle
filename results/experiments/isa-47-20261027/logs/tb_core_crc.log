@@ -1,0 +1,3 @@
+$ vvp /home/luixf/eda/uniccass-icdesign-tools/shared_xserver/cmos-riscv/build/tb_core_crc
+PASS core_crc: 32930 retirements, 2146 CRC, overlap/x0/stream/store/reset
+/home/luixf/eda/uniccass-icdesign-tools/shared_xserver/cmos-riscv/tb/integration/tb_core_crc.sv:55: $finish called at 1317336000 (1ps)

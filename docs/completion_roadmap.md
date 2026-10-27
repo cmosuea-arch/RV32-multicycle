@@ -1,21 +1,21 @@
 # Roteiro de conclusão e submissão
 
 Atualizado em **2026-10-27**. Acompanhamento da ordem acordada com a equipe.
-Perfil atual: **44/47 (93,62%)**, CRC oficial e firmware publicado PASS em RTL.
+Perfil atual: **47/47 (100%)**, CRC oficial e firmware publicado PASS em RTL.
 O fechamento oficial depende das definições registradas em
 [official_questions.md](architecture/official_questions.md).
 
 | Ordem | Entrega | Estado / próximo resultado verificável |
 |---|---|---|
-| 1 | Definições oficiais | Firmware recebido: CRC e término identificados; sistema/sincronização e top final ainda carecem de definição |
+| 1 | Definições oficiais | CRC e término identificados; RV32I identifica FENCE/ECALL/EBREAK; EEI CMOS implementado; top final pendente |
 | 2 | CRC oficial, 44/47 | Concluído funcionalmente: unidade/core/ISA/firmware e regressão PASS |
-| 3 | Sistema/sincronização, até 47/47 | Aguardando nomes, códigos e semântica oficiais |
+| 3 | Sistema/sincronização, até 47/47 | Concluído funcionalmente sob o [EEI CMOS](architecture/system.md): FENCE e traps precisos; 33 TBs/lint PASS |
 | 4 | Top final | Integração atual funcional; fechar pinos/periféricos/capacidades e implementação das memórias |
 | 5 | Firmware oficial | PASS na revisão edc7d59: 252 aposentadorias/1026 ciclos, x4 e loop final; log/VCD/figura arquivados |
 | 6 | Congelamento RTL | Regressão final, evidências, cobertura e tag da versão de entrega |
 | 7 | Desenhos | Datapath+controle atuais prontos no relatório; diagramas ChipInventor com outro colaborador |
 | 8 | Fluxo físico | Configuração experimental preparada para execução manual; faltam rodada concluída, revisão e resultados finais |
-| 9 | Relatório final | v0.6 com execução oficial de 27/10; manter reserva de diagramas/resultados e completar autoria e resultados oficiais/físicos |
+| 9 | Relatório final | v0.7 com 47/47 e execução oficial de 27/10; manter reserva de diagramas/resultados e completar autoria e resultados oficiais/físicos |
 | 10 | Vídeo | Produzir 5–7 minutos, disponibilizar no YouTube e conferir os seis temas do guia |
 | 11 | Submissão | Conferir regras atuais e reunir PDF, GDSII, GL, config.json, código/TBs e link do vídeo |
 
@@ -40,9 +40,8 @@ do firmware próprio já foram incorporadas à seção 6, com
 [evidência reproduzível](../results/experiments/firmware-wave/README.md).
 A revisão sucinta do relatório foi concluída; diagramas ChipInventor estão sob
 responsabilidade de outro colaborador. Faltam receber as figuras, preencher
-autoria e obter os materiais oficiais. A execução funcional/física será retomada
-na etapa posterior combinada com o usuário. O waveform oficial exige receber
-e executar aquele programa.
+autoria e concluir os resultados físicos. O firmware oficial já foi recebido,
+executado e capturado; a implementação física fica para execução pelo usuário.
 
 Critérios detalhados da entrega: [report/conformidade.md](report/conformidade.md).
 Situação técnica e evidências: [status.md](status.md).
@@ -70,7 +69,9 @@ síntese SKY130A aprovada nesta preparação.
 O CRC foi corrigido e a imagem publicada passou no core. A regressão atual
 aprova 32 TBs/lint, o teste negativo rejeita o CRC anterior e o VCD oficial foi
 conferido com o log. Não houve síntese, conforme orientação do usuário. A imagem
-contém 44 tipos; sistema/sincronização e a interface final continuam pendentes.
+contém 44 tipos. Em seguida, sistema/sincronização foi implementado e validado
+sob o [EEI CMOS](architecture/system.md): 47/47 e 33 TBs/lint PASS. A interface
+final permanece pendente. [Nova rodada](../results/experiments/isa-47-20261027/README.md).
 
 ## Prática guiada no workspace atual
 

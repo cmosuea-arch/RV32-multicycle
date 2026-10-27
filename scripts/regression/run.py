@@ -5,6 +5,7 @@ import argparse
 from datetime import datetime, timezone
 import hashlib
 import json
+import re
 from pathlib import Path
 import subprocess
 import sys
@@ -80,7 +81,7 @@ def main():
         run([sys.executable, str(generator)], logs / 'vectors.log')
         run([sys.executable, str(ROOT/'scripts/sim/crc_vectors.py')], logs / 'crc_vectors.log')
     programs = ROOT / 'scripts/sim/programs.py'
-    if (full or args.suite == 'integration' or args.test) and programs.exists():
+    if (full or args.suite in ('unit','integration') or args.test) and programs.exists():
         run([sys.executable, str(programs)], logs / 'programs.log')
     firmware = ROOT / 'scripts/sim/build_firmware.py'
     # GCC só é necessário nos modos que incluem uma bancada de firmware.
@@ -94,6 +95,9 @@ def main():
         # A cópia original é obtida explicitamente por make official-fetch, fora da regressão.
         (logs/'official_firmware.json').write_text(json.dumps({'status': 'RUNNING'})+'\n')
         run([sys.executable, str(ROOT/'scripts/sim/build_official.py')], logs/'official_image.log')
+    needs_system = full or args.suite == 'integration' or selected_test == 'tb_core_system'
+    if needs_system:
+        (logs/'system.json').write_text(json.dumps({'status':'RUNNING'})+'\n')
     benches = sorted((ROOT / 'tb').glob('**/tb_*.sv'))
     # A descoberta é alfabética; a ordem didática está no laboratório.
     if args.smoke:
@@ -131,10 +135,23 @@ def main():
             raise RuntimeError(f'{name}: missing PASS marker')
         print('\n'.join(line for line in output.splitlines() if 'PASS' in line))
         passed.append(name)
+        if name == 'tb_core_system':
+            line=next(line for line in output.splitlines() if line.startswith('PASS core_system:'))
+            match=re.search(r'FENCE=(\d+) ECALL=(\d+) EBREAK=(\d+),',line)
+            if not match or any(int(n)!=expected for n,expected in zip(match.groups(),(512,256,256))):
+                raise RuntimeError('incomplete system checks')
+            files=[*rtl,str(tb.relative_to(ROOT)),'scripts/sim/isa.py','scripts/sim/programs.py']
+            proof={'status':'PASS','scope':'CMOS EEI: ordered FENCE and terminal requested traps; not privileged architecture',
+                   'utc':datetime.now(timezone.utc).isoformat(),
+                   'checks':dict(zip(('FENCE','ECALL','EBREAK'),map(int,match.groups()))),
+                   'trap_instructions_retired':0,'result':line,
+                   'sha256':{p:hashlib.sha256((ROOT/p).read_bytes()).hexdigest() for p in files}}
+            (logs/'system.json').write_text(json.dumps(proof,indent=2)+'\n')
         if name == 'tb_official_firmware':
             image = json.loads((build/'official_image.json').read_text())
             files = [*rtl, str(tb.relative_to(ROOT)), 'scripts/sim/build_official.py',
-                     'firmware/official/source.json', 'build/official.hex',
+                     'firmware/official/source.json', 'scripts/sim/isa.py',
+                     'docs/isa/enabled.json', 'build/official.hex',
                      'build/official_tags.hex', 'build/official_meta.hex']
             proof = {'status': 'PASS', 'scope': 'official firmware RTL simulation; no physical signoff',
                      'utc': datetime.now(timezone.utc).isoformat(),
@@ -149,7 +166,7 @@ def main():
     if full and (ROOT / 'scripts/regression/coverage.py').exists():
         # Os hashes identificam o conteúdo verificado, inclusive scripts e firmware.
         from coverage import write_coverage
-        write_coverage()
+        write_coverage(passed)
         files = [ROOT / 'docs/isa/enabled.json', ROOT / 'Makefile']
         for folder in ('rtl', 'tb', 'scripts', 'firmware'):
             files += [p for p in (ROOT / folder).rglob('*')
@@ -159,6 +176,8 @@ def main():
             'status': 'PASS', 'utc': datetime.now(timezone.utc).isoformat(),
             'testbenches': passed, 'lint': 'PASS' if args.with_lint else 'NOT_RUN',
             'official_firmware': 'PASS' if 'tb_official_firmware' in passed else 'PENDING',
+            'system': 'PASS' if 'tb_core_system' in passed else 'PENDING',
+            'official_firmware_coverage': '44/47; FENCE/ECALL/EBREAK not exercised by published image',
             'sha256': {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest()
                        for p in sorted(files)},
         }
@@ -177,4 +196,7 @@ if __name__ == '__main__':
         official = ROOT/'results/logs/official_firmware.json'
         if official.exists() and json.loads(official.read_text()).get('status') == 'RUNNING':
             official.write_text(json.dumps({'status': 'FAIL', 'error': str(error)}, indent=2)+'\n')
+        system = ROOT/'results/logs/system.json'
+        if system.exists() and json.loads(system.read_text()).get('status') == 'RUNNING':
+            system.write_text(json.dumps({'status':'FAIL','error':str(error)},indent=2)+'\n')
         sys.exit(str(error))

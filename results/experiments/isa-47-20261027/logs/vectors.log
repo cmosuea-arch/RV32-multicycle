@@ -1,0 +1,2 @@
+$ /home/luixf/eda/uniccass-icdesign-tools/shared_xserver/cmos-riscv/.venv/bin/python /home/luixf/eda/uniccass-icdesign-tools/shared_xserver/cmos-riscv/scripts/sim/vectors.py
+PASS deterministic vectors generated

@@ -7,13 +7,14 @@ module decoder #(
     input logic [31:0] instr_i,
     output reg [3:0] alu_op_o,
     output reg a_pc_o,b_imm_o,reg_we_o,branch_o,jal_o,jalr_o,load_o,store_o,mul_o,illegal_o,
-    output reg crc_o
+    output reg crc_o,
+    output reg trap_o
 );
     // Defaults em todos os caminhos evitam latches na lógica combinacional.
     always @* begin
         alu_op_o=0; a_pc_o=0; b_imm_o=0; reg_we_o=0;
         branch_o=0; jal_o=0; jalr_o=0; load_o=0; store_o=0; mul_o=0;
-        illegal_o=0; crc_o=0;
+        illegal_o=0; crc_o=0; trap_o=0;
         case(instr_i[6:0])
             // OP: operações entre registradores, Zmmul e Xicrc.
             7'h33: begin
@@ -70,13 +71,21 @@ module decoder #(
                 store_o=1; b_imm_o=1; alu_op_o=1;
                 if(instr_i[14:12]>2) illegal_o=1;
             end
+            // FENCE: todos os acessos anteriores já terminaram neste núcleo serial.
+            // fm/pred/succ e rs1/rd são ignorados; funct3 diferencia FENCE.I.
+            7'h0f: if(instr_i[14:12]!=0) illegal_o=1;
+            // ECALL/EBREAK solicitam trap preciso, sem enables de escrita.
+            7'h73: begin
+                if(instr_i==32'h00000073 || instr_i==32'h00100073) trap_o=1;
+                else illegal_o=1;
+            end
             default: illegal_o=1;
         endcase
         // Instruções inválidas anulam controles para não causar escrita ou salto.
         if(illegal_o) begin
             alu_op_o=0; a_pc_o=0; b_imm_o=0; reg_we_o=0;
             branch_o=0; jal_o=0; jalr_o=0; load_o=0; store_o=0; mul_o=0;
-            crc_o=0;
+            crc_o=0; trap_o=0;
         end
     end
 endmodule

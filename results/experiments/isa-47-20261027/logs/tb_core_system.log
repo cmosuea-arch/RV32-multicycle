@@ -1,0 +1,3 @@
+$ vvp /home/luixf/eda/uniccass-icdesign-tools/shared_xserver/cmos-riscv/build/tb_core_system
+PASS core_system: FENCE=512 ECALL=256 EBREAK=256, precise terminal traps, no retirement/side effects, reset recovery
+/home/luixf/eda/uniccass-icdesign-tools/shared_xserver/cmos-riscv/tb/integration/tb_core_system.sv:140: $finish called at 184756000 (1ps)

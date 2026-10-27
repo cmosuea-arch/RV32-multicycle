@@ -8,7 +8,10 @@ O [registro do contrato](crc_official_confirmation.md) e o
 [recebimento do firmware](../../firmware/official/receipt.md) foram preenchidos.
 Adequação, integração e execução foram concluídas em seguida:
 [44/47, 32 TBs/lint e firmware oficial PASS](../../results/experiments/crc-official-20261027/README.md).
-P01/P03 estão resolvidas para a revisão publicada; P02 e P04 seguem abertas.
+P01/P03 estão resolvidas para a revisão publicada. A revisão normativa abaixo
+identifica os nomes/códigos de P02. O [EEI CMOS](system.md) foi implementado e
+validado em seguida: [47/47 e 33 TBs/lint PASS](../../results/experiments/isa-47-20261027/README.md).
+P02 passa funcionalmente nesse ambiente; P04 segue aberta.
 
 Referências a páginas físicas de `Champion-chip-guia-fase-2.pdf` (arquivo de 24 páginas).
 
@@ -18,8 +21,13 @@ Referências a páginas físicas de `Champion-chip-guia-fase-2.pdf` (arquivo de 
    para a mesma mensagem nos três tamanhos. A falta de exemplos está resolvida;
    RTL/modelo/vetores/firmware próprio foram corrigidos e a regressão passou.
 2. **Sistema/sincronização — p.2.** A tabela exige 3 instruções sem enumerá-las.
-   Confirmar nomes, codificações e comportamento esperado, inclusive se há
-   parada, trap ou protocolo específico com o firmware/testbench.
+   O Block Guide exige RV32I e referencia o manual oficial (§1.2, p.7;
+   §§2.1/2.4, pp.9/11). Essa referência identifica **FENCE, ECALL e EBREAK**,
+   com codificações e semântica padronizadas. A
+   [revisão normativa](system_audit_20261027.md) corrige a pendência anterior.
+   O [EEI CMOS](system.md) define traps terminais separados de FAULT, com PC e
+   motivo expostos; FENCE e os dois traps passam em testes próprios. Confirmar
+   apenas eventual protocolo adicional exigido pela competição.
 3. **Firmware oficial — p.4.** Repositório consultado em 27/10: fonte assembly e
    imagem de 259 palavras para IMEM, início em 00400000; término em x4=0 ou
    FFFFFFFF. A imagem foi convertida/carregada e o TB verifica a escrita final
@@ -42,8 +50,9 @@ da organização nem foram usadas para escolher semântica de sistema.
 As consultas e a ausência de esclarecimentos em 17/10 são registros históricos;
 as mensagens de 19–20/10 e o firmware recebido em 27/10 complementam essa situação,
 sem novo PDF local. O firmware consultado contém 44 instruções distintas e não
-enumera as três de sistema; essa lacuna da tabela de 47 permanece.
+exercita as três de sistema. Seus nomes/códigos, porém, estão disponíveis no
+manual RV32I referenciado pelo Block Guide, conforme a revisão acima.
 
-Após resolver as lacunas restantes: fechar CRC isolado → integração e regressão → sistema → 47/47 →
-firmware oficial → interface final e entregáveis → OpenLane → GDSII, mantendo
-a prioridade e os critérios de conclusão do AGENTS.md.
+CRC, sistema/sincronização e firmware oficial passam no ambiente documentado.
+Próximas etapas: interface final e diagramas → congelamento da entrega → síntese
+e fluxo físico pelo usuário → GDSII e pacote, mantendo os critérios do AGENTS.md.

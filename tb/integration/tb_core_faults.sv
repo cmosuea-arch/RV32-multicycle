@@ -2,6 +2,8 @@
 module tb_core_faults;
     // Injeta instruções inválidas, alvos desalinhados e falha de fetch no core baseline.
     reg clk=0; always #5 clk=~clk;
+    wire trap,trap_ebreak;
+    wire [31:0] trap_pc;
     reg rst=1,bus_error=0;
     reg [31:0] rom[0:15];
     wire [31:0] address,data,wdata,cpc,ci,cd;
@@ -11,7 +13,7 @@ module tb_core_faults;
     integer i,cycles,retired,cases;
     assign data=oe&&address>=32'h00400000&&address<32'h00400040 ? rom[(address-32'h00400000)>>2] : 0;
     // Mantém a checagem explícita do perfil sem CRC, além das instruções inválidas.
-    riscv_core #(.EXPERIMENTAL_XICRC(0)) dut(clk,rst,data,bus_error,address,wdata,oe,we,bw,fault,valid,cpc,ci,cd,rd);
+    riscv_core #(.EXPERIMENTAL_XICRC(0)) dut(clk,rst,data,bus_error,address,wdata,oe,we,bw,fault,valid,cpc,ci,cd,rd,trap,trap_ebreak,trap_pc);
     task clear_rom;
         // Reinicia o core, retira erro externo e limpa a ROM antes de montar cada caso.
         begin
@@ -50,9 +52,9 @@ module tb_core_faults;
         clear_rom(); rom[0]=32'h802081b3; expect_fault(0,32'h00400000); // CRC disabled in baseline
         clear_rom(); rom[0]=32'h0220c1b3; expect_fault(0,32'h00400000); // DIV unsupported
         clear_rom(); rom[0]=32'h02009193; expect_fault(0,32'h00400000); // invalid shift
-        clear_rom(); rom[0]=32'h00000073; expect_fault(0,32'h00400000);
-        clear_rom(); rom[0]=32'h00100073; expect_fault(0,32'h00400000);
-        clear_rom(); rom[0]=32'h0000000f; expect_fault(0,32'h00400000);
+        clear_rom(); rom[0]=32'h00200073; expect_fault(0,32'h00400000); // unsupported SYSTEM
+        clear_rom(); rom[0]=32'h00108073; expect_fault(0,32'h00400000); // malformed EBREAK
+        clear_rom(); rom[0]=32'h0000100f; expect_fault(0,32'h00400000); // FENCE.I outside profile
         clear_rom(); rom[0]=32'h00000163; expect_fault(0,32'h00400000); // taken misaligned
         clear_rom(); rom[0]=32'h00001163; expect_fault(1,32'h00400004); // untaken allowed
         clear_rom(); rom[0]=32'h002000ef; expect_fault(0,32'h00400000); // jal misaligned

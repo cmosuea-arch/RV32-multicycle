@@ -1,0 +1,3 @@
+$ vvp /home/luixf/eda/uniccass-icdesign-tools/shared_xserver/cmos-riscv/build/tb_isa
+PASS isa: 88794 retirements, 46 stores and 12 final bytes match Python
+/home/luixf/eda/uniccass-icdesign-tools/shared_xserver/cmos-riscv/tb/integration/tb_isa.sv:62: $finish called at 3553546000 (1ps)

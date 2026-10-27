@@ -11,15 +11,19 @@ import sys
 
 ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/'scripts/sim'))
-from isa import CATEGORIES,fields
+from isa import CATEGORIES,fields,SYSTEM
 from coverage_xlsx import generate_xlsx
 
 
-def write_coverage():
+def write_coverage(passed_tests):
     # Chamado pelo executor após sucesso; sozinho não executa nem certifica os TBs.
     enabled=set(json.loads((ROOT/'docs/isa/enabled.json').read_text()))
     counts=json.loads((ROOT/'build/isa_counts.json').read_text())
     official=json.loads((ROOT/'results/logs/official_firmware.json').read_text())
+    system=json.loads((ROOT/'results/logs/system.json').read_text())
+    required_tests={'tb_decoder','tb_control_unit','tb_core_system','tb_isa','tb_official_firmware'}
+    if not required_tests.issubset(passed_tests):
+        raise RuntimeError('missing current unit/integration/official coverage tests')
     revision=subprocess.run(['git','rev-parse','--short','HEAD'],cwd=ROOT,capture_output=True,text=True)
     commit='worktree / SHA-256 regression.json'
     if revision.returncode==0:
@@ -27,39 +31,57 @@ def write_coverage():
                                 'firmware','Makefile','docs/isa/enabled.json'],
                                cwd=ROOT,capture_output=True,text=True,check=True)
         commit=revision.stdout.strip()+(' + worktree' if changes.stdout.strip() else '')
-    if official.get('status')!='PASS' or not enabled.issubset(official.get('instructions',[])):
-        raise RuntimeError('official firmware execution does not cover enabled ISA')
-    for name,expected in official['sha256'].items():
-        if hashlib.sha256((ROOT/name).read_bytes()).hexdigest()!=expected:
-            raise RuntimeError(f'stale official evidence: {name}')
-    if not enabled.issubset(counts):
+    system_names=set(CATEGORIES['Sistema/Sincronização'])
+    if official.get('status')!='PASS' or set(official.get('instructions',[]))!=enabled-system_names:
+        raise RuntimeError('official firmware execution does not cover its published 44-type inventory')
+    if system.get('status')!='PASS' or system.get('trap_instructions_retired')!=0 or any(
+            system.get('checks',{}).get(name,0)<=0 for name in system_names):
+        raise RuntimeError('missing precise system/trap evidence')
+    for proof in (official,system):
+        if not proof.get('sha256'):
+            raise RuntimeError('missing coverage evidence hashes')
+        for name,expected in proof['sha256'].items():
+            if hashlib.sha256((ROOT/name).read_bytes()).hexdigest()!=expected:
+                raise RuntimeError(f'stale coverage evidence: {name}')
+    if not (enabled-set(SYSTEM)).issubset(counts) or any(counts.get(name,0)<=0 for name in enabled-set(SYSTEM)):
         # Exige presença no trace modelado; a comparação desse trace é feita em tb_isa.
         raise RuntimeError('coverage includes instructions absent from trace')
+    if set(SYSTEM).intersection(counts):
+        raise RuntimeError('trap instructions must not be counted as retirements')
     # Relaciona cada grupo da ISA a módulos e logs que sustentam seus estados.
     headers=['Categoria','Instrução','Opcode','Funct3','Funct7','Módulo principal',
              'Teste unitário','Teste integrado','Regressão','Firmware oficial',
              'Commit','Evidência','Observação']
     modules={'Register':'alu','Immediate':'alu/imm_ext','Upper':'alu/pc/imm_ext',
              'Branch':'branch_comp','Jump':'pc/alu','Load':'lsu/dmem','Store':'lsu/dmem',
-             'Multiplication':'multiplier','CRC':'crc','Sistema/Sincronização':'PENDENTE'}
+             'Multiplication':'multiplier','CRC':'crc','Sistema/Sincronização':'decoder/control_unit/riscv_core'}
     unit_logs={'Register':'tb_alu','Immediate':'tb_imm_ext; tb_alu','Upper':'tb_imm_ext; tb_pc',
                'Branch':'tb_branch_comp','Jump':'tb_pc; tb_imm_ext','Load':'tb_lsu; tb_dmem',
-               'Store':'tb_lsu; tb_dmem','Multiplication':'tb_multiplier','CRC':'tb_crc'}
+               'Store':'tb_lsu; tb_dmem','Multiplication':'tb_multiplier','CRC':'tb_crc',
+               'Sistema/Sincronização':'tb_decoder; tb_control_unit'}
     with (ROOT/'docs/isa/coverage.csv').open('w',newline='') as f:
         writer=csv.writer(f,lineterminator='\n'); writer.writerow(headers)
         for category,names in CATEGORIES.items():
             for name in names:
                 op,f3,f7=fields(name)
-                # Só instruções habilitadas, presentes no trace e no firmware entram no PASS.
+                # Traps têm evidência própria e não são aposentadorias do trace.
                 passed=name in enabled
                 state='PASS' if passed else 'PENDENTE'
+                is_system=name in system_names
+                observations=(f'{system["checks"][name]} traps precisos verificados; não aposenta' if name in SYSTEM
+                              else f'{counts.get(name,0)} aposentadorias no teste próprio')
+                if is_system:
+                    observations+='; contrato EEI CMOS, firmware publicado não exercita'
+                tests=list(dict.fromkeys(['tb_decoder',*unit_logs[category].split('; '),
+                    *(['tb_core_system'] if is_system else []),
+                    *([] if name in SYSTEM else ['tb_isa']),
+                    *([] if is_system else ['tb_official_firmware'])]))
                 writer.writerow([category,name,f'{op:07b}' if op is not None else '',
                                  f'{f3:03b}' if f3 is not None else '',f'{f7:07b}' if f7 is not None else '',
-                                 modules[category],state,state,state,state,
+                                 modules[category],state,state,state,'NÃO EXERCITADA' if is_system else state,
                                  commit if passed else '',
-                                 ('; '.join('results/logs/'+test+'.log' for test in
-                                            ['tb_decoder',*unit_logs[category].split('; '),'tb_isa','tb_official_firmware'])) if passed else '',
-                                 f'{counts.get(name,0)} aposentadorias no teste próprio' if passed else 'Definição oficial pendente'])
+                                 '; '.join('results/logs/'+test+'.log' for test in tests) if passed else '',
+                                 observations if passed else 'Implementação pendente'])
     render_coverage()
 
 
@@ -105,7 +127,7 @@ def render_coverage():
     lines.append(f'| **Total** | **{n}/{total}** | **{percent(n,total)}** |')
     firmware=', '.join(dict.fromkeys(row['Firmware oficial'] for row in rows))
     lines += ['',f'**Firmware oficial:** {firmware}. A evidência da execução fica em `official_firmware.json` junto aos logs.',
-              'Slots de sistema são pendências, não nomes oficiais de instruções.']
+              'O firmware publicado exercita 44 tipos; FENCE/ECALL/EBREAK têm testes próprios sob o [contrato EEI CMOS](../architecture/system.md).']
     for category,items in groups.items():
         lines += ['',f'## {labels.get(category,category)}','']
         modules=list(dict.fromkeys(part for row in items for part in row['Módulo principal'].split('/')))
@@ -113,7 +135,7 @@ def render_coverage():
         commits=list(dict.fromkeys(row['Commit'] for row in items if row['Commit']))
         lines += ['**Módulos:** '+', '.join(module_links)+'.',
                   '**Commit/tag validado:** '+(', '.join(code(c) for c in commits) if commits else 'PENDENTE')+'.','',
-                  '| Instrução | Opcode | Funct3 | Funct7 | Unitário | Integrado | Regressão | Execuções¹ |',
+                  '| Instrução | Opcode | Funct3 | Funct7 | Unitário | Integrado | Regressão | Eventos¹ |',
                   '|---|---|---|---|---|---|---|---:|']
         for row in items:
             count=row['Observação'].split()[0] if row['Observação'] else ''
@@ -126,7 +148,7 @@ def render_coverage():
             lines += ['','**Evidências:** '+', '.join(f'[{Path(path).stem}](../../{path})' for path in evidence)+'.']
         notes=list(dict.fromkeys(row['Observação'] for row in items if row['Observação'] and not row['Observação'].split()[0].isdigit()))
         if notes:
-            lines += ['','**Pendência:** '+'; '.join(notes)+'. Ver [definições oficiais necessárias](../architecture/official_questions.md).']
+            lines += ['','**Observações:** '+'; '.join(notes)+'. Ver [contratos e questões oficiais](../architecture/official_questions.md).']
     # O CSV também pode apontar a evidências históricas após limpar o workspace.
     candidates=list(dict.fromkeys(str(Path(path).parent/'regression.json')
                     for row in rows for path in row['Evidência'].split('; ') if path))
@@ -135,7 +157,7 @@ def render_coverage():
                    'Confira a identificação da rodada antes de combinar logs de exercícios individuais.'
                    if manifest else 'O manifesto da nova rodada será publicado em `results/logs/regression.json` após a regressão.')
     lines += ['', '## Como interpretar','',
-              '¹ Execuções são aposentadorias verificadas no teste próprio por instrução, incluindo instruções auxiliares que preparam operandos.',
+              '¹ Eventos são aposentadorias do trace próprio; para ECALL/EBREAK são traps precisos verificados, sem aposentadoria. Incluem instruções auxiliares que preparam operandos.',
               'PASS representa os testes disponíveis, não prova formal nem certificação da competição.',
               'A tag identifica o marco RTL; '+manifest_note,
               'Cada tag incremental conserva os logs da respectiva regressão. Esta tabela é atualizada automaticamente pela regressão.',
@@ -152,4 +174,4 @@ if __name__=='__main__':
     if args.render_only:
         render_coverage()
     else:
-        write_coverage()
+        raise SystemExit('A publicação exige a rodada completa: execute make regression.')

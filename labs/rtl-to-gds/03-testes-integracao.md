@@ -104,10 +104,28 @@ cat results/logs/tb_simple_system.log
 Essa prática usa [outro firmware](../../firmware/simple/README.md), ROM de 2 KiB,
 RAM de 1 KiB e assinatura em 0x100103f0. O programa exercita CRCB/CRCH/CRCW; o TB
 verifica boot, reset, assinatura ruim e instrução inválida. A baseline continua
-44/47, com o CRC validado conforme [contrato oficial](../../docs/architecture/crc.md).
+47/47 sob o EEI CMOS, com o CRC validado conforme [contrato oficial](../../docs/architecture/crc.md).
 
 O sistema já testado será a entrada da [aula de síntese](07-sintese.md).
-O teste da netlist é adicional às 18 integrações RTL.
+O teste da netlist é adicional às 19 integrações RTL.
+
+## FENCE e pedidos de trap
+
+```bash
+make system
+cat results/logs/tb_core_system.log
+cat results/logs/system.json
+```
+
+Leia [tb_core_system](../../tb/integration/tb_core_system.sv) nesta ordem:
+`prepare` monta store/FENCE/load e uma instrução ECALL ou EBREAK;
+`run_to_trap` compara os seis commits anteriores, verifica o PC e o motivo do
+trap e confirma que o store posterior não ocorre; `reset_core` recupera FETCH.
+O teste varia máscaras/campos FENCE e repete os dois tipos de trap. Compare
+`commit_valid_o` com `trap_o`: a instrução que gera trap não aposenta.
+O [contrato EEI CMOS](../../docs/architecture/system.md) encerra a execução até
+reset, sem serviços de sistema/CSRs. O firmware oficial exercita 44 tipos;
+esses testes próprios completam o perfil de 47.
 
 ## Observar o firmware em forma de onda
 

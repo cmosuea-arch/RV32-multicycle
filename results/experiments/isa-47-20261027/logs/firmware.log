@@ -1,0 +1,2 @@
+$ /home/luixf/eda/uniccass-icdesign-tools/shared_xserver/cmos-riscv/.venv/bin/python /home/luixf/eda/uniccass-icdesign-tools/shared_xserver/cmos-riscv/scripts/sim/build_firmware.py
+PASS own firmware built: RV32I_Zmmul, checksum 0x00101a3e

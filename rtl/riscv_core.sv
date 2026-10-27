@@ -12,9 +12,11 @@ module riscv_core #(
     output wire [3:0] bw_o,
     output wire fault_o,commit_valid_o,
     output wire [31:0] commit_pc_o,commit_instr_o,commit_data_o,
-    output wire [4:0] commit_rd_o
+    output wire [4:0] commit_rd_o,
+    output wire trap_o,trap_ebreak_o,
+    output wire [31:0] trap_pc_o
 );
-    localparam [2:0] FETCH=0,EXECUTE=2,WRITEBACK=3,MEMORY=4,FAULT=5;
+    localparam [2:0] FETCH=0,EXECUTE=2,WRITEBACK=3,MEMORY=4,FAULT=5,TRAP=6;
     wire [2:0] state;
     wire [31:0] current_pc,plus4,instruction,immediate,a,b,alu_result;
     // Registradores entre EXECUTE e WRITEBACK: guardam resultado/endereço e próximo PC.
@@ -27,7 +29,7 @@ module riscv_core #(
     wire a_pc,b_imm,reg_we,branch,jal,jalr,load,store_op,mul,illegal;
     wire [31:0] load_data,store_data;
     wire [31:0] product;
-    wire crc_op;
+    wire crc_op,trap_request;
     wire [31:0] crc_result;
     wire [3:0] store_bw;
     wire misaligned,lsu_invalid;
@@ -39,9 +41,9 @@ module riscv_core #(
                      ((state==EXECUTE)&&redirect&&redirect_target[1:0]!=0) ||
                      ((state==MEMORY)&&(bus_fault_i||misaligned||lsu_invalid));
     // A FSM define quando agir; o decoder define qual operação a instrução pede.
-    control_unit control(clk_i,rst_i,illegal,load,store_op,local_fault,state);
+    control_unit control(clk_i,rst_i,illegal,load,store_op,local_fault,state,trap_request);
     decoder #(.EXPERIMENTAL_XICRC(EXPERIMENTAL_XICRC)) decode(
-        instruction,alu_op,a_pc,b_imm,reg_we,branch,jal,jalr,load,store_op,mul,illegal,crc_op);
+        instruction,alu_op,a_pc,b_imm,reg_we,branch,jal,jalr,load,store_op,mul,illegal,crc_op,trap_request);
     // PC e RF mudam em WRITEBACK; IR captura em FETCH e retém a instrução depois.
     pc program_counter(clk_i,rst_i,retire,next_pc_q,current_pc,plus4);
     ir instruction_register(clk_i,rst_i,state==FETCH&&!local_fault&&!rst_i,data_i,instruction);
@@ -75,6 +77,10 @@ module riscv_core #(
     assign we_o=!rst_i&&state==MEMORY&&store_op&&!misaligned&&!lsu_invalid;
     assign bw_o=we_o?store_bw:4'b0;
     assign fault_o=state==FAULT;
+    // Pedido terminal ao ambiente: PC/IR permanecem retidos, sem commit nem bus.
+    assign trap_o=!rst_i && state==TRAP;
+    assign trap_ebreak_o=trap_o && instruction[20];
+    assign trap_pc_o=trap_o?current_pc:32'b0;
     // Dados de commit só descrevem uma conclusão quando commit_valid_o está em 1.
     assign commit_valid_o=retire;
     assign commit_pc_o=current_pc;

@@ -1,0 +1,3 @@
+$ vvp /home/luixf/eda/uniccass-icdesign-tools/shared_xserver/cmos-riscv/build/tb_control_unit
+PASS control_unit: stages, memory, illegal, fault, terminal TRAP and reset priority
+/home/luixf/eda/uniccass-icdesign-tools/shared_xserver/cmos-riscv/tb/unit/tb_control_unit.sv:36: $finish called at 286000 (1ps)

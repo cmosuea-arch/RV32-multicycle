@@ -1,0 +1,26 @@
+{
+  "iverilog": {
+    "path": "/home/luixf/oss-cad-suite/bin/iverilog",
+    "version": "Icarus Verilog version 13.0 (devel) (s20221226-498-g52d049b51)"
+  },
+  "vvp": {
+    "path": "/home/luixf/oss-cad-suite/bin/vvp",
+    "version": "Icarus Verilog runtime version 13.0 (devel) (s20221226-498-g52d049b51)"
+  },
+  "verilator": {
+    "path": "/home/luixf/oss-cad-suite/bin/verilator",
+    "version": "Verilator 5.023 devel rev v5.020-199-g26f15e11c"
+  },
+  "riscv64-unknown-elf-gcc": {
+    "path": "/usr/bin/riscv64-unknown-elf-gcc",
+    "version": "riscv64-unknown-elf-gcc (13.2.0-11ubuntu1+12) 13.2.0"
+  },
+  "make": {
+    "path": "/usr/bin/make",
+    "version": "GNU Make 4.3"
+  },
+  "python3": {
+    "path": "/usr/bin/python3",
+    "version": "Python 3.12.3"
+  }
+}

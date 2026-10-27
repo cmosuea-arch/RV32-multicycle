@@ -80,6 +80,15 @@ module tb_simple_system;
         repeat(8) begin @(posedge clk); #1; end
         if(!fault || done || success) $fatal(1,"illegal instruction did not report fault");
         checks=checks+1;
+        // A interface reduzida agrega traps em fault sem produzir assinatura/sucesso.
+        for(i=0;i<2;i=i+1) begin
+            reset_system();
+            dut.instruction_memory.mem[0]=i==0?32'h00000073:32'h00100073;
+            @(negedge clk); rst=0;
+            repeat(8) begin @(posedge clk); #1; end
+            if(!fault || !dut.core_trap || done || success) $fatal(1,"simple trap was hidden");
+            checks=checks+1;
+        end
         reset_system();
         $readmemh("build/simple.hex",dut.instruction_memory.mem);
         // Restaura o programa original e confirma recuperação completa após reset.

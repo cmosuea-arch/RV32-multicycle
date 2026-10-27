@@ -2,13 +2,15 @@
 module tb_memory_faults;
     // Testa falhas de memória no top integrado e verifica que nenhum dado é corrompido.
     reg clk=0; always #5 clk=~clk;
+    wire trap,trap_ebreak;
+    wire [31:0] trap_pc;
     reg rst=1;
     wire fault,valid;
     wire [31:0] cpc,ci,cd;
     wire [4:0] rd;
     integer i,cycles,retired,cases=0,writes=0;
     reg [31:0] operations[0:7];
-    riscv_top #(.IMEM_WORDS(16),.DMEM_WORDS(4)) dut(clk,rst,fault,valid,cpc,ci,cd,rd);
+    riscv_top #(.IMEM_WORDS(16),.DMEM_WORDS(4)) dut(clk,rst,fault,valid,cpc,ci,cd,rd,trap,trap_ebreak,trap_pc);
     always @(posedge clk) if(!rst&&dut.dmem_we) writes=writes+1;
     // Conta escritas reais na RAM, separadamente das instruções concluídas.
     task prepare;

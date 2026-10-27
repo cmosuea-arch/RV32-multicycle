@@ -9,7 +9,7 @@ import re
 import sys
 from urllib.request import urlopen
 
-from isa import CATEGORIES, fields
+from isa import CATEGORIES, identify
 
 ROOT = Path(__file__).resolve().parents[2]
 ROM_WORDS = 512
@@ -32,17 +32,6 @@ def parse_image(text, base, capacity=ROM_WORDS):
     if not words:
         raise ValueError('Imagem oficial vazia')
     return words
-
-
-def identify(word):
-    # Classifica os campos binários sem depender do texto assembly ou seus aliases.
-    opcode, f3, f7 = word & 127, (word >> 12) & 7, word >> 25
-    for group in CATEGORIES.values():
-        for name in group:
-            op, a, b = fields(name)
-            if op == opcode and a in (None, f3) and b in (None, f7):
-                return name
-    raise ValueError(f'Instrução oficial não reconhecida: {word:08x}')
 
 
 def main():
@@ -73,9 +62,12 @@ def main():
     # Código e constantes são preservados; somente o código recebe tags de cobertura.
     count = manifest['imem']['code_words']
     names = [identify(word) for word in words[:count]]
-    enabled = sorted(json.loads((ROOT / 'docs/isa/enabled.json').read_text()))
-    if set(names) != set(enabled):
-        raise ValueError('Inventário da imagem diverge do perfil ISA habilitado')
+    enabled = sorted(set(names))
+    # A imagem publicada testa 44 tipos; habilitar sistema no RTL não altera a ROM oficial.
+    profile = set(json.loads((ROOT / 'docs/isa/enabled.json').read_text()))
+    expected = profile - set(CATEGORIES['Sistema/Sincronização'])
+    if set(names) != expected or len(enabled) != manifest['static_instruction_inventory']['unique_confirmed_instructions']:
+        raise ValueError('Inventário da imagem diverge da revisão oficial fixada')
     success = int(manifest['termination']['success_write_pc'], 16)
     failure = int(manifest['termination']['failure_write_pc'], 16)
     for pc, expected in ((success, 0x00000213), (failure, 0xfff00213),

@@ -105,8 +105,9 @@ O download é explícito e validado por SHA-256; as execuções seguintes usam o
 retorna ao terminal? O que muda entre teste individual, suíte e regressão completa?
 Qual é o papel dos hashes e da cobertura por instrução?
 
-**Critério:** 32 TBs e lint PASS na configuração atual, manifesto da sua rodada
-com estado PASS e cobertura **44/47**; as três instruções de sistema seguem pendentes.
+**Critério:** 33 TBs e lint PASS na configuração atual, manifesto da sua rodada
+com estado PASS e cobertura **47/47** no EEI CMOS. Use `make system` para
+explicar FENCE e os traps de ECALL/EBREAK; estes não aposentam.
 
 ## Etapa 5 — Firmware no processador e waveform
 

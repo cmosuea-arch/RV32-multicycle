@@ -3,9 +3,10 @@
 Para aprender os conceitos e executar primeiro os passos manuais, siga o
 [laboratório guiado](../labs/rtl-to-gds/README.md). Esta página é a consulta rápida.
 
-Este roteiro valida o perfil 44/47, o firmware oficial e o simple_system.
+Este roteiro valida o perfil 47/47, o firmware oficial e o simple_system.
 O contrato CRC e o firmware oficial estão verificados em RTL;
-sistema/sincronização, interface final e resultados físicos continuam pendentes.
+FENCE/ECALL/EBREAK passam sob o [EEI CMOS](architecture/system.md).
+Interface final e resultados físicos continuam pendentes.
 
 ## 1. Preparação
 
@@ -81,6 +82,7 @@ make tb TB=tb_memory_bus
 make tb TB=tb_mult_rf
 
 make tb TB=tb_core_smoke
+make system              # FENCE + ECALL/EBREAK no contrato CMOS
 make tb TB=tb_core_faults
 make tb TB=tb_memory_faults
 make tb TB=tb_isa
@@ -142,7 +144,7 @@ make regression
 git status --short
 ```
 
-`make regression` recompõe vetores e firmware, executa os 32 testbenches, roda
+`make regression` recompõe vetores e firmware, executa os 33 testbenches, roda
 lint, atualiza a matriz de cobertura e grava hashes em
 `results/logs/regression.json`. Somente esse resultado completo deve ser usado
 como evidência de fechamento.
@@ -183,7 +185,7 @@ python3 -m json.tool results/logs/simple_synth.json
 ```
 
 Gera `build/simple_netlist.v` com Yosys e simula dois boots nessa netlist.
-O resumo deve registrar status/simulação PASS. A execução é adicional aos 32 TBs;
+O resumo deve registrar status/simulação PASS. A execução é adicional aos 33 TBs;
 não envolve PDK, timing físico ou GDSII. Tutorial e comandos manuais:
 [aula 7](../labs/rtl-to-gds/07-sintese.md); consulta: [synthesis.md](synthesis.md).
 

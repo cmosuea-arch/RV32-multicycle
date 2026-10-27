@@ -1,0 +1,3 @@
+$ vvp /home/luixf/eda/uniccass-icdesign-tools/shared_xserver/cmos-riscv/build/tb_ir_imm
+PASS ir_imm: captured instruction and stable execution operand
+/home/luixf/eda/uniccass-icdesign-tools/shared_xserver/cmos-riscv/tb/integration/tb_ir_imm.sv:19: $finish called at 26000 (1ps)

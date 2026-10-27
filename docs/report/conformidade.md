@@ -15,16 +15,16 @@ geral ou retificações que não estejam nesse arquivo.
 
 ## Requisitos expressos do guia
 
-| ID | Origem | Exigência | Local no relatório | Situação da versão 0.6 |
+| ID | Origem | Exigência | Local no relatório | Situação da versão 0.7 |
 |---|---|---|---|---|
 | R01 | §1, p. 2 | Objetivo, arquitetura, módulos, funcionamento e funcionalidades | §1 | Redigido para o escopo atual |
-| R02 | §2, pp. 2–3 | Quantidades esperadas/implementadas e percentual por categoria | §2.1 | 44/47; CRC oficial integrado e testado |
-| R03 | §2, p. 3 | Lista de instruções por categoria | §2.1 | Incluída junto à tabela de cobertura; sistema oficial pendente |
-| R04 | §2, p. 3 | Tabela opcode/funct3/funct7 das instruções implementadas | §§2.3–2.5 | 44 implementadas; conferidas com CSV |
+| R02 | §2, pp. 2–3 | Quantidades esperadas/implementadas e percentual por categoria | §2.1 | 47/47; CRC e sistema integrados; EEI CMOS documentado |
+| R03 | §2, p. 3 | Lista de instruções por categoria | §2.1 | Incluída junto à tabela de cobertura; FENCE, ECALL e EBREAK sob o EEI CMOS |
+| R04 | §2, p. 3 | Tabela opcode/funct3/funct7 das instruções implementadas | §§2.3–2.6 | 47 implementadas; conferidas com CSV |
 | R05 | §3, p. 3 | Desenho completo do datapath com unidade de controle | §3 | Três painéis SVG/PNG incluídos, conferidos com o RTL atual; rever se houver alteração funcional |
 | R06 | §4, p. 3 | Explicação de cada módulo desenvolvido | §§4.1–4.2 | 17 módulos descritos, incluindo tops e experimento |
 | R07 | §4, p. 3 | Diagrama por módulo feito no ChipInventor | §§4.1–4.2 | F02–F18 pendentes, sob responsabilidade de outro colaborador |
-| R08 | §4, p. 3 | Testbenches individuais | §4 e código da entrega | 14 unitários e 18 integrações identificados; anexar todo o código no pacote |
+| R08 | §4, p. 3 | Testbenches individuais | §4 e código da entrega | 14 unitários e 19 integrações identificados; anexar todo o código no pacote |
 | R09 | §5, p. 4 | Área total e densidade após fluxo OpenLane | §5 | Pendentes; células genéricas não preenchem área física |
 | R10 | §5, p. 4 | Imagem do GDSII final | §5 | F19 pendente; GDS do exemplo da ferramenta não serve como resultado do processador |
 | R11 | §6, p. 4 | Waveforms comprovando execução do firmware de validação | §6 | F21 oficial no PDF; F20-A/B próprios preservados no repositório |
@@ -58,9 +58,9 @@ simuladas ou ilustrativas apresentadas como waveforms reais.
 
 | Afirmação | Evidência principal | Limite |
 |---|---|---|
-| 44/47 e codificações | `docs/isa/coverage.csv` | Contagem funcional verificada; sistema/sincronização pendente |
-| 32 TBs e lint PASS | `results/experiments/crc-official-20261027/logs/regression.json` | Rodada atual; hashes identificam arquivos |
-| CRC e firmware oficial PASS | `results/experiments/crc-official-20261027/` | Fonte edc7d599; 16 CRCs, 44 tipos e término em x4/loop |
+| 47/47 e codificações | `docs/isa/coverage.csv` | Contagem funcional sob EEI CMOS; imagem oficial exercita 44 tipos |
+| 33 TBs e lint PASS | `results/experiments/isa-47-20261027/logs/regression.json` | Rodada atual; hashes identificam arquivos |
+| CRC e firmware oficial PASS | `results/experiments/isa-47-20261027/` | Fonte edc7d599; 16 CRCs, 44 tipos e término em x4/loop |
 | 598 aposentadorias, 2579 ciclos e SW em 25795 ns | `results/experiments/firmware-wave/` | Smoke próprio reexecutado; VCD e TB conferem a escrita; não é benchmark geral |
 | 32922 células e dois boots na netlist | `results/experiments/simple/simple_synth.json`, `simple_netlist.log` | Histórico antes do CRC corrigido; sem PDK/timing/área física |
 | Ambiente físico aprovado | `results/openlane/environment-smoke.md` | Somente circuito de exemplo LibreLane |
@@ -71,7 +71,7 @@ o fechamento da entrega deve registrar uma rodada nova no commit final.
 
 ## Organização das páginas
 
-Versão 0.6: **12 páginas**, liberando oito dentro do limite. A revisão 0.4 removeu
+Versão 0.7: **12 páginas**, liberando oito dentro do limite. A revisão 0.4 removeu
 repetições e detalhes didáticos do PDF; descrições de módulos e testes foram
 concentradas em tabelas. Os tamanhos de fonte foram preservados.
 

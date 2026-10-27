@@ -1,0 +1,3 @@
+$ vvp /home/luixf/eda/uniccass-icdesign-tools/shared_xserver/cmos-riscv/build/tb_dmem
+PASS dmem: 256 address/mask combinations, read-first, hold and bounds
+/home/luixf/eda/uniccass-icdesign-tools/shared_xserver/cmos-riscv/tb/unit/tb_dmem.sv:40: $finish called at 5316000 (1ps)

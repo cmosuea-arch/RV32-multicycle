@@ -24,8 +24,8 @@ nomes iguais identificam o mesmo fio entre blocos/painéis.
 | result_q/PC → endereço | `rtl/riscv_core.sv` | Endereço de dados mantido também em WRITEBACK de load/store |
 | LSU ↔ barramento | `rtl/lsu.sv`, `rtl/riscv_core.sv` | Extensões, posicionamento, alinhamento e bw condicionado por we |
 | Decoder de endereços ↔ IMEM/DMEM | `rtl/riscv_top.sv`, `rtl/address_decoder.sv` | Bases, alinhamento, seleção do retorno e proteção de ROM |
-| Classificação/erros → FSM | `rtl/control_unit.sv`, `rtl/riscv_core.sv` | MEMORY só para load/store; FAULT até reset |
-| Estado → enables/observação | `rtl/riscv_core.sv` | IR/PC/RF, oe/we/bw e sinais commit_* |
+| Classificação/erros → FSM | `rtl/control_unit.sv`, `rtl/riscv_core.sv` | MEMORY para load/store; TRAP para ECALL/EBREAK; FAULT/TRAP até reset |
+| Estado → enables/observação | `rtl/riscv_core.sv` | IR/PC/RF, oe/we/bw, commit_* e trap_* |
 
 Verde identifica armazenamento arquitetural/intermediário; azul identifica
 funções e caminhos de dados; roxo identifica controle; laranja identifica CRC

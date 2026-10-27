@@ -1,0 +1,2 @@
+$ /home/luixf/eda/uniccass-icdesign-tools/shared_xserver/cmos-riscv/.venv/bin/python /home/luixf/eda/uniccass-icdesign-tools/shared_xserver/cmos-riscv/scripts/sim/programs.py
+PASS generated 88799 instructions; targets=47

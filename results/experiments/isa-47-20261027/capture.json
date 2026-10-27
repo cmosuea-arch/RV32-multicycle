@@ -1,0 +1,21 @@
+{
+  "utc": "2026-10-27T20:52:11.563703+00:00",
+  "tag": "isa-47-v1",
+  "rtl_base_commit": "8c16bce",
+  "scope": "47 instructions under documented CMOS EEI; no synthesis or physical signoff",
+  "testbenches": 33,
+  "unit": 14,
+  "integration": 19,
+  "lint": "PASS",
+  "official_firmware": "PASS",
+  "official_instruction_types": 44,
+  "synthesis_executed": false,
+  "sha256": {
+    "results/experiments/isa-47-20261027/logs/regression.json": "cccfb5ac8464b4951bfe60e1cca1af75060b9a445538b85596727f1ffb29d4ee",
+    "results/experiments/isa-47-20261027/logs/system.json": "df569158fa8ec50475bdd07dbac1e075c89ee85115c3dcfa7b6553234b95a897",
+    "results/experiments/isa-47-20261027/logs/official_firmware.json": "6371f6669b236ba6eca63b3d365410c83d31a7fa841c23096ebd72a686ae3135",
+    "results/experiments/isa-47-20261027/official.vcd.gz": "dd42cedadb2e5d92a8e4a19dedc0b48c3bd3f42266608ae1cb364a7ae146769b",
+    "docs/architecture/system.md": "1020f0eb21232bfb23253534b0d7e1b296e5985929106b6784c455d53f336804",
+    "docs/architecture/interfaces.md": "a47d237082b6d31943b4ade8af1524b10364d5c7a80aef489278f48a4c7e67eb"
+  }
+}

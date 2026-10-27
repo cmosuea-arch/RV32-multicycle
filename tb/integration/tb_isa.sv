@@ -2,6 +2,8 @@
 module tb_isa;
     // Executa o programa ISA e compara cada instrução com o trace arquitetural do Python.
     reg clk=0; always #5 clk=~clk;
+    wire trap,trap_ebreak;
+    wire [31:0] trap_pc;
     reg rst=1;
     wire [31:0] address,data,wdata,commit_pc,commit_instr,commit_data;
     wire oe,we,fault,valid;
@@ -12,7 +14,7 @@ module tb_isa;
     integer fd,status,n,cycles,mfd,checked_bytes,stores=0,physical_writes=0;
     reg [31:0] expected_address;
     reg [7:0] expected_byte;
-    riscv_top #(.IMEM_WORDS(131072),.IMEM_FILE("build/isa.hex")) dut(clk,rst,fault,valid,commit_pc,commit_instr,commit_data,rd);
+    riscv_top #(.IMEM_WORDS(131072),.IMEM_FILE("build/isa.hex")) dut(clk,rst,fault,valid,commit_pc,commit_instr,commit_data,rd,trap,trap_ebreak,trap_pc);
     assign address=dut.address;
     always @(posedge clk) if(!rst&&dut.dmem_we) physical_writes=physical_writes+1;
     // Conta stores físicos para detectar escritas ausentes ou repetidas entre estados da FSM.
@@ -28,7 +30,7 @@ module tb_isa;
                 // Bloco nomeado permite sair com disable quando a instrução esperada termina.
                 forever begin
                     @(posedge clk); cycles=cycles+1;
-                    if(fault) $fatal(1,"ISA fault at pc=%h instruction=%h",address,commit_instr);
+                    if(fault || trap) $fatal(1,"ISA fault at pc=%h instruction=%h",address,commit_instr);
                     if(cycles>1000000) $fatal(1,"ISA timeout");
                     if(valid) begin
                         // Compara efeitos arquiteturais antes da borda concluir a escrita no RF.

@@ -1,0 +1,3 @@
+$ vvp /home/luixf/eda/uniccass-icdesign-tools/shared_xserver/cmos-riscv/build/tb_simple_system
+PASS simple_system: 9 boot/reset/signature/fault checks, Xicrc firmware
+/home/luixf/eda/uniccass-icdesign-tools/shared_xserver/cmos-riscv/tb/integration/tb_simple_system.sv:97: $finish called at 75546000 (1ps)

@@ -18,13 +18,13 @@
 			<text x="30" y="559" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(43%,32%,52%); stroke:none;" transform="translate(0,1118) scale(1,-1)">opcode / funct3 / funct7</text>
 			<text x="30" y="545" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(43%,32%,52%); stroke:none;" transform="translate(0,1090) scale(1,-1)">alu_op, a_pc, b_imm, reg_we</text>
 			<text x="30" y="531" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(43%,32%,52%); stroke:none;" transform="translate(0,1062) scale(1,-1)">branch, jal, jalr, load, store_op</text>
-			<text x="30" y="517" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(43%,32%,52%); stroke:none;" transform="translate(0,1034) scale(1,-1)">mul, crc_op, illegal</text>
+			<text x="30" y="517" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(43%,32%,52%); stroke:none;" transform="translate(0,1034) scale(1,-1)">mul, crc_op, illegal, trap_request</text>
 			<rect x="330" y="495" width="250" height="100" rx="6" ry="6" style="stroke: rgb(43%,32%,52%); stroke-linecap: butt; stroke-width: 1; fill: rgb(95%,94%,98%); fill-rule: evenodd;"/>
 			<text x="340" y="577" style="font-family: DejaVu Sans; font-size: 12px;fill: rgb(43%,32%,52%); stroke:none;" transform="translate(0,1154) scale(1,-1)">Control Unit / FSM</text>
 			<text x="340" y="559" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(43%,32%,52%); stroke:none;" transform="translate(0,1118) scale(1,-1)">FETCH → DECODE → EXECUTE</text>
 			<text x="340" y="545" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(43%,32%,52%); stroke:none;" transform="translate(0,1090) scale(1,-1)">→ [MEMORY] → WRITEBACK → FETCH</text>
-			<text x="340" y="531" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(43%,32%,52%); stroke:none;" transform="translate(0,1062) scale(1,-1)">DECODE ilegal ou fault → FAULT</text>
-			<text x="340" y="517" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(43%,32%,52%); stroke:none;" transform="translate(0,1034) scale(1,-1)">Reset síncrono leva a FETCH.</text>
+			<text x="340" y="531" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(43%,32%,52%); stroke:none;" transform="translate(0,1062) scale(1,-1)">ECALL/EBREAK → TRAP; erro → FAULT</text>
+			<text x="340" y="517" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(43%,32%,52%); stroke:none;" transform="translate(0,1034) scale(1,-1)">Reset recupera FETCH.</text>
 			<polyline points="280 550, 330 550" style="stroke: rgb(43%,32%,52%); stroke-linecap: butt; stroke-width: 1; fill: None; fill-rule: evenodd;"/>
 			<polygon points="330 550, 323 547, 323 553" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(43%,32%,52%); fill-rule: evenodd;"/>
 			<text x="284" y="564" style="font-family: DejaVu Sans; font-size: 9px;fill: rgb(43%,32%,52%); stroke:none;" transform="translate(0,1128) scale(1,-1)">classes</text>
@@ -47,14 +47,15 @@
 			<polyline points="570 495, 590 495, 590 325, 460 325, 460 305" style="stroke: rgb(43%,32%,52%); stroke-linecap: butt; stroke-width: 1; fill: None; fill-rule: evenodd;"/>
 			<polygon points="460 305, 457 312, 463 312" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(43%,32%,52%); fill-rule: evenodd;"/>
 			<text x="470" y="331" style="font-family: DejaVu Sans; font-size: 9px;fill: rgb(43%,32%,52%); stroke:none;" transform="translate(0,662) scale(1,-1)">state[2:0]</text>
-			<rect x="20" y="65" width="560" height="80" rx="6" ry="6" style="stroke: rgb(19%,36%,47%); stroke-linecap: butt; stroke-width: 1; fill: rgb(92%,96%,98%); fill-rule: evenodd;"/>
-			<text x="30" y="127" style="font-family: DejaVu Sans; font-size: 12px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,254) scale(1,-1)">Observação e sincronização</text>
-			<text x="30" y="109" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,218) scale(1,-1)">commit_valid = retire; commit_pc = current_pc; commit_instr = instruction.</text>
-			<text x="30" y="95" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,190) scale(1,-1)">commit_rd = reg_we ? rd : 0; commit_data = commit_rd == 0 ? 0 : WB.</text>
-			<text x="30" y="81" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,162) scale(1,-1)">fault_o = (state == FAULT); interfaces commit são de verificação, não pinagem final.</text>
-			<polyline points="300 190, 300 145" style="stroke: rgb(19%,36%,47%); stroke-linecap: butt; stroke-width: 1; fill: None; fill-rule: evenodd;"/>
-			<polygon points="300 145, 297 152, 303 152" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(19%,36%,47%); fill-rule: evenodd;"/>
-			<text x="310" y="165" style="font-family: DejaVu Sans; font-size: 9px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,330) scale(1,-1)">retire / dados arquiteturais</text>
+			<rect x="20" y="65" width="560" height="90" rx="6" ry="6" style="stroke: rgb(19%,36%,47%); stroke-linecap: butt; stroke-width: 1; fill: rgb(92%,96%,98%); fill-rule: evenodd;"/>
+			<text x="30" y="137" style="font-family: DejaVu Sans; font-size: 12px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,274) scale(1,-1)">Observação e sincronização</text>
+			<text x="30" y="119" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,238) scale(1,-1)">commit_valid = retire; commit_pc = current_pc; commit_instr = instruction.</text>
+			<text x="30" y="105" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,210) scale(1,-1)">commit_rd = reg_we ? rd : 0; commit_data = commit_rd == 0 ? 0 : WB.</text>
+			<text x="30" y="91" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,182) scale(1,-1)">TRAP: sem commit/bus; trap_o, trap_ebreak_o e trap_pc_o expostos ao EEI.</text>
+			<text x="30" y="77" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,154) scale(1,-1)">fault_o = (state == FAULT); observação não define pinagem final.</text>
+			<polyline points="300 190, 300 155" style="stroke: rgb(19%,36%,47%); stroke-linecap: butt; stroke-width: 1; fill: None; fill-rule: evenodd;"/>
+			<polygon points="300 155, 297 162, 303 162" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(19%,36%,47%); fill-rule: evenodd;"/>
+			<text x="310" y="170" style="font-family: DejaVu Sans; font-size: 9px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,340) scale(1,-1)">retire / dados arquiteturais</text>
 			<text x="20" y="40" style="font-family: DejaVu Sans; font-size: 9px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,80) scale(1,-1)">válido = !misaligned &amp;&amp; !lsu_invalid. Address Decoder também bloqueia escrita fora da RAM.</text>
 			<text x="20" y="23" style="font-family: DejaVu Sans; font-size: 9px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,46) scale(1,-1)">Clock/reset: PC, IR, RF, result_q, next_pc_q e FSM. DMEM usa clock e não é apagada por reset.</text>
 			<text x="20" y="6" style="font-family: DejaVu Sans; font-size: 9px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,12) scale(1,-1)">Fonte: rtl/riscv_core.sv, riscv_top.sv, address_decoder.sv e control_unit.sv; revisão 27/10/2026.</text>

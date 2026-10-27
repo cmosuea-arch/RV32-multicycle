@@ -43,7 +43,7 @@ O experimento não encerra requisitos do top final nem do firmware oficial.
 | ID | Lacuna | Evidência | Impacto |
 |---|---|---|---|
 | P01 | Resolvida para a revisão publicada | Contrato implementado; unidade, core e firmware oficial PASS | Perfil padrão ampliado para 44/47 |
-| P02 | nomes e comportamento das 3 instruções sistema/sincronização | PDF p.2: apenas quantidade | bloqueia categoria; não presumir nomes pela contagem |
+| P02 | Implementadas no EEI CMOS | [Contrato e limites](system.md); FENCE ordenada, ECALL/EBREAK com PC e motivo | 47/47 funcionais; eventual protocolo adicional da competição deve ser conferido |
 | P03 | Resolvida para a revisão publicada | Imagem completa, x4 final e loop verificados; log/VCD arquivados | Firmware oficial PASS em RTL; sem declaração de signoff |
 | P04 | pinos UART/GPIO e interface final de submissão | PDF pp.9–10: figura 12 pinos, tabela apenas clk/rst | top físico pendente |
 
@@ -67,3 +67,10 @@ verificadas. O nome EXPERIMENTAL_XICRC foi preservado para não quebrar configur
 seu valor padrão agora é 1, e valor 0 mantém o subconjunto sem CRC. O firmware
 oficial passa no RTL. A simulação usa a imagem publicada sem remontar assembly,
 e só aceita x4 após a escrita final e três commits no loop. Síntese reservada ao usuário.
+
+Fechamento funcional posterior em 27/10: [EEI CMOS](system.md) implementado.
+FENCE preserva a ordenação serial; ECALL/EBREAK entram em TRAP=6, sem
+aposentadoria, expondo trap_o/trap_ebreak_o/trap_pc_o até reset. FAULT=5 continua
+sendo diagnóstico distinto. A interface foi ampliada no core/top de integração;
+o simple_system preserva seus pinos e agrega trap em fault. 47/47 e 33 TBs/lint
+PASS, firmware oficial novamente PASS (44 tipos). Sem síntese nesta revisão.

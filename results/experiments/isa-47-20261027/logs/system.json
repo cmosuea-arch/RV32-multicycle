@@ -1,0 +1,34 @@
+{
+  "status": "PASS",
+  "scope": "CMOS EEI: ordered FENCE and terminal requested traps; not privileged architecture",
+  "utc": "2026-10-27T20:51:14.890624+00:00",
+  "checks": {
+    "FENCE": 512,
+    "ECALL": 256,
+    "EBREAK": 256
+  },
+  "trap_instructions_retired": 0,
+  "result": "PASS core_system: FENCE=512 ECALL=256 EBREAK=256, precise terminal traps, no retirement/side effects, reset recovery",
+  "sha256": {
+    "rtl/address_decoder.sv": "2f1db53a5ad59731511032f2ca98ca4da74de4d127888c49c0cb366549586072",
+    "rtl/alu.sv": "a5dd63d28c1289c402582d1eb9ba9595fb3f53e68b44d8247bdaab79c353b0c6",
+    "rtl/branch_comp.sv": "c913273fa2b70c40eff584f013681236382c7c21464fc3e18d8dae2fc62f7f07",
+    "rtl/control_unit.sv": "64e287537b3db391d9c838c719dd9c8d3881bd78d475c323e447c06a732114e3",
+    "rtl/crc.sv": "17a5d300c4f4a1d913d96107cabeedaa784b82a0a580b170622f10e54d6278f3",
+    "rtl/decoder.sv": "6f6610f0ca00d7a99e7212f7efaff04441c041847c4091298cb4631becfb97c6",
+    "rtl/dmem.sv": "a886be9ed68e29424fd5b4bb4da88b34f129c1b388b7165e9c2bb2df71e2fabe",
+    "rtl/imem.sv": "1402a240f90d74865cf7896d211ef44afcf7d5ec8a2f7796bdefb47c94b690ad",
+    "rtl/imm_ext.sv": "c5e1d6472718267ccfb91e8f996b58a801943dad4d1a0c67b7bea749ee69c72f",
+    "rtl/ir.sv": "3e9e2e3ece2052874efd5dc984006f42a0e6854530545ece13c6f8cdedb27419",
+    "rtl/lsu.sv": "70b54af03974548a4b9613353e1ffb337447370b97a93afda46dfeb5bd5bd86f",
+    "rtl/multiplier.sv": "07386aa3ccfbc3bdbc93f3975eb5ceb7ad48b047aa83d4b69c5457e58d4e37a3",
+    "rtl/pc.sv": "0cc1f3eb540f710a2376b320afcf1201953e4ac0e23e1ad024655dae481809eb",
+    "rtl/regfile.sv": "e0f07fef591a0adf5fe83befb6a0a7e670cbbf2f40d328ca7bdd038db3600833",
+    "rtl/riscv_core.sv": "841631d5aff6c701f70156d1907f1c182c78e6aebbe7de4a63a2e6adda44852e",
+    "rtl/riscv_top.sv": "88d8304bf7665d055b1570b4b0e03d975203c7291236e3d9c7d0a5ef30da9dee",
+    "rtl/simple_system.sv": "f3f3d0b11edc0259807a975ba54e17440a66863651a92f4338056b81997706f2",
+    "tb/integration/tb_core_system.sv": "bab18f79f4b6ab315146bce3d1eef7331f092089c46b309d11351dc908224846",
+    "scripts/sim/isa.py": "6613cb55939ce43ed8d1c1d153eece4761bf5b10696ba6a76275dcd223e50c9e",
+    "scripts/sim/programs.py": "b4343a53209305ebf89f05c92976b2c0af4202d150f93866ce678a4b44f5136e"
+  }
+}

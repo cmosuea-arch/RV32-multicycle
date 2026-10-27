@@ -1,4 +1,4 @@
-# Datapath integrado — perfil de 44 instruções
+# Datapath integrado — perfil de 47 instruções
 
 Fonte principal: Block Guide, seções 2–4, páginas físicas 9–23 do PDF combinado.
 
@@ -13,6 +13,7 @@ flowchart TB
  IR --> IMM[Immediate Extension]
  IR --> RF[Register File 32 x 32]
  DEC --> FSM[FSM]
+ FSM --> EEI[Ambiente CMOS: trap / motivo / PC]
  RF --> A[Mux A: rs1 / PC]
  RF --> B[Mux B: rs2 / imediato]
  PC[PC 32 bits] --> A
@@ -71,8 +72,11 @@ o [contrato oficial implementado](crc.md) foi validado com o firmware publicado.
 | MEMORY (4), só load/store | DMEM registra leitura ou efetua escrita mascarada | endereço = result_q |
 | WRITEBACK (3) | RF recebe resultado/load e PC recebe next_pc_q | load conserva endereço/oe; store não repete escrita |
 | FAULT (5) | retém estado até reset | sem oe/we/writeback |
+| TRAP (6), ECALL/EBREAK | retém PC/IR; expõe pedido e motivo até reset | sem oe/we/writeback/commit |
 
 Instruções normais usam quatro ciclos; loads/stores, cinco. Reset síncrono leva
 ao FETCH e endereço inicial. A política de FAULT é diagnóstico CMOS, não um
 ambiente de exceções privilegiadas. Diagramas Mermaid estão versionados;
 reprodução no ChipInventor para a submissão permanece um entregável separado.
+FENCE preserva a ordem serial e usa quatro ciclos. ECALL/EBREAK solicitam trap
+preciso em EXECUTE e não aposentam. Ver [contrato EEI CMOS](system.md).

@@ -1,6 +1,6 @@
 # CMOS RISC-V — Relatório técnico da Fase 2
 
-**Versão preliminar 0.6 — 27 de outubro de 2026**
+**Versão preliminar 0.7 — 27 de outubro de 2026**
 
 Equipe: CMOS. Integrantes, instituição e orientador: **a preencher**.
 Repositório: cmosuea-arch/RV32-multicycle. Rodada atual: 27/10, hashes em [R4].
@@ -17,8 +17,8 @@ conforme o Block Guide ChampionCHIP: RV32I, Zmmul e Xicrc, com meta de
 
 `riscv_core` integra PC, IR, banco de registradores, imediatos, decoder, ALU,
 comparador de branch, multiplicador, LSU e controle. `riscv_top` conecta o núcleo
-a IMEM, DMEM e decoder de endereços. A configuração padrão verifica **44/47
-instruções (93,62%)**, incluindo CRCB/CRCH/CRCW conforme o firmware oficial.
+a IMEM, DMEM e decoder de endereços. A configuração padrão verifica **47/47
+instruções (100%)**, incluindo CRCB/CRCH/CRCW conforme o firmware oficial.
 O parâmetro histórico `EXPERIMENTAL_XICRC` vale 1 por padrão [R2, R3].
 
 A execução segue `FETCH → DECODE → EXECUTE → WRITEBACK`. Loads/stores acrescentam
@@ -50,7 +50,7 @@ coordena os comandos. Logs e hashes SHA-256 identificam o conteúdo verificado.
 Os vetores são determinísticos; firmware compilado complementa os programas
 gerados pelo modelo Python [R2, R4].
 
-A rodada de 27/10 aprovou 32 TBs e lint dos dois tops. O firmware oficial
+A rodada de 27/10 aprovou 33 TBs e lint dos dois tops. O firmware oficial
 concluiu a validação e sua captura VCD foi conferida. A síntese genérica
 histórica antecede a correção do CRC; a nova síntese e o fluxo físico ficam
 para execução pelo usuário [R3–R7].
@@ -70,18 +70,18 @@ para execução pelo usuário [R3–R7].
 | Branch | 6 | 6 | 100% | BEQ, BNE, BLT, BGE, BLTU, BGEU |
 | Jump | 2 | 2 | 100% | JAL, JALR |
 | Upper Immediate | 2 | 2 | 100% | LUI, AUIPC |
-| Sistema / Sincronização | 3 | 0 | 0% | Definições oficiais pendentes |
+| Sistema / Sincronização | 3 | 3 | 100% | FENCE, ECALL, EBREAK (EEI CMOS) |
 | Multiplication | 4 | 4 | 100% | MUL, MULH, MULHSU, MULHU |
 | CRC | 3 | 3 | 100% | CRCB, CRCH, CRCW |
-| **Total** | **47** | **44** | **93,62%** | **Perfil integrado e verificado** |
+| **Total** | **47** | **47** | **100%** | **Perfil integrado e verificado** |
 
 **Firmware oficial:** 44 tipos de instrução exercitados, com término real em x4.
-As três instruções de sistema/sincronização não são enumeradas nessa revisão
-do firmware; a meta 47 do guia não foi reduzida por suposição.
+FENCE, ECALL e EBREAK usam testes próprios sob o EEI CMOS. Os nomes vêm do
+manual RV32I referenciado pelo Block Guide; a imagem oficial não as exercita.
 
 A contagem exige decode, execução integrada e regressão, com evidência por
-instrução em [R3]. Os três nomes/códigos de sistema não foram presumidos apenas
-pela quantidade indicada no guia.
+instrução em [R3]. ECALL/EBREAK geram traps precisos, sem aposentadoria;
+o ambiente CMOS encerra a execução até reset, sem implementar CSRs.
 
 ### 2.2 Convenções das codificações
 
@@ -90,7 +90,7 @@ usado como discriminador; seus bits podem fazer parte do imediato. Em shifts
 imediatos, funct7 discrimina a operação e shamt tem cinco bits. PASS_B é uma
 operação interna da ALU, sem acrescentar instrução à cobertura.
 
-As 44 codificações implementadas foram conferidas com
+As 47 codificações implementadas foram conferidas com
 `docs/isa/coverage.csv`. A matriz contém testes, firmware oficial, marco Git e
 caminho da evidência por instrução; versões Markdown/Excel acompanham o CSV.
 
@@ -167,6 +167,17 @@ primeiro dentro dos 8/16/32 bits selecionados. CRC16/CCITT-FALSE usa polinômio
 software. A mensagem 12 34 56 78 90 AB CD EF resulta em 1E82 nos três tamanhos;
 ASCII 123456789 resulta em 29B1. RTL/modelo/firmware próprio foram adequados [R3, R7].
 
+### 2.6 Codificação — sistema/sincronização
+
+| Instrução | Opcode [6:0] | Funct3 [14:12] | Palavra / campos adicionais |
+|---|---|---|---|
+| FENCE | 0001111 | 000 | fm/pred/succ; exemplo 0x0ff0000f |
+| ECALL | 1110011 | 000 | Palavra exata 0x00000073 |
+| EBREAK | 1110011 | 000 | Palavra exata 0x00100073 |
+
+FENCE preserva a ordem serial sem escrita. Traps expõem trap_o, trap_ebreak_o
+(0=ECALL, 1=EBREAK) e trap_pc_o. Não há retorno de trap neste EEI [R2, R3].
+
 <!-- pagebreak -->
 
 ## 3. Datapath
@@ -200,8 +211,9 @@ em MEMORY e WRITEBACK de load/store; o store não repete escrita em WRITEBACK.
 
 **Figura F01-C.** Decoder gera seleções/classes; FSM e lógica do core geram
 enables e oe/we/bw. Instruções sem acesso a dados usam quatro ciclos;
-loads/stores, cinco. FAULT é diagnóstico CMOS até reset. commit_* observa a
-aposentadoria para os TBs; não define a pinagem final.
+loads/stores, cinco. ECALL/EBREAK entram em TRAP sem commit; trap_* informa
+PC/motivo ao EEI. FAULT indica erro. Ambos retêm estado até reset; os sinais
+de observação não definem a pinagem final.
 
 <!-- pagebreak -->
 
@@ -242,17 +254,18 @@ com pinos e larguras legíveis. Os painéis podem agrupar módulos relacionados.
 | lsu | Seleção/extensão de loads; posicionamento/máscara de stores | tb_lsu | 8.960 vetores; byte/half/word, offsets, sinal e alinhamento |
 | dmem | Leitura/escrita síncronas; preserva bytes não selecionados | tb_dmem | 256 combinações posição/máscara, read-first e limites |
 | address_decoder | Seleção IMEM/DMEM, retorno, controles e proteção da ROM | tb_address_decoder | 768 combinações faixa/pedido/máscara |
-| decoder | Decodifica opcode/funct3/funct7; Xicrc habilitado | tb_decoder | 131.072 combinações de campos por perfil; válidos e inválidos |
-| control_unit | FSM FETCH / DECODE / EXECUTE / MEMORY / WRITEBACK / FAULT | tb_control_unit | Transições, classes, falhas e reset |
+| decoder | Decodifica opcode/funct3/funct7; Xicrc habilitado | tb_decoder | 131.138 palavras por perfil; SYSTEM exatas/vizinhas e demais campos |
+| control_unit | FSM multiciclo com FAULT e TRAP terminais | tb_control_unit | Transições, classes, falhas e reset |
 | crc | CRC-16 Xicrc combinacional; 1/2/4 bytes | tb_crc | 18.304 vetores e respostas 29B1/1E82 |
-| riscv_core | Integra execução, controle e barramento compartilhado | tb_core_smoke; tb_isa | PC, instrução, destino, dado e RF por aposentadoria |
+| riscv_core | Integra execução, controle e barramento compartilhado | tb_isa; tb_core_system | PC/RF por aposentadoria; FENCE ordenada e traps precisos |
 | riscv_top | Liga core, decoder de endereços e memórias | tb_official_firmware; tb_memory_faults | Firmware, acessos e bloqueio de efeitos inválidos |
-| simple_system | Sistema pequeno com CRC e saídas de término/sucesso/falha | tb_simple_system | Sete cenários de boot/reset/assinatura/falha |
+| simple_system | Sistema pequeno com CRC e saídas de término/sucesso/falha | tb_simple_system | Nove cenários de boot/reset/assinatura/falha/trap |
 
-**Resultado agregado:** 14 TBs unitários + 18 de integração e lint PASS em
-27/10/2026. `tb_isa`: 88.727 aposentadorias, 45 stores e 12 bytes finais.
+**Resultado agregado:** 14 TBs unitários + 19 de integração e lint PASS em
+27/10/2026. `tb_isa`: 88.794 aposentadorias, 46 stores e 12 bytes finais.
 CRC integrado: 2.146 CRCs em 32.930 aposentadorias. O teste negativo com o
-CRC anterior produz a falha oficial esperada. Síntese atual não executada [R4, R7].
+CRC anterior produziu a falha oficial na rodada histórica. Sistema: 512 FENCE,
+256 ECALL e 256 EBREAK, sem efeitos posteriores e com reset. Sem síntese [R4, R7].
 
 Python gera referências determinísticas; o TB encerra com erro em divergência.
 O executor rejeita falha, timeout, diagnóstico de compilação ou ausência de PASS.
@@ -301,7 +314,7 @@ PASS firmware: signature 600dc0de, 598 retirements, 2579 cycles
 ```
 
 O experimento simple_system também executa firmware próprio com os três CRCs;
-usa assinatura em `0x100103f0`, ROM 2 KiB e RAM 1 KiB, e passou nos sete cenários RTL atuais. A netlist de referência é histórica [R4, R5].
+usa assinatura em `0x100103f0`, ROM 2 KiB e RAM 1 KiB, e passou nos nove cenários RTL atuais. A netlist de referência é histórica [R4, R5].
 
 ### 6.2 Firmware oficial
 
@@ -319,7 +332,7 @@ CRC=16, ISA=44, terminal loop verified
 
 ### 6.3 Waveform do firmware oficial
 
-![Figura F21: término real do firmware oficial](../../results/experiments/crc-official-20261027/official-success.png)
+![Figura F21: término real do firmware oficial](../../results/experiments/isa-47-20261027/official-success.png)
 
 **Figura F21 — Janela de 10.090–10.266 ns da captura de 27/10/2026.**
 Na borda de **10.145 ns**, WRITEBACK conclui a instrução no PC 004003E8,
@@ -349,12 +362,12 @@ requisitos: [conformidade.md](conformidade.md).
 [fontes das figuras](../architecture/figures/README.md).
 
 **[R3] ISA.** [Matriz CSV](../isa/coverage.csv), [versão legível](../isa/coverage.md),
-[contrato CRC](../architecture/crc.md) e
+[contrato CRC](../architecture/crc.md), [EEI CMOS](../architecture/system.md) e
 [matriz experimental](../isa/experimental_crc.md).
 
 **[R4] Verificação.** [Alcance dos testes](../verification.md),
-[manifesto da rodada completa](../../results/experiments/crc-official-20261027/logs/regression.json),
-[evidências CRC atuais](../../results/experiments/crc-official-20261027/README.md),
+[manifesto da rodada completa](../../results/experiments/isa-47-20261027/logs/regression.json),
+[evidências ISA atuais](../../results/experiments/isa-47-20261027/README.md),
 [Makefile](../../Makefile), [roteiro](../testing_roadmap.md) e
 [laboratório](../../labs/rtl-to-gds/README.md).
 
@@ -372,12 +385,12 @@ requisitos: [conformidade.md](conformidade.md).
 
 Os manifestos comprovam os conteúdos das respectivas rodadas. O fechamento da
 entrega deve vincular código, testes, firmware e resultados físicos ao commit
-final. Autoria, diagramas ChipInventor, resultados físicos e validação oficial
-ainda devem ser incorporados e revisados antes da submissão.
+final. Autoria, diagramas ChipInventor e resultados físicos ainda devem ser
+incorporados e revisados antes da submissão.
 
 **[R7] Firmware oficial e validação, 27/10/2026.**
 [Origem/revisão/hashes](../../firmware/official/source.json),
-[registro da rodada](../../results/experiments/crc-official-20261027/README.md),
-[log oficial](../../results/experiments/crc-official-20261027/logs/tb_official_firmware.log),
-[verificação do VCD](../../results/experiments/crc-official-20261027/waveform.json) e
-[VCD comprimido](../../results/experiments/crc-official-20261027/official.vcd.gz).
+[registro da rodada](../../results/experiments/isa-47-20261027/README.md),
+[log oficial](../../results/experiments/isa-47-20261027/logs/tb_official_firmware.log),
+[verificação do VCD](../../results/experiments/isa-47-20261027/waveform.json) e
+[VCD comprimido](../../results/experiments/isa-47-20261027/official.vcd.gz).

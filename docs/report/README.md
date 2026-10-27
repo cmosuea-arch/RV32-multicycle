@@ -4,10 +4,10 @@
 - [Prévia PDF](relatorio-preliminar.pdf): versão preliminar, não pronta para submissão.
 - [Conferência dos requisitos](conformidade.md): exigência, página de origem e pendência.
 
-**Versão 0.6, 27/10:** CRC adequado, 44/47 instruções, 32 TBs/lint e firmware
+**Versão 0.7, 27/10:** 47/47 sob o EEI CMOS, 33 TBs/lint e firmware
 oficial PASS. O PDF inclui a figura F21 real, conferida com log/VCD, mantendo
 12 páginas e espaço para diagramas/resultados físicos.
-[Evidências da rodada](../../results/experiments/crc-official-20261027/README.md).
+[Evidências da rodada](../../results/experiments/isa-47-20261027/README.md).
 A síntese da nova versão não foi executada, conforme orientação do usuário.
 
 O documento descreve arquitetura, desenvolvimento incremental, RTL, testes,
@@ -63,9 +63,9 @@ Para reexportar a figura oficial a partir da captura identificada:
 
 ```bash
 build/report-venv/bin/python scripts/report/official_waveforms.py \
-  --vcd results/experiments/crc-official-20261027/official.vcd.gz \
-  --log results/experiments/crc-official-20261027/logs/tb_official_firmware.wave.log \
-  --output results/experiments/crc-official-20261027
+  --vcd results/experiments/isa-47-20261027/official.vcd.gz \
+  --log results/experiments/isa-47-20261027/logs/tb_official_firmware.wave.log \
+  --output results/experiments/isa-47-20261027
 ```
 
 A geração das figuras usa Ghostscript (`gs`); a fonte editável e a conferência
@@ -120,3 +120,7 @@ substituir pendências por resultados comprovados; atualizar commit, fontes e
 evidências; gerar o PDF final e revisar todas as páginas. O título e a marcação
 de rascunho só devem mudar depois dessa revisão. A lista detalhada está em
 [conformidade.md](conformidade.md).
+
+Revisão 0.7: FENCE/ECALL/EBREAK implementadas e testadas; traps são eventos
+separados de aposentadoria. A imagem oficial continua exercitando 44 tipos.
+[Contrato EEI CMOS](../architecture/system.md). Nenhuma síntese foi executada.

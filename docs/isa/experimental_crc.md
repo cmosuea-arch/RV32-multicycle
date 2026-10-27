@@ -1,7 +1,7 @@
 # Matriz experimental CRC — contrato CMOS, 2026-10-13
 
 **Histórico substituído em 27/10.** O contrato oficial foi implementado e as três
-instruções agora pertencem ao perfil padrão de [44/47](coverage.md). Veja
+instruções agora pertencem ao perfil padrão de [47/47](coverage.md). Veja
 [crc.md](../architecture/crc.md) e a
 [rodada atual](../../results/experiments/crc-official-20261027/README.md).
 O conteúdo abaixo descreve a implementação anterior, sem misturar as evidências.

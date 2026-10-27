@@ -63,7 +63,7 @@ assinatura incorreta e instrução inválida. O CRC usado aqui segue o
 [contrato oficial Xicrc](../../docs/architecture/crc.md).
 
 Para fechar uma alteração funcional antes de sintetizar, use também
-`make regression`: são 32 TBs e lint. Fazer esta aula não exige reescrever os módulos.
+`make regression`: são 33 TBs e lint. Fazer esta aula não exige reescrever os módulos.
 
 ## Execução automática
 

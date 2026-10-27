@@ -42,5 +42,8 @@
   "MULHU",
   "CRCB",
   "CRCH",
-  "CRCW"
+  "CRCW",
+  "FENCE",
+  "ECALL",
+  "EBREAK"
 ]

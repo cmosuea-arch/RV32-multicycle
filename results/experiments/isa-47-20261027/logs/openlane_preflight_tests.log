@@ -1,0 +1,6 @@
+$ python3 scripts/openlane/test_run_simple.py
+.....
+----------------------------------------------------------------------
+Ran 5 tests in 0.020s
+
+OK

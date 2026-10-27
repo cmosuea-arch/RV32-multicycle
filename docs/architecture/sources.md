@@ -8,7 +8,9 @@
   e endereços; README descreve integração, x4 de término e mock físico.
 - [Manifesto de origem](../../firmware/official/source.json), com hashes e URLs fixas.
   [Contrato extraído e diferenças do RTL](crc_official_20261027.md).
-- Consulta de fontes e comparação Python; sem execução do core ou síntese.
+- A consulta inicial cobriu fontes/modelo Python. Posteriormente, a imagem
+  passou no core: [rodada atual de 47/47](../../results/experiments/isa-47-20261027/README.md).
+  Síntese da versão atual não executada.
 
 ## Baseline normativa
 
@@ -22,6 +24,10 @@
 
 Consultadas em 2026-09-11. Implementação própria. Guias ChampionCHIP têm prioridade
 para arquitetura/entregáveis; os padrões esclarecem semântica da ISA.
+
+Revisão de 27/10/2026: o manual RV32I e `riscv-opcodes/rv_i` foram conferidos
+para FENCE, ECALL e EBREAK. O Block Guide remete ao manual em §1.2 e exige
+RV32I em §§2.1/2.4. Ver [identificação e limites da pendência de sistema](system_audit_20261027.md).
 
 ## Complemento recebido em 20/10/2026
 

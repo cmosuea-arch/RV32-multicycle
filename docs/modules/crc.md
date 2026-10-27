@@ -44,17 +44,20 @@ Core: 2.146 CRCs em 32.930 aposentadorias; rd=rs1/rs2, x0, memória e reset.
 Firmware oficial completo: 16 CRCs e término real em x4. Decoder testa os dois perfis.
 
 ## Resultado
-[Regressão de 27/10](../../results/experiments/crc-official-20261027/README.md):
-32 TBs/lint PASS, firmware oficial PASS, teste negativo detecta o CRC anterior.
+[Regressão atual](../../results/experiments/isa-47-20261027/README.md):
+33 TBs/lint PASS e firmware oficial PASS. A
+[rodada anterior](../../results/experiments/crc-official-20261027/README.md)
+preserva o teste negativo que detecta o CRC antigo.
 
 ## Integração
 Resultado de CRC selecionado e registrado em EXECUTE, writeback em WRITEBACK.
-FSM e codificações preservadas. O perfil padrão tem 44/47 instruções verificadas.
+FSM e codificações preservadas. O perfil padrão tem 47/47 instruções verificadas sob o EEI CMOS.
 
 ## Commit validado
 A rodada identificada possui hashes de RTL, modelo, testes, ROM e scripts em
-regression.json e official_firmware.json. O commit de adequação será identificado no Git.
+regression.json e official_firmware.json. Adequação CRC em 8c16bce/isa-44-v1;
+integração de 47 instruções em isa-47-v1.
 
 ## Pendências
 Síntese do CRC atualizado, área/timing e diagramas ChipInventor para submissão.
-As três instruções de sistema e a interface física final são pendências separadas.
+A interface física final permanece pendente; sistema passa sob o EEI CMOS.

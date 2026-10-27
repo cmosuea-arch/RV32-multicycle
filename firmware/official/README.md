@@ -32,8 +32,10 @@ CRC=16, ISA=44, terminal loop verified
 ```
 
 [Logs, VCD e figura real](../../results/experiments/crc-official-20261027/README.md).
-A cobertura é 44/47; as três instruções de sistema da tabela do guia continuam
-sem definição. Esse PASS não constitui síntese ou signoff físico.
+A imagem publicada exercita 44 tipos. O perfil integrado atingiu 47/47 com
+[testes próprios de sistema](../../docs/architecture/system.md), sem modificar
+a imagem oficial. [Rodada atual](../../results/experiments/isa-47-20261027/README.md).
+Esse PASS não constitui síntese ou signoff físico.
 
 ```bash
 make official-fetch  # primeira preparação: download explícito com revisão/SHA

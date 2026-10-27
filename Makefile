@@ -10,7 +10,7 @@ PYTHON ?= $(if $(wildcard .venv/bin/python),.venv/bin/python,python3)
 
 # .PHONY faz os comandos executarem mesmo se existir um arquivo com o nome do alvo.
 .PHONY: help clean setup update doctor setup-openlane \
-        tb unit integration smoke lint test regression \
+        tb unit integration smoke lint test regression system \
         firmware run wave simple-firmware simple-system simple-synth \
         official-fetch official-image official-run official-wave \
         openlane-env-check openlane-env-smoke openlane-shell \
@@ -43,7 +43,7 @@ tb: ## Executa uma bancada: make tb TB=tb_alu
 unit: ## Testa os 14 blocos isolados, incluindo Xicrc.
 	$(PYTHON) scripts/regression/run.py --suite unit
 
-integration: ## Executa as 18 bancadas de integração, incluindo firmware oficial.
+integration: ## Executa as 19 bancadas de integração, incluindo sistema e firmware oficial.
 	$(PYTHON) scripts/regression/run.py --suite integration
 
 smoke: ## Executa quatro integrações rápidas para conferir o básico.
@@ -52,11 +52,14 @@ smoke: ## Executa quatro integrações rápidas para conferir o básico.
 lint: ## Analisa o RTL com Verilator, sem executar simulação.
 	$(PYTHON) scripts/regression/run.py --lint-only
 
-test: ## Executa todos os 32 testbenches, sem lint; é o comando padrão.
+test: ## Executa todos os 33 testbenches, sem lint; é o comando padrão.
 	$(PYTHON) scripts/regression/run.py
 
 regression: ## Executa todos os testes e lint; use para validar uma alteração.
 	$(PYTHON) scripts/regression/run.py --with-lint
+
+system: ## Verifica FENCE e os traps precisos de ECALL/EBREAK, sem síntese.
+	$(PYTHON) scripts/regression/run.py --test tb_core_system
 
 
 # 3. Executar o processador baseline com nosso firmware C/assembly.

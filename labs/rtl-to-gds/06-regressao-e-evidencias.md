@@ -20,8 +20,8 @@ git status --short
 ```
 
 O smoke deve informar quatro bancadas aprovadas. A regressão completa deve informar
-32 testbenches, lint PASS, firmware próprio com assinatura `600dc0de` e cobertura
-44/47. Se qualquer etapa falhar, investigue antes de aceitar a rodada.
+33 testbenches, lint PASS, firmware próprio com assinatura `600dc0de` e cobertura
+47/47. Se qualquer etapa falhar, investigue antes de aceitar a rodada.
 
 ## Leia as evidências
 
@@ -104,7 +104,7 @@ Após corrigir, refaça o teste local e a regressão. Não altere referências o
 
 ## Exercício e critério para avançar
 
-Um arquivo CSV continua com 44/47 depois de uma falha: isso prova que o código atual
+Um arquivo CSV continua com 47/47 depois de uma falha: isso prova que o código atual
 passou? Não. Ele pode ser resultado da rodada anterior. Confira status, hashes,
 logs e saída do comando. Avance com regressão PASS e sabendo distinguir evidência
 de uma rodada de arquivos históricos que permanecem no disco.

@@ -1,10 +1,11 @@
 # Estado do projeto — 2026-10-27
 
-**44/47 instruções (93,62%)**, com Xicrc habilitado por padrão. Matriz:
+**47/47 instruções (100%)**, com Xicrc habilitado por padrão. Matriz:
 [coverage.md](isa/coverage.md) / [Excel](isa/coverage.xlsx).
-[Rodada identificada de 27/10](../results/experiments/crc-official-20261027/README.md).
-O projeto completo permanece NOT DONE: sistema/sincronização, interface final,
-resultados físicos e fechamento da entrega ainda faltam.
+[Rodada identificada de 27/10](../results/experiments/isa-47-20261027/README.md).
+O projeto completo permanece NOT DONE: interface final, diagramas, resultados
+físicos e fechamento da entrega ainda faltam. Sistema/sincronização passa sob o
+[contrato EEI CMOS](architecture/system.md), sem arquitetura privilegiada.
 
 ## Resultado atual
 
@@ -16,21 +17,21 @@ EXPERIMENTAL_XICRC agora vale 1 por padrão; 0 preserva o subconjunto sem CRC.
 
 | Marco | Estado | Evidência / limite |
 |---|---|---|
-| M0 — contratos | Parcial | Blocos implementados; interface final/sistema pendentes |
+| M0 — contratos | Parcial | Blocos implementados; interface final pendente |
 | M1/M2 — datapath e primeira instrução | PASS | Regressão preserva os blocos e o primeiro programa |
 | M3–M6 — RV32I/Zmmul | PASS | Tags históricas isa-21-v1 até isa-41-v1; nova regressão preservada |
 | M7 — Xicrc | PASS funcional | Unidade, decoder, core, ISA e firmware oficial na revisão de 27/10 |
-| M8 — ISA completa | NOT DONE | Faltam 3 instruções de sistema/sincronização ainda não enumeradas |
+| M8 — ISA completa | PASS funcional no EEI CMOS | FENCE ordenada e traps precisos ECALL/EBREAK; 47/47 sob o contrato documentado |
 | M9 — firmware oficial publicado | PASS na simulação RTL | 252 aposentadorias, 1026 ciclos, 16 CRCs, 44 tipos exercitados |
-| M10 — RTL final | NOT DONE | Faltam M8, interface final e tag da entrega |
+| M10 — RTL final | NOT DONE | Interface final, diagramas e tag final da entrega pendentes |
 | M11/M12 — fluxo físico/GDSII | NOT DONE | Síntese da versão atual reservada ao usuário |
 | Ambiente físico | PASS histórico | Smoke LibreLane do circuito de exemplo, sem validar o processador |
-| simple_system | PASS em RTL | 7 cenários, firmware próprio ajustado; netlist anterior é histórica |
+| simple_system | PASS em RTL | 9 cenários, firmware próprio ajustado; netlist anterior é histórica |
 
-Regressão atual: **32 TBs PASS (14 unitários + 18 integrações) e lint dos dois tops PASS**.
-ISA: 88.727 aposentadorias, 45 stores físicos e 12 bytes finais comparados.
+Regressão atual: **33 TBs PASS (14 unitários + 19 integrações) e lint dos dois tops PASS**.
+ISA: 88.794 aposentadorias, 46 stores físicos e 12 bytes finais comparados.
 CRC: 18.304 vetores e 2.146 operações em 32.930 aposentadorias no teste dedicado.
-O decoder varre 131.072 combinações com CRC habilitado e desabilitado.
+O decoder verifica 131.138 palavras (varredura de campos, SYSTEM exatas e vizinhas) com CRC habilitado e desabilitado.
 Firmware próprio baseline: 598 aposentadorias/2579 ciclos e assinatura 600dc0de.
 
 O programa oficial foi carregado a partir de firmware.txt, sem remontagem,
@@ -63,14 +64,16 @@ fecha automaticamente os requisitos físicos da competição.
 
 ## Pendências da entrega
 
-1. Confirmar nomes/códigos/comportamento das três instruções de sistema/sincronização.
+1. Conferir eventual protocolo adicional de traps exigido pela competição; o
+   [EEI CMOS](architecture/system.md) está implementado e testado. O firmware
+   publicado cobre 44 tipos; as três de sistema têm testes próprios.
 2. Fechar interface do top final, pinos/periféricos e estratégia física das memórias.
 3. Incorporar os diagramas ChipInventor, a cargo do outro colaborador.
 4. Executar/revisar síntese e fluxo físico da versão escolhida; obter área/densidade,
    timing, DRC/LVS/antena e GDSII identificados.
 5. Fechar relatório, autoria, vídeo de 5–7 minutos, pacote e tag final.
 
-O relatório preliminar v0.6 incorpora CRC e execução oficial, preservando espaço
+O relatório preliminar v0.7 incorpora 47/47, contrato EEI e execução oficial, preservando espaço
 para diagramas e resultados físicos. Fontes e lacunas:
 [questões oficiais](architecture/official_questions.md) e
 [roteiro de conclusão](completion_roadmap.md).

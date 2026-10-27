@@ -69,7 +69,7 @@ executor ao mesmo tempo: elas compartilham os mesmos caminhos.
 
 Os códigos apresentados são os do repositório, acessíveis pelos links. Não há cópia
 didática de RTL para manter sincronizada. Comentários curtos foram adicionados aos
-33 testbenches (32 de RTL e um de netlist) e aos blocos usados no percurso.
+34 testbenches (33 de RTL e um de netlist) e aos blocos usados no percurso.
 Não é necessário alterar o código para fazer as práticas.
 
 Para se orientar: `make run` executa o firmware baseline; `make simple-system`
@@ -78,9 +78,10 @@ simula sua netlist. `make help` descreve todos os comandos.
 
 ## Alcance
 
-O perfil atual tem **44/47 instruções (93,62%)**. A regressão atual tem 14 TBs unitários
-e 18 de integração, incluindo Xicrc, firmware oficial e simple_system. O teste da netlist
-é adicional, executado por `make simple-synth`. Sistema/sincronização e top físico final têm [pendências registradas](../../docs/architecture/official_questions.md).
+O perfil atual tem **47/47 instruções (100%)**. A regressão atual tem 14 TBs unitários
+e 19 de integração, incluindo Xicrc, firmware oficial e simple_system. O teste da netlist
+é adicional, executado por `make simple-synth`. FENCE/ECALL/EBREAK passam sob o [EEI CMOS](../../docs/architecture/system.md);
+o top físico final tem [pendências registradas](../../docs/architecture/official_questions.md).
 O [simple_system](../../docs/modules/simple_system.md) já possui RTL, firmware,
 TB e síntese genérica histórica. A configuração física está preparada; a nova execução fica com o usuário.
 O smoke test do LibreLane valida o ambiente com um circuito de exemplo.
@@ -90,7 +91,7 @@ o [roteiro operacional](../../docs/testing_roadmap.md).
 
 ## Validação deste material
 
-A rodada atual registra [32 TBs/lint e firmware oficial PASS](../../results/experiments/crc-official-20261027/README.md).
+A rodada atual registra [33 TBs/lint, 47/47 e firmware oficial PASS](../../results/experiments/isa-47-20261027/README.md).
 O registro histórico de 13/10 do sistema experimental aprovou 31 TBs/lint,
 síntese genérica e dois boots na netlist: [rodada do simple_system](../../results/experiments/simple/README.md).
 O comando `make run` foi validado após a reorganização do Makefile, com assinatura

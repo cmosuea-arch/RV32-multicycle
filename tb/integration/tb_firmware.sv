@@ -2,12 +2,14 @@
 module tb_firmware;
     // Executa o firmware C/assembly compilado até observar sua assinatura de término na RAM.
     reg clk=0; always #5 clk=~clk;
+    wire trap,trap_ebreak;
+    wire [31:0] trap_pc;
     reg rst=1;
     wire fault,valid;
     wire [31:0] cpc,ci,cd;
     wire [4:0] rd;
     integer cycles,n=0;
-    riscv_top #(.IMEM_WORDS(4096),.IMEM_FILE("build/smoke.hex")) dut(clk,rst,fault,valid,cpc,ci,cd,rd);
+    riscv_top #(.IMEM_WORDS(4096),.IMEM_FILE("build/smoke.hex")) dut(clk,rst,fault,valid,cpc,ci,cd,rd,trap,trap_ebreak,trap_pc);
     initial begin
         // +WAVE, usado por make wave, habilita a gravação dos sinais do core em VCD.
         if($test$plusargs("WAVE")) begin
@@ -18,7 +20,7 @@ module tb_firmware;
         for(cycles=0;cycles<100000;cycles=cycles+1) begin
             // Monitora falha, instruções concluídas e limite de ciclos para detectar travamento.
             @(posedge clk);
-            if(fault) $fatal(1,"firmware fault pc=%h instr=%h",cpc,ci);
+            if(fault || trap) $fatal(1,"firmware fault pc=%h instr=%h",cpc,ci);
             if(valid) n=n+1;
             if(dut.dmem_we&&dut.mem_address==32'h10011ff0) begin
                 // Sucesso exige assinatura 600dc0de escrita como palavra completa (bw=f).

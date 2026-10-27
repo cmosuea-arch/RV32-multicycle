@@ -1,0 +1,4 @@
+$ vvp /home/luixf/eda/uniccass-icdesign-tools/shared_xserver/cmos-riscv/build/tb_official_firmware +WAVE
+VCD info: dumpfile results/waveforms/official.vcd opened for output.
+PASS official_firmware: x4=00000000, 252 retirements, 1026 cycles, CRC=16, ISA=44, terminal loop verified
+/home/luixf/eda/uniccass-icdesign-tools/shared_xserver/cmos-riscv/tb/integration/tb_official_firmware.sv:58: $finish called at 10266000 (1ps)

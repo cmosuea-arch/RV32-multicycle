@@ -11,13 +11,17 @@ module simple_system #(
     wire [31:0] address,wdata,rdata,mem_address,mem_data,idata,ddata;
     wire oe,we,bus_fault,imem_oe,dmem_oe,dmem_we;
     wire [3:0] bw,dmem_bw;
-    wire commit_valid;
+    wire commit_valid,core_fault,core_trap,trap_ebreak;
+    wire [31:0] trap_pc;
     wire [31:0] commit_pc,commit_instr,commit_data;
     wire [4:0] commit_rd;
     // Usa o mesmo contrato Xicrc do top de validação, com firmware próprio reduzido.
     riscv_core #(.EXPERIMENTAL_XICRC(1)) core(
         clk_i,rst_i,rdata,bus_fault,address,wdata,oe,we,bw,
-        fault_o,commit_valid,commit_pc,commit_instr,commit_data,commit_rd);
+        core_fault,commit_valid,commit_pc,commit_instr,commit_data,commit_rd,
+        core_trap,trap_ebreak,trap_pc);
+    // Interface reduzida sinaliza também o encerramento por trap, sem indicar sucesso.
+    assign fault_o=core_fault || core_trap;
     address_decoder #(.IMEM_WORDS(512),.DMEM_WORDS(256)) bus_decoder(
         address,wdata,oe,we,bw,idata,ddata,mem_address,mem_data,rdata,
         imem_oe,dmem_oe,dmem_we,dmem_bw,bus_fault);

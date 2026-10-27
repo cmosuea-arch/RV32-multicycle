@@ -112,8 +112,8 @@ def generate_xlsx(csv_path, output_path):
     summary += [
         ([], {}, set(), None),
         (['Estado geral', f'{total_passed}/{len(data)} instruções'], {1: 3, 2: 3}, set(), None),
-        (['Firmware oficial', 'PASS' if any(item['Regressão']=='PASS' for item in data) and all(item['Firmware oficial']=='PASS' for item in data if item['Regressão']=='PASS') else 'PENDENTE'], {1: 3}, set(), None),
-        (['Observação', 'O firmware próprio não substitui a validação oficial.'], {1: 3}, set(), 30),
+        (['Firmware oficial', f"{sum(item['Firmware oficial']=='PASS' for item in data)}/{len(data)} tipos com PASS; demais conforme tabela"], {1: 3}, set(), None),
+        (['Observação', 'Sistema: testes próprios e contrato EEI CMOS; traps não aposentam.'], {1: 3}, set(), 30),
     ]
 
     # Aba Instruções: todos os campos do CSV, com cores para PASS e PENDENTE.

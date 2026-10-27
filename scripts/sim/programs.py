@@ -4,7 +4,7 @@
 from pathlib import Path
 import json
 import random
-from isa import R,I,BRANCH,LOAD,STORE,MULT,CATEGORIES,fields,encode
+from isa import R,I,BRANCH,LOAD,STORE,MULT,SYSTEM,CATEGORIES,fields,encode,identify
 from vectors import signed,MASK,EDGES,alu_model
 
 ROOT=Path(__file__).resolve().parents[2]
@@ -53,6 +53,7 @@ class Program:
                 rd=0; value=0
             elif name=='JAL': value=pc+4; next_pc=pc+imm
             elif name=='JALR': value=pc+4; next_pc=((a+signed(imm,12))&MASK)&~1
+            elif name=='FENCE': rd=0; value=0  # Ordem serial já garantida pelo modelo.
             # Memória do modelo é byte a byte; a ROM também pode ser lida por load.
             elif name in LOAD:
                 addr=(a+signed(imm,12))&MASK
@@ -109,6 +110,10 @@ def main():
     p=Program(experimental_crc=any(name in CATEGORIES['CRC'] for name in enabled))
     # Cada grupo recebe casos de borda, alias de registradores, desvios ou offsets.
     for name in enabled:
+        # ECALL/EBREAK encerram a execução e são verificadas em tb_core_system,
+        # com eventos de trap, sem inventar aposentadorias no trace sequencial.
+        if name in SYSTEM:
+            continue
         if name in R or name in MULT or name in CATEGORIES['CRC']:
             pairs=[(a,b) for a in EDGES[:10] for b in [0,1,31,32,0xffffffff,0x80000000]]
             pairs += [(rng.getrandbits(32),rng.getrandbits(32)) for _ in range(12)]
@@ -175,25 +180,41 @@ def main():
                 p.constant(1,0x10010000); p.constant(2,0xa5a5a5a5); p.emit('SW',0,1,2)
                 p.constant(2,0x87654321); p.emit(name,0,1,2,imm=offset); p.emit('LW',3,1)
             p.constant(1,0x10011ffc); p.emit(name,0,1,2); p.emit(name,0,1,2,imm=-4)
+        elif name=='FENCE':
+            p.constant(1,0x10010000); p.constant(2,0x12345678)
+            p.emit('SW',0,1,2)
+            for masks in (0,0x0ff,0x033,0x833,0xfff):
+                p.emit('FENCE',rd=31,rs1=31,imm=masks)
+                p.emit('LW',3,1)
     p.save()
     # Varre todas as combinações opcode/funct3/funct7, incluindo instruções ilegais.
     with (OUT/'decoder.vec').open('w') as f:
+        def vector(inst):
+            try:
+                name=identify(inst)
+            except ValueError:
+                name=None
+            ctrl=1
+            if name in enabled:
+                if name in CATEGORIES['Sistema/Sincronização']:
+                    ctrl=int(name in SYSTEM)<<14
+                else:
+                    op=R[name][2] if name in R else I[name][1] if name in I else 1 if name=='AUIPC' else 0
+                    if name in BRANCH or name in ('JAL','JALR') or name in LOAD or name in STORE: op=1
+                    is_register=name in R or name in MULT or name in CATEGORIES['CRC']
+                    ctrl=(op<<10)|(int(name in ('AUIPC','JAL') or name in BRANCH)<<9)|(int(not is_register)<<8)|(int(name not in BRANCH and name not in STORE)<<7)|(int(name in BRANCH)<<6)|(int(name=='JAL')<<5)|(int(name=='JALR')<<4)|(int(name in LOAD)<<3)|(int(name in STORE)<<2)|(int(name in MULT)<<1)
+            f.write(f'{inst:08x} {ctrl:04x}\n')
+
         for opcode in range(128):
             for f3 in range(8):
                 for f7 in range(128):
                     inst=(f7<<25)|(2<<20)|(1<<15)|(f3<<12)|(3<<7)|opcode
-                    matches=[name for name in enabled if fields(name)[0]==opcode
-                             and fields(name)[1] in (None,f3) and fields(name)[2] in (None,f7)]
-                    # Empacota controles no mesmo formato lido por tb_decoder.
-                    # Bit 0 indica ilegal; bits 13:10 guardam o seletor da ALU.
-                    ctrl=1
-                    if matches:
-                        name=matches[0]
-                        op=R[name][2] if name in R else I[name][1] if name in I else 1 if name=='AUIPC' else 0
-                        if name in BRANCH or name in ('JAL','JALR') or name in LOAD or name in STORE: op=1
-                        is_register=name in R or name in MULT or name in CATEGORIES['CRC']
-                        ctrl=(op<<10)|(int(name in ('AUIPC','JAL') or name in BRANCH)<<9)|(int(not is_register)<<8)|(int(name not in BRANCH and name not in STORE)<<7)|(int(name in BRANCH)<<6)|(int(name=='JAL')<<5)|(int(name=='JALR')<<4)|(int(name in LOAD)<<3)|(int(name in STORE)<<2)|(int(name in MULT)<<1)
-                    f.write(f'{inst:08x} {ctrl:04x}\n')
+                    vector(inst)
+        # Palavras SYSTEM exatas e cada vizinha de um bit (campos fixos inclusive).
+        for word in SYSTEM.values():
+            vector(word)
+            for bit in range(32):
+                vector(word^(1<<bit))
     print(f'PASS generated {len(p.words)} instructions; targets={len(enabled)}')
 
 

@@ -138,9 +138,9 @@ def control():
     d = canvas('F01-C — Decode, FSM, enables e observação',
                'Controles associados às redes de dados dos painéis A e B; estado não é dado de WB.')
     box(d, 20, 495, 260, 100, 'Decoder — instruction[31:0]',
-        'opcode / funct3 / funct7\nalu_op, a_pc, b_imm, reg_we\nbranch, jal, jalr, load, store_op\nmul, crc_op, illegal', '#f3f0fa', PURPLE)
+        'opcode / funct3 / funct7\nalu_op, a_pc, b_imm, reg_we\nbranch, jal, jalr, load, store_op\nmul, crc_op, illegal, trap_request', '#f3f0fa', PURPLE)
     box(d, 330, 495, 250, 100, 'Control Unit / FSM',
-        'FETCH → DECODE → EXECUTE\n→ [MEMORY] → WRITEBACK → FETCH\nDECODE ilegal ou fault → FAULT\nReset síncrono leva a FETCH.', '#f3f0fa', PURPLE)
+        'FETCH → DECODE → EXECUTE\n→ [MEMORY] → WRITEBACK → FETCH\nECALL/EBREAK → TRAP; erro → FAULT\nReset recupera FETCH.', '#f3f0fa', PURPLE)
     arrow(d, [(280, 550), (330, 550)], 'classes', (284, 564), PURPLE)
     box(d, 20, 350, 560, 100, 'local_fault → fault_i da FSM',
         'FETCH: bus_fault || current_pc[1:0] != 0\nEXECUTE: redirect && redirect_target[1:0] != 0\nMEMORY: bus_fault || misaligned || lsu_invalid\nDemais estados: sem novo local_fault. FAULT permanece até reset.', '#fbeaea', '#985151')
@@ -149,9 +149,9 @@ def control():
         'retire = (state == WRITEBACK) && !rst; WE do RF = retire && reg_we.\nWE do PC = retire. WE do IR = FETCH && !local_fault && !rst.\nresult_q / next_pc_q capturam em EXECUTE; reset tem prioridade.\noe = !rst && (FETCH || ((MEMORY || WRITEBACK) && load && válido)).\nwe = !rst && MEMORY && store_op && válido; bw = we ? store_bw : 0.', '#f3f0fa', PURPLE)
     arrow(d, [(570, 495), (590, 495), (590, 325), (460, 325), (460, 305)],
           'state[2:0]', (470, 331), PURPLE)
-    box(d, 20, 65, 560, 80, 'Observação e sincronização',
-        'commit_valid = retire; commit_pc = current_pc; commit_instr = instruction.\ncommit_rd = reg_we ? rd : 0; commit_data = commit_rd == 0 ? 0 : WB.\nfault_o = (state == FAULT); interfaces commit são de verificação, não pinagem final.')
-    arrow(d, [(300, 190), (300, 145)], 'retire / dados arquiteturais', (310, 165))
+    box(d, 20, 65, 560, 90, 'Observação e sincronização',
+        'commit_valid = retire; commit_pc = current_pc; commit_instr = instruction.\ncommit_rd = reg_we ? rd : 0; commit_data = commit_rd == 0 ? 0 : WB.\nTRAP: sem commit/bus; trap_o, trap_ebreak_o e trap_pc_o expostos ao EEI.\nfault_o = (state == FAULT); observação não define pinagem final.')
+    arrow(d, [(300, 190), (300, 155)], 'retire / dados arquiteturais', (310, 170))
     text(d, 20, 40, 'válido = !misaligned && !lsu_invalid. Address Decoder também bloqueia escrita fora da RAM.', 9)
     text(d, 20, 23, 'Clock/reset: PC, IR, RF, result_q, next_pc_q e FSM. DMEM usa clock e não é apagada por reset.', 9)
     text(d, 20, 6, 'Fonte: rtl/riscv_core.sv, riscv_top.sv, address_decoder.sv e control_unit.sv; revisão 27/10/2026.', 9)
