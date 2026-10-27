@@ -10,7 +10,8 @@ module tb_core_faults;
     wire [4:0] rd;
     integer i,cycles,retired,cases;
     assign data=oe&&address>=32'h00400000&&address<32'h00400040 ? rom[(address-32'h00400000)>>2] : 0;
-    riscv_core dut(clk,rst,data,bus_error,address,wdata,oe,we,bw,fault,valid,cpc,ci,cd,rd);
+    // Mantém a checagem explícita do perfil sem CRC, além das instruções inválidas.
+    riscv_core #(.EXPERIMENTAL_XICRC(0)) dut(clk,rst,data,bus_error,address,wdata,oe,we,bw,fault,valid,cpc,ci,cd,rd);
     task clear_rom;
         // Reinicia o core, retira erro externo e limpa a ROM antes de montar cada caso.
         begin

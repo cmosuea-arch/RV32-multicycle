@@ -1,32 +1,29 @@
 # Definições oficiais necessárias para continuar
 
-Atualização **20/10/2026**: o usuário encaminhou mensagens atribuídas à organização
-confirmando CRC-16-CCITT-FALSE nas três instruções e firmware assembly a ser
-carregado na IMEM. Veja o [registro e a comparação com o RTL](clarifications_20261020.md).
-P01 está parcialmente esclarecida; P02–P04 seguem abertas. O firmware oficial
-ainda não foi recebido. O [contrato CRC atual](crc_provisional.md) permanece opt-in
-até confirmar a semântica dos operandos, sem ampliar a cobertura oficial.
-O retorno será registrado no [formulário de confirmação CRC](crc_official_confirmation.md),
-com origem, exemplos e critérios de integração. O programa oficial terá o
-[checklist de recebimento](../../firmware/official/receipt.md) preenchido antes da carga.
+Atualização **27/10/2026**: o usuário forneceu o repositório do firmware oficial.
+O uso das instruções resolve a principal lacuna de P01, e o README fornece o
+formato IMEM/protocolo de P03. A [análise da revisão consultada](crc_official_20261027.md)
+identifica duas divergências do RTL: operandos invertidos e ordem dos bytes.
+O [registro do contrato](crc_official_confirmation.md) e o
+[recebimento do firmware](../../firmware/official/receipt.md) foram preenchidos.
+Adequação, integração e execução foram concluídas em seguida:
+[44/47, 32 TBs/lint e firmware oficial PASS](../../results/experiments/crc-official-20261027/README.md).
+P01/P03 estão resolvidas para a revisão publicada; P02 e P04 seguem abertas.
 
 Referências a páginas físicas de `Champion-chip-guia-fase-2.pdf` (arquivo de 24 páginas).
 
 1. **Xicrc — pp.12,14–15, tabelas 8 e 11.** As codificações de CRCB/CRCH/CRCW estão
-   confirmadas. A mensagem de 20/10 identifica CRC-16-CCITT-FALSE e dados de
-   8/16/32 bits, sempre com resultado de 16 bits. O nome resolve polinômio,
-   reflexão, inicialização da mensagem e XOR final. Falta confirmar papel de
-   rs1/rs2, aplicação da semente por instrução/fluxo, ordem dos bytes e
-   preenchimento de rd[31:16]. Confrontar pseudocódigo/vetores, incluindo os
-   três exemplos registrados, antes de promover o contrato CMOS a oficial.
+   confirmadas. O firmware.s recebido em 27/10 usa rs1=dados, rs2=CRC anterior,
+   seed FFFF por software e bytes mais significativos primeiro, exigindo 1E82
+   para a mesma mensagem nos três tamanhos. A falta de exemplos está resolvida;
+   RTL/modelo/vetores/firmware próprio foram corrigidos e a regressão passou.
 2. **Sistema/sincronização — p.2.** A tabela exige 3 instruções sem enumerá-las.
    Confirmar nomes, codificações e comportamento esperado, inclusive se há
    parada, trap ou protocolo específico com o firmware/testbench.
-3. **Firmware oficial — p.4.** A mensagem de 19/10 prevê publicação após autorização:
-   testes assembly de todas as instruções, convertidos em instruções para a IMEM.
-   Programas próprios estão autorizados enquanto isso. Faltam o arquivo,
-   formato/build, eventual imagem de dados e protocolo de sucesso/falha.
-   O demo próprio valida a infraestrutura, mas não fecha esse entregável.
+3. **Firmware oficial — p.4.** Repositório consultado em 27/10: fonte assembly e
+   imagem de 259 palavras para IMEM, início em 00400000; término em x4=0 ou
+   FFFFFFFF. A imagem foi convertida/carregada e o TB verifica a escrita final
+   mais três commits do loop, sem aceitar o zero do reset. Execução completa PASS.
 4. **Top físico — pp.9–10.** A figura mostra UART/GPIO, enquanto a tabela de
    portas lista apenas clock/reset. Confirmar interface exigida, periféricos,
    mapa de registradores e contratos elétricos/lógicos antes do top de submissão.
@@ -43,7 +40,9 @@ na plataforma. Implementações de outras equipes não substituem esclarecimento
 da organização nem foram usadas para escolher semântica de sistema.
 
 As consultas e a ausência de esclarecimentos em 17/10 são registros históricos;
-as mensagens de 19–20/10 complementam essa situação, sem novo PDF local.
+as mensagens de 19–20/10 e o firmware recebido em 27/10 complementam essa situação,
+sem novo PDF local. O firmware consultado contém 44 instruções distintas e não
+enumera as três de sistema; essa lacuna da tabela de 47 permanece.
 
 Após resolver as lacunas restantes: fechar CRC isolado → integração e regressão → sistema → 47/47 →
 firmware oficial → interface final e entregáveis → OpenLane → GDSII, mantendo

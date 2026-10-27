@@ -1,5 +1,13 @@
 # Contrato CRC CMOS — implementação de 13/10, revisão de 20/10/2026
 
+**Revisão de 27/10: contrato histórico substituído pelo oficial.**
+Esta página preserva o comportamento anterior. O
+[firmware publicado](crc_official_20261027.md) usa rs1 como dados, rs2 como CRC
+anterior e bytes mais significativos primeiro. Portanto, são necessárias duas
+correções, já implementadas e verificadas; esta página não deve ser usada como
+especificação atual. [Contrato implementado](crc.md) e
+[checklist concluído](crc_official_confirmation.md).
+
 Decisão autorizada pelo usuário para avançar sem o algoritmo oficial. É uma
 especificação interna explícita. A mensagem de 20/10 identifica oficialmente,
 conforme transcrição do usuário, CRC-16-CCITT-FALSE com dados de 8/16/32 bits.
@@ -85,4 +93,5 @@ permanece **41/47 (87,23%)**, até resolver a semântica restante das instruçõ
   implementação independente usada no modelo de teste.
 - [Catálogo CRC RevEng — IBM-3740](https://reveng.sourceforge.io/crc-catalogue/16.htm#crc.cat.crc-16-ibm-3740):
   parâmetros e check conhecido, consultado em 2026-10-13.
-- [Pendências oficiais](official_questions.md): P01 continua aberta.
+- [Pendências oficiais](official_questions.md): a fonte para P01 foi recebida;
+  adequação e validação continuam pendentes.

@@ -1,0 +1,3 @@
+$ vvp /tmp/cmos-crc-official-validation-ddy3vfjx/build/tb_pc
+PASS pc: sequential, hold, forward/backward targets, wrap and reset
+/tmp/cmos-crc-official-validation-ddy3vfjx/tb/unit/tb_pc.sv:31: $finish called at 236000 (1ps)

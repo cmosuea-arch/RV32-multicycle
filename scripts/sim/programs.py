@@ -106,10 +106,10 @@ def main():
     # Só as instruções declaradas em enabled.json entram no programa baseline.
     enabled=json.loads((ROOT/'docs/isa/enabled.json').read_text())
     rng=random.Random(4711)
-    p=Program()
+    p=Program(experimental_crc=any(name in CATEGORIES['CRC'] for name in enabled))
     # Cada grupo recebe casos de borda, alias de registradores, desvios ou offsets.
     for name in enabled:
-        if name in R or name in MULT:
+        if name in R or name in MULT or name in CATEGORIES['CRC']:
             pairs=[(a,b) for a in EDGES[:10] for b in [0,1,31,32,0xffffffff,0x80000000]]
             pairs += [(rng.getrandbits(32),rng.getrandbits(32)) for _ in range(12)]
             for a,b in pairs:
@@ -191,7 +191,8 @@ def main():
                         name=matches[0]
                         op=R[name][2] if name in R else I[name][1] if name in I else 1 if name=='AUIPC' else 0
                         if name in BRANCH or name in ('JAL','JALR') or name in LOAD or name in STORE: op=1
-                        ctrl=(op<<10)|(int(name in ('AUIPC','JAL') or name in BRANCH)<<9)|(int(name not in R and name not in MULT)<<8)|(int(name not in BRANCH and name not in STORE)<<7)|(int(name in BRANCH)<<6)|(int(name=='JAL')<<5)|(int(name=='JALR')<<4)|(int(name in LOAD)<<3)|(int(name in STORE)<<2)|(int(name in MULT)<<1)
+                        is_register=name in R or name in MULT or name in CATEGORIES['CRC']
+                        ctrl=(op<<10)|(int(name in ('AUIPC','JAL') or name in BRANCH)<<9)|(int(not is_register)<<8)|(int(name not in BRANCH and name not in STORE)<<7)|(int(name in BRANCH)<<6)|(int(name=='JAL')<<5)|(int(name=='JALR')<<4)|(int(name in LOAD)<<3)|(int(name in STORE)<<2)|(int(name in MULT)<<1)
                     f.write(f'{inst:08x} {ctrl:04x}\n')
     print(f'PASS generated {len(p.words)} instructions; targets={len(enabled)}')
 

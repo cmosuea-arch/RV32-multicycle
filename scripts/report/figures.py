@@ -80,8 +80,8 @@ def execution():
     text(d, 335, 390, 'current_pc vem do painel B.', 9)
     box(d, 20, 210, 175, 65, 'ALU', 'A, B, alu_op[3:0]\nalu_result[31:0]')
     box(d, 215, 210, 175, 65, 'Multiplicador', 'a, b, {0, funct3}\nproduct[31:0]')
-    box(d, 410, 210, 170, 65, 'CRC experimental',
-        'a, b, {0, funct3}\ncrc_result[31:0]', '#fff4df', '#a15c12')
+    box(d, 410, 210, 170, 65, 'CRC — Xicrc',
+        'a=dados; b=CRC; op=funct3\ncrc_result[31:0]', '#fff4df', '#a15c12')
     arrow(d, [(100, 315), (100, 275)], 'A[31:0]', (25, 291))
     arrow(d, [(450, 315), (450, 295), (170, 295), (170, 275)],
           'B[31:0]', (247, 301))
@@ -90,7 +90,7 @@ def execution():
     for x in (110, 300, 490):
         arrow(d, [(x, 210), (x, 170)], '32', (x + 7, 184))
     box(d, 20, 10, 560, 60, 'MUX writeback → writeback_data[31:0] → RF',
-        'load ? load_data : result_q; load_data vem da LSU (painel B).\nCRC existe somente com EXPERIMENTAL_XICRC=1; padrão é 0.')
+        'load ? load_data : result_q; load_data vem da LSU (painel B).\nCRC existe com EXPERIMENTAL_XICRC=1 (padrão); 0 desabilita a extensão.')
     arrow(d, [(300, 105), (300, 70)], 'result_q[31:0]', (310, 83))
     return d
 
@@ -154,7 +154,7 @@ def control():
     arrow(d, [(300, 190), (300, 145)], 'retire / dados arquiteturais', (310, 165))
     text(d, 20, 40, 'válido = !misaligned && !lsu_invalid. Address Decoder também bloqueia escrita fora da RAM.', 9)
     text(d, 20, 23, 'Clock/reset: PC, IR, RF, result_q, next_pc_q e FSM. DMEM usa clock e não é apagada por reset.', 9)
-    text(d, 20, 6, 'Fonte: rtl/riscv_core.sv, riscv_top.sv, address_decoder.sv e control_unit.sv; revisão 17/10/2026.', 9)
+    text(d, 20, 6, 'Fonte: rtl/riscv_core.sv, riscv_top.sv, address_decoder.sv e control_unit.sv; revisão 27/10/2026.', 9)
     return d
 
 

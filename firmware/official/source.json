@@ -1,0 +1,53 @@
+{
+  "repository": "https://github.com/championchip-experience-community/CCX_Brasil_Edition_Firmware_Stage_2",
+  "commit": "edc7d5990d2185942081ee8a6899aa603cc91569",
+  "reviewed_on": "2026-10-27",
+  "local_rtl_base_commit": "3580e06",
+  "scope": "source review and independent CRC reference; no official firmware simulation or synthesis",
+  "files": {
+    "README.md": {
+      "url": "https://github.com/championchip-experience-community/CCX_Brasil_Edition_Firmware_Stage_2/blob/edc7d5990d2185942081ee8a6899aa603cc91569/README.md",
+      "sha256": "d9a1ed4cc001351b5055ae0ed327d870d01cd7af1e865d930d880bab87497ade",
+      "bytes": 3556
+    },
+    "firmware.s": {
+      "url": "https://github.com/championchip-experience-community/CCX_Brasil_Edition_Firmware_Stage_2/blob/edc7d5990d2185942081ee8a6899aa603cc91569/firmware.s",
+      "sha256": "0c4a5ee72bbe34ddbd6cda51bbb924d1695382f99b927050dd1ac2cab86b838f",
+      "bytes": 9165
+    },
+    "firmware.txt": {
+      "url": "https://github.com/championchip-experience-community/CCX_Brasil_Edition_Firmware_Stage_2/blob/edc7d5990d2185942081ee8a6899aa603cc91569/firmware.txt",
+      "sha256": "18dd1ee8cc6925ac4ce5e0cbad635687ec129f5b4a75f861a9cb3a2f8df28890",
+      "bytes": 11396
+    }
+  },
+  "crc_contract": {
+    "rs1": "data, low 8/16/32 bits",
+    "rs2": "previous CRC16",
+    "first_crc": "0xFFFF",
+    "byte_order": "most significant selected byte first",
+    "expected_stream_hex": "1234567890ABCDEF",
+    "expected_crc": "0x1E82"
+  },
+  "imem": {
+    "base": "0x00400000",
+    "words": 259,
+    "last_address": "0x00400408",
+    "code_words": 254,
+    "constant_words": 5
+  },
+  "termination": {
+    "register": "x4",
+    "success_value": "0x00000000",
+    "failure_value": "0xFFFFFFFF",
+    "success_write_pc": "0x004003E8",
+    "failure_write_pc": "0x004003F0",
+    "note": "observe final write/terminal loop; x4 is also zero after reset"
+  },
+  "static_instruction_inventory": {
+    "unique_confirmed_instructions": 44,
+    "crc_instructions": 16,
+    "system_synchronization_instructions_found": 0,
+    "note": "static encoding inventory, not dynamic PASS or 47/47 coverage"
+  }
+}

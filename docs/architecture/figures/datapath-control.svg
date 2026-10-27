@@ -57,7 +57,7 @@
 			<text x="310" y="165" style="font-family: DejaVu Sans; font-size: 9px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,330) scale(1,-1)">retire / dados arquiteturais</text>
 			<text x="20" y="40" style="font-family: DejaVu Sans; font-size: 9px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,80) scale(1,-1)">válido = !misaligned &amp;&amp; !lsu_invalid. Address Decoder também bloqueia escrita fora da RAM.</text>
 			<text x="20" y="23" style="font-family: DejaVu Sans; font-size: 9px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,46) scale(1,-1)">Clock/reset: PC, IR, RF, result_q, next_pc_q e FSM. DMEM usa clock e não é apagada por reset.</text>
-			<text x="20" y="6" style="font-family: DejaVu Sans; font-size: 9px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,12) scale(1,-1)">Fonte: rtl/riscv_core.sv, riscv_top.sv, address_decoder.sv e control_unit.sv; revisão 17/10/2026.</text>
+			<text x="20" y="6" style="font-family: DejaVu Sans; font-size: 9px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,12) scale(1,-1)">Fonte: rtl/riscv_core.sv, riscv_top.sv, address_decoder.sv e control_unit.sv; revisão 27/10/2026.</text>
 		</g>
 	</g>
 </svg>

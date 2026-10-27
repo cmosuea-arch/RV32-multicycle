@@ -1,0 +1,3 @@
+$ vvp /tmp/cmos-crc-official-validation-ddy3vfjx/build/tb_control_unit
+PASS control_unit: four stages, illegal, fault and reset
+/tmp/cmos-crc-official-validation-ddy3vfjx/tb/unit/tb_control_unit.sv:28: $finish called at 196000 (1ps)

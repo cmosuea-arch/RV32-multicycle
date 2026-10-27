@@ -59,8 +59,8 @@
 			<text x="225" y="239" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,478) scale(1,-1)">a, b, {0, funct3}</text>
 			<text x="225" y="225" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,450) scale(1,-1)">product[31:0]</text>
 			<rect x="410" y="210" width="170" height="65" rx="6" ry="6" style="stroke: rgb(63%,36%,7%); stroke-linecap: butt; stroke-width: 1; fill: rgb(100%,95%,87%); fill-rule: evenodd;"/>
-			<text x="420" y="257" style="font-family: DejaVu Sans; font-size: 12px;fill: rgb(63%,36%,7%); stroke:none;" transform="translate(0,514) scale(1,-1)">CRC experimental</text>
-			<text x="420" y="239" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(63%,36%,7%); stroke:none;" transform="translate(0,478) scale(1,-1)">a, b, {0, funct3}</text>
+			<text x="420" y="257" style="font-family: DejaVu Sans; font-size: 12px;fill: rgb(63%,36%,7%); stroke:none;" transform="translate(0,514) scale(1,-1)">CRC — Xicrc</text>
+			<text x="420" y="239" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(63%,36%,7%); stroke:none;" transform="translate(0,478) scale(1,-1)">a=dados; b=CRC; op=funct3</text>
 			<text x="420" y="225" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(63%,36%,7%); stroke:none;" transform="translate(0,450) scale(1,-1)">crc_result[31:0]</text>
 			<polyline points="100 315, 100 275" style="stroke: rgb(19%,36%,47%); stroke-linecap: butt; stroke-width: 1; fill: None; fill-rule: evenodd;"/>
 			<polygon points="100 275, 97 282, 103 282" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(19%,36%,47%); fill-rule: evenodd;"/>
@@ -84,7 +84,7 @@
 			<rect x="20" y="10" width="560" height="60" rx="6" ry="6" style="stroke: rgb(19%,36%,47%); stroke-linecap: butt; stroke-width: 1; fill: rgb(92%,96%,98%); fill-rule: evenodd;"/>
 			<text x="30" y="52" style="font-family: DejaVu Sans; font-size: 12px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,104) scale(1,-1)">MUX writeback → writeback_data[31:0] → RF</text>
 			<text x="30" y="34" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,68) scale(1,-1)">load ? load_data : result_q; load_data vem da LSU (painel B).</text>
-			<text x="30" y="20" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,40) scale(1,-1)">CRC existe somente com EXPERIMENTAL_XICRC=1; padrão é 0.</text>
+			<text x="30" y="20" style="font-family: DejaVu Sans; font-size: 10px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,40) scale(1,-1)">CRC existe com EXPERIMENTAL_XICRC=1 (padrão); 0 desabilita a extensão.</text>
 			<polyline points="300 105, 300 70" style="stroke: rgb(19%,36%,47%); stroke-linecap: butt; stroke-width: 1; fill: None; fill-rule: evenodd;"/>
 			<polygon points="300 70, 297 77, 303 77" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(19%,36%,47%); fill-rule: evenodd;"/>
 			<text x="310" y="83" style="font-family: DejaVu Sans; font-size: 9px;fill: rgb(19%,36%,47%); stroke:none;" transform="translate(0,166) scale(1,-1)">result_q[31:0]</text>

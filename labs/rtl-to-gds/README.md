@@ -69,7 +69,7 @@ executor ao mesmo tempo: elas compartilham os mesmos caminhos.
 
 Os códigos apresentados são os do repositório, acessíveis pelos links. Não há cópia
 didática de RTL para manter sincronizada. Comentários curtos foram adicionados aos
-32 testbenches (31 de RTL e um de netlist) e aos blocos usados no percurso.
+33 testbenches (32 de RTL e um de netlist) e aos blocos usados no percurso.
 Não é necessário alterar o código para fazer as práticas.
 
 Para se orientar: `make run` executa o firmware baseline; `make simple-system`
@@ -78,12 +78,11 @@ simula sua netlist. `make help` descreve todos os comandos.
 
 ## Alcance
 
-A baseline tem **41/47 instruções (87,23%)**. A regressão atual tem 14 TBs unitários
-e 17 de integração, incluindo CRC provisório e simple_system. O teste da netlist
-é adicional, executado por `make simple-synth`. CRC oficial, sistema/sincronização,
-firmware oficial e top físico final têm [pendências registradas](../../docs/architecture/official_questions.md).
+O perfil atual tem **44/47 instruções (93,62%)**. A regressão atual tem 14 TBs unitários
+e 18 de integração, incluindo Xicrc, firmware oficial e simple_system. O teste da netlist
+é adicional, executado por `make simple-synth`. Sistema/sincronização e top físico final têm [pendências registradas](../../docs/architecture/official_questions.md).
 O [simple_system](../../docs/modules/simple_system.md) já possui RTL, firmware,
-TB e síntese lógica genérica. A configuração física ainda está pendente.
+TB e síntese genérica histórica. A configuração física está preparada; a nova execução fica com o usuário.
 O smoke test do LibreLane valida o ambiente com um circuito de exemplo.
 
 Comece pela [aula 1](01-visao-geral.md). Para consulta rápida dos comandos, use
@@ -91,7 +90,8 @@ o [roteiro operacional](../../docs/testing_roadmap.md).
 
 ## Validação deste material
 
-As evidências mais recentes do sistema experimental registram 31 TBs/lint PASS,
+A rodada atual registra [32 TBs/lint e firmware oficial PASS](../../results/experiments/crc-official-20261027/README.md).
+O registro histórico de 13/10 do sistema experimental aprovou 31 TBs/lint,
 síntese genérica e dois boots na netlist: [rodada do simple_system](../../results/experiments/simple/README.md).
 O comando `make run` foi validado após a reorganização do Makefile, com assinatura
 600dc0de. Na atualização de 2026-10-13, os sete blocos de comandos da aula de

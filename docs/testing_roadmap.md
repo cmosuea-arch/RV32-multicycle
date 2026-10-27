@@ -3,9 +3,9 @@
 Para aprender os conceitos e executar primeiro os passos manuais, siga o
 [laboratório guiado](../labs/rtl-to-gds/README.md). Esta página é a consulta rápida.
 
-Este roteiro valida a baseline 41/47 e os experimentos CRC/simple_system.
-Os testes do contrato CRC provisório não ampliam a matriz oficial; CRC oficial,
-sistema/sincronização e firmware oficial continuam pendentes.
+Este roteiro valida o perfil 44/47, o firmware oficial e o simple_system.
+O contrato CRC e o firmware oficial estão verificados em RTL;
+sistema/sincronização, interface final e resultados físicos continuam pendentes.
 
 ## 1. Preparação
 
@@ -130,6 +130,11 @@ gtkwave results/waveforms/smoke.vcd
 
 ## 5. Fechamento da regressão
 
+Antes da primeira execução completa, use `make official-fetch`. A imagem é
+fixada por revisão/SHA e fica em cache. `make official-run` verifica apenas o
+programa oficial; `make official-wave` também grava seu VCD. O resultado é
+x4=0 após a escrita final e o loop, não o zero observado durante reset.
+
 Depois que testes isolados e de integração estiverem PASS:
 
 ```sh
@@ -137,14 +142,14 @@ make regression
 git status --short
 ```
 
-`make regression` recompõe vetores e firmware, executa os 31 testbenches, roda
+`make regression` recompõe vetores e firmware, executa os 32 testbenches, roda
 lint, atualiza a matriz de cobertura e grava hashes em
 `results/logs/regression.json`. Somente esse resultado completo deve ser usado
 como evidência de fechamento.
 
 ## 6. Experimento simple_system
 
-O sistema com ROM 2 KiB/RAM 1 KiB e CRC provisório já existe. Execute:
+O sistema com ROM 2 KiB/RAM 1 KiB e Xicrc já existe. Execute:
 
 ```bash
 make simple-system
@@ -178,7 +183,7 @@ python3 -m json.tool results/logs/simple_synth.json
 ```
 
 Gera `build/simple_netlist.v` com Yosys e simula dois boots nessa netlist.
-O resumo deve registrar status/simulação PASS. A execução é adicional aos 31 TBs;
+O resumo deve registrar status/simulação PASS. A execução é adicional aos 32 TBs;
 não envolve PDK, timing físico ou GDSII. Tutorial e comandos manuais:
 [aula 7](../labs/rtl-to-gds/07-sintese.md); consulta: [synthesis.md](synthesis.md).
 

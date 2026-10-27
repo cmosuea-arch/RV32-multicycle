@@ -62,18 +62,20 @@ Execute os comandos da tabela, de cima para baixo, na raiz do projeto:
 | `make tb TB=tb_memory_faults` | endereços inválidos/desalinhados e cancelamento |
 | `make tb TB=tb_isa` | programa e aposentadorias comparados ao modelo Python |
 | `make tb TB=tb_firmware` | programa C/assembly compilado, executado até assinatura |
-| `make tb TB=tb_core_crc` | trace do CRC provisório, dependências e armazenamento |
+| `make tb TB=tb_core_crc` | trace Xicrc oficial, dependências e armazenamento |
 | `make simple-system` | sistema pequeno: firmware com CRC, reset, sucesso e falha |
+| `make official-run` | imagem oficial, 44 tipos, x4 final e loop de término |
 
-Com `tb_rf_alu`, são os 17 testes da suíte. `make integration` executa todos,
-em ordem alfabética, e prepara programas e firmware automaticamente.
+Com `tb_rf_alu`, são os 18 testes da suíte. Antes da primeira execução oficial,
+use `make official-fetch` para obter a imagem fixada por SHA-256. Depois,
+`make integration` executa todos em ordem alfabética e prepara entradas offline.
 
 ## Como reconhecer a execução completa
 
 Em `tb_isa`, aposentadoria significa que uma instrução terminou seus efeitos
 arquiteturais. A referência fornece PC, instrução, destino e dado esperado para
 comparar com `commit_*`. Há também checagens de RF e memória.
-Na baseline, espere 76.409 aposentadorias, 45 stores e 12 bytes finais comparados.
+Na baseline, espere 88.727 aposentadorias, 45 stores e 12 bytes finais comparados.
 
 No firmware próprio, o código de startup prepara memória e pilha. O C executa
 cálculos e escreve `0x600dc0de` em `0x10011ff0`. O TB verifica a escrita e seu
@@ -91,7 +93,7 @@ cat results/logs/tb_firmware.log
 O primeiro comando só compila; `run` recompila o necessário e executa `tb_firmware`.
 Você pode chamar `make run` diretamente, sem executar `make firmware` antes.
 
-## Sistema pequeno e CRC provisório
+## Sistema pequeno e Xicrc
 
 ```bash
 make simple-system
@@ -102,10 +104,10 @@ cat results/logs/tb_simple_system.log
 Essa prática usa [outro firmware](../../firmware/simple/README.md), ROM de 2 KiB,
 RAM de 1 KiB e assinatura em 0x100103f0. O programa exercita CRCB/CRCH/CRCW; o TB
 verifica boot, reset, assinatura ruim e instrução inválida. A baseline continua
-41/47, com o CRC identificado em [matriz experimental](../../docs/isa/experimental_crc.md).
+44/47, com o CRC validado conforme [contrato oficial](../../docs/architecture/crc.md).
 
 O sistema já testado será a entrada da [aula de síntese](07-sintese.md).
-O teste da netlist é adicional às 17 integrações RTL.
+O teste da netlist é adicional às 18 integrações RTL.
 
 ## Observar o firmware em forma de onda
 

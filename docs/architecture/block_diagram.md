@@ -1,8 +1,8 @@
-# Datapath integrado — subconjunto de 41 instruções
+# Datapath integrado — perfil de 44 instruções
 
 Fonte principal: Block Guide, seções 2–4, páginas físicas 9–23 do PDF combinado.
 
-Figuras para o relatório, conferidas com o RTL em 2026-10-17:
+Figuras para o relatório, conferidas com o RTL em 2026-10-27:
 [execução](figures/datapath-execution.svg), [memórias/PC](figures/datapath-memory.svg)
 e [controle](figures/datapath-control.svg). Os três painéis usam redes nomeadas;
 veja [fontes, reprodução e conferência](figures/README.md).
@@ -51,15 +51,15 @@ flowchart TB
  FSM -. enables .-> IR
  FSM -. enables .-> RF
  FSM -. oe / we .-> AD
- RF -. EXPERIMENTAL_XICRC .-> CRC[CRC provisório CMOS]
+ RF -. EXPERIMENTAL_XICRC .-> CRC[Xicrc: rs1=dados / rs2=CRC]
  CRC -. EXPERIMENTAL_XICRC .-> EXEC
 ```
 
 Dados, endereços e instruções são de 32 bits; funct3 tem 3 bits, seletores ALU/MULT
 4 bits, endereços RF 5 bits e byte write 4 bits. O decoder gera as seleções; a FSM
 habilita atualizações. Nenhum barramento de instruções separado ou pipeline.
-CRC pontilhado está implementado e habilitado somente com `EXPERIMENTAL_XICRC=1`;
-o [contrato provisório](crc_provisional.md) não confirma conformidade oficial.
+CRC pontilhado é opcional e está habilitado por padrão (`EXPERIMENTAL_XICRC=1`);
+o [contrato oficial implementado](crc.md) foi validado com o firmware publicado.
 
 ## Sequência de execução
 

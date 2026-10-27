@@ -1,7 +1,8 @@
 # Datapath e controle — figuras do relatório
 
-Revisão: **2026-10-17**. Escopo: `riscv_core`, `riscv_top` e blocos conectados,
-com CRC identificado como experimental. O desenho está dividido em três painéis;
+Revisão: **2026-10-27**. Escopo: `riscv_core`, `riscv_top` e blocos conectados,
+com Xicrc oficial: a=rs1/dados e b=rs2/CRC anterior, habilitado por padrão.
+O desenho está dividido em três painéis;
 nomes iguais identificam o mesmo fio entre blocos/painéis.
 
 | Painel | SVG vetorial | PNG usado no PDF |
@@ -28,7 +29,7 @@ nomes iguais identificam o mesmo fio entre blocos/painéis.
 
 Verde identifica armazenamento arquitetural/intermediário; azul identifica
 funções e caminhos de dados; roxo identifica controle; laranja identifica CRC
-provisório e vermelho identifica diagnóstico. Alguns blocos combinam mux e
+e vermelho identifica diagnóstico. Alguns blocos combinam mux e
 registrador na mesma caixa, com a equação e o instante de captura explícitos.
 O painel A representa o IR e sua saída; o painel B detalha sua captura de rdata.
 

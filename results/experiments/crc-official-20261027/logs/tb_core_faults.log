@@ -1,0 +1,3 @@
+$ vvp /tmp/cmos-crc-official-validation-ddy3vfjx/build/tb_core_faults
+PASS core_faults: 12 invalid/control-flow faults, no side effects, reset recovery
+/tmp/cmos-crc-official-validation-ddy3vfjx/tb/integration/tb_core_faults.sv:64: $finish called at 986000 (1ps)

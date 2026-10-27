@@ -15,20 +15,20 @@ geral ou retificações que não estejam nesse arquivo.
 
 ## Requisitos expressos do guia
 
-| ID | Origem | Exigência | Local no relatório | Situação da versão 0.4 |
+| ID | Origem | Exigência | Local no relatório | Situação da versão 0.6 |
 |---|---|---|---|---|
 | R01 | §1, p. 2 | Objetivo, arquitetura, módulos, funcionamento e funcionalidades | §1 | Redigido para o escopo atual |
-| R02 | §2, pp. 2–3 | Quantidades esperadas/implementadas e percentual por categoria | §2.1 | 41/47; CRC experimental identificado separadamente |
+| R02 | §2, pp. 2–3 | Quantidades esperadas/implementadas e percentual por categoria | §2.1 | 44/47; CRC oficial integrado e testado |
 | R03 | §2, p. 3 | Lista de instruções por categoria | §2.1 | Incluída junto à tabela de cobertura; sistema oficial pendente |
-| R04 | §2, p. 3 | Tabela opcode/funct3/funct7 das instruções implementadas | §§2.3–2.5 | 41 da baseline + 3 experimentais; conferida com CSV |
+| R04 | §2, p. 3 | Tabela opcode/funct3/funct7 das instruções implementadas | §§2.3–2.5 | 44 implementadas; conferidas com CSV |
 | R05 | §3, p. 3 | Desenho completo do datapath com unidade de controle | §3 | Três painéis SVG/PNG incluídos, conferidos com o RTL atual; rever se houver alteração funcional |
 | R06 | §4, p. 3 | Explicação de cada módulo desenvolvido | §§4.1–4.2 | 17 módulos descritos, incluindo tops e experimento |
 | R07 | §4, p. 3 | Diagrama por módulo feito no ChipInventor | §§4.1–4.2 | F02–F18 pendentes, sob responsabilidade de outro colaborador |
-| R08 | §4, p. 3 | Testbenches individuais | §4 e código da entrega | 14 unitários e 17 integrações identificados; anexar todo o código no pacote |
+| R08 | §4, p. 3 | Testbenches individuais | §4 e código da entrega | 14 unitários e 18 integrações identificados; anexar todo o código no pacote |
 | R09 | §5, p. 4 | Área total e densidade após fluxo OpenLane | §5 | Pendentes; células genéricas não preenchem área física |
 | R10 | §5, p. 4 | Imagem do GDSII final | §5 | F19 pendente; GDS do exemplo da ferramenta não serve como resultado do processador |
-| R11 | §6, p. 4 | Waveforms comprovando execução do firmware de validação | §6 | F20-B no PDF; F20-A arquivado como apoio; F21 oficial pendente |
-| R12 | §6, p. 4 | Logs do TB mostrando conclusão sem erros | §6 | Nova execução própria de 17/10 com log/VCD/hashes; log oficial pendente |
+| R11 | §6, p. 4 | Waveforms comprovando execução do firmware de validação | §6 | F21 oficial no PDF; F20-A/B próprios preservados no repositório |
+| R12 | §6, p. 4 | Logs do TB mostrando conclusão sem erros | §6 | Execução oficial de 27/10: x4=0, 252 commits/1026 ciclos, log/VCD/hashes |
 | R13 | §7, p. 4 | Vídeo de 5–7 min no YouTube cobrindo os seis temas indicados | Entregável separado | Pendente |
 | R14 | §8, p. 4 | Relatório PDF contendo tópicos 1–6, máximo 20 páginas | PDF preliminar | Formato e tópicos presentes; 12 páginas; oito disponíveis para diagramas/resultados; conteúdo final incompleto |
 | R15 | §9, p. 4 | Relatório, GDSII, GL, config.json e todo o código, incluindo TBs | Pacote de submissão | Código existente; PDF preliminar; resultados físicos ausentes |
@@ -47,7 +47,7 @@ final OpenLane exigida.
 | F09–F13 | LSU, DMEM, Address Decoder, Decoder, FSM | Incluir controles, máscaras, latência e erros |
 | F14–F18 | Multiplicador, CRC, Core, Top, simple_system | Identificar CRC e sistema experimental; alinhar top final |
 | F19 | GDSII final do processador | Run, commit, top, escala e correspondência com área/densidade |
-| F20-A/B | Waveform do firmware próprio | F20-B no PDF; boot F20-A como apoio. Ambos com VCD/logs/hashes arquivados |
+| F20-A/B | Waveform do firmware próprio | F20-A/B próprios preservados como apoio, com VCD/logs/hashes |
 | F21 | Waveform do firmware oficial | Protocolo oficial, etapa final e ausência de erros, acompanhados de log |
 
 As figuras podem ser agrupadas em painéis legíveis. A numeração é uma escolha
@@ -58,11 +58,11 @@ simuladas ou ilustrativas apresentadas como waveforms reais.
 
 | Afirmação | Evidência principal | Limite |
 |---|---|---|
-| 41/47 e codificações | `docs/isa/coverage.csv` | Contagem funcional da baseline; firmware oficial pendente |
-| 31 TBs e lint PASS | `results/experiments/simple/regression.json` | Rodada de 13/10 local, 14/10 UTC; hashes identificam arquivos |
-| CRC próprio PASS | `results/experiments/crc/` | CCITT-FALSE identificado em 20/10; contrato de operandos/bytes ainda não confirmado |
+| 44/47 e codificações | `docs/isa/coverage.csv` | Contagem funcional verificada; sistema/sincronização pendente |
+| 32 TBs e lint PASS | `results/experiments/crc-official-20261027/logs/regression.json` | Rodada atual; hashes identificam arquivos |
+| CRC e firmware oficial PASS | `results/experiments/crc-official-20261027/` | Fonte edc7d599; 16 CRCs, 44 tipos e término em x4/loop |
 | 598 aposentadorias, 2579 ciclos e SW em 25795 ns | `results/experiments/firmware-wave/` | Smoke próprio reexecutado; VCD e TB conferem a escrita; não é benchmark geral |
-| 32922 células e dois boots na netlist | `results/experiments/simple/simple_synth.json`, `simple_netlist.log` | Yosys genérico, sem PDK/timing/área física |
+| 32922 células e dois boots na netlist | `results/experiments/simple/simple_synth.json`, `simple_netlist.log` | Histórico antes do CRC corrigido; sem PDK/timing/área física |
 | Ambiente físico aprovado | `results/openlane/environment-smoke.md` | Somente circuito de exemplo LibreLane |
 
 Manifestos de rodadas anteriores não comprovam automaticamente o estado de
@@ -71,7 +71,7 @@ o fechamento da entrega deve registrar uma rodada nova no commit final.
 
 ## Organização das páginas
 
-Versão 0.5: **12 páginas**, liberando oito dentro do limite. A revisão 0.4 removeu
+Versão 0.6: **12 páginas**, liberando oito dentro do limite. A revisão 0.4 removeu
 repetições e detalhes didáticos do PDF; descrições de módulos e testes foram
 concentradas em tabelas. Os tamanhos de fonte foram preservados.
 
@@ -82,11 +82,11 @@ concentradas em tabelas. Os tamanhos de fonte foram preservados.
 | Datapath e controle | 5–7 |
 | Módulos e testbenches | 8–9 |
 | Resultados físicos e firmware | 10 |
-| Waveform próprio de término | 11 |
+| Waveform oficial de término | 11 |
 | Referências | 12 |
 
 Planejamento das oito páginas adicionais: até cinco para diagramas ChipInventor,
-uma para resultados físicos/GDSII, uma para firmware oficial e uma de margem.
+uma para resultados físicos/GDSII e duas de margem. A waveform oficial já está incluída.
 As figuras devem ser legíveis, com grupos por função próximos à descrição dos
 módulos. O responsável pelos diagramas é outro colaborador, conforme informado
 pelo usuário. Rever a paginação depois de receber as imagens reais.
@@ -107,7 +107,7 @@ a ponto de comprometer a leitura para manter a contagem.
 - [ ] Rever as figuras após mudanças de RTL e incorporar diagramas ChipInventor de cada módulo.
 - [ ] Preencher área/densidade e inserir imagem do GDSII do processador.
 - [x] Incluir waveform de término/log do firmware próprio e arquivar boot, VCD e hashes (17/10/2026).
-- [ ] Incluir waveform e logs do firmware oficial, declarando a etapa efetivamente atingida.
+- [x] Incluir waveform e logs oficiais: simulação RTL completa em 27/10, sem declaração de timing físico.
 - [ ] Vincular relatório, RTL, testes, firmware e resultados físicos ao commit de entrega.
 - [ ] Gerar PDF final, contar no máximo 20 páginas e revisar visualmente todas elas.
 - [ ] Produzir vídeo de 5–7 minutos no YouTube: arquitetura, funcionamento, simulação, firmware, OpenLane e layout.

@@ -1,0 +1,18 @@
+{
+  "success_edge_tick": 10145000,
+  "retirements": 252,
+  "cycles": 1026,
+  "crc_retirements": 16,
+  "terminal_loop_retirements": 3,
+  "status": "PASS",
+  "scope": "official firmware RTL waveform; no physical timing",
+  "source_commit": "edc7d5990d2185942081ee8a6899aa603cc91569",
+  "success_edge_ns": 10145.0,
+  "timescale_ns_per_tick": 0.001,
+  "start_ns": 10090.0,
+  "end_ns": 10266.0,
+  "vcd_sha256": "31cbc59f53a1be350a08f40329960e10a6dcac97e080349f58217c0ec5cc37cd",
+  "log_sha256": "ba07e749c588b8eac1c6cee7ecc2040820df8aca91ebe6c4951789156a5c0744",
+  "renderer_sha256": "32568575a5b5141b6cea60569b49d64a951cf450a36d53993e10b113e3775fc4",
+  "shared_renderer_sha256": "970fce094b03e9fd3ea99af9c64f0482c561f85c5933aa84235f2a9dc8a24ffe"
+}

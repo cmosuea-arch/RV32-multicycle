@@ -1,0 +1,3 @@
+$ vvp /tmp/cmos-crc-official-validation-ddy3vfjx/build/tb_crc
+PASS crc: 18304 vectors, ASCII -> 29b1, official byte/half/word -> 1e82
+/tmp/cmos-crc-official-validation-ddy3vfjx/tb/unit/tb_crc.sv:39: $finish called at 18321000 (1ps)

@@ -1,0 +1,4 @@
+$ riscv64-unknown-elf-gcc -march=rv32i_zmmul -mabi=ilp32 -Os -g -ffreestanding -fno-builtin -fno-pic -msmall-data-limit=0 -fno-strict-aliasing -Wall -Wextra -Werror -nostdlib -nostartfiles -Wl,--no-relax,-T,firmware/simple/link.ld,-Map,build/simple.map firmware/simple/start.S firmware/simple/main.c -o build/simple.elf
+   text	   data	    bss	    dec	    hex	filename
+    604	      4	     32	    640	    280	build/simple.elf
+ROM image: 608/2048 bytes

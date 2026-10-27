@@ -1,0 +1,2 @@
+$ /usr/bin/python3 /tmp/cmos-crc-official-validation-ddy3vfjx/scripts/sim/vectors.py
+PASS deterministic vectors generated

@@ -5,8 +5,8 @@ solicitou em 20/10/2026 executar pessoalmente a síntese. Uma tentativa inicial 
 cópia temporária chegou à etapa de síntese, mas ficou sem resultado final e não
 constitui evidência PASS. Nenhuma nova síntese é iniciada por esta preparação.
 
-O circuito usa o contrato CRC atual, firmware próprio, ROM 2 KiB e RAM 1 KiB.
-O fechamento do CRC é acompanhado em
+O circuito usa o contrato Xicrc oficial implementado em 27/10, firmware próprio, ROM 2 KiB e RAM 1 KiB.
+O registro de adequação do CRC está em
 [crc_official_confirmation.md](../../docs/architecture/crc_official_confirmation.md).
 Esta configuração não fecha os marcos de submissão dependentes do firmware,
 ISA e interface oficiais.

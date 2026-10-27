@@ -1,0 +1,3 @@
+$ vvp /tmp/cmos-crc-official-validation-ddy3vfjx/build/tb_rf_alu
+PASS rf_alu: source reads, overflow and dependent writeback
+/tmp/cmos-crc-official-validation-ddy3vfjx/tb/integration/tb_rf_alu.sv:34: $finish called at 56000 (1ps)

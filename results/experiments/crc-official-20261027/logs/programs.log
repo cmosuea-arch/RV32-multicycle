@@ -1,0 +1,2 @@
+$ /usr/bin/python3 /tmp/cmos-crc-official-validation-ddy3vfjx/scripts/sim/programs.py
+PASS generated 88732 instructions; targets=44

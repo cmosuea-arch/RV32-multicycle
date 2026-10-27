@@ -98,13 +98,15 @@ estado adicional? Como a FSM controla os enables?
 Siga as [aulas 4](04-scripts-python.md), [5](05-makefile.md) e
 [6](06-regressao-e-evidencias.md). Relacione as receitas ao executor e execute
 `make regression` quando os testes específicos estiverem compreendidos.
+Antes da primeira rodada que inclui o firmware oficial, execute `make official-fetch`.
+O download é explícito e validado por SHA-256; as execuções seguintes usam o cache.
 
 **Explique:** como sementes fixas permitem reproduzir entradas? Como uma falha
 retorna ao terminal? O que muda entre teste individual, suíte e regressão completa?
 Qual é o papel dos hashes e da cobertura por instrução?
 
-**Critério:** 31 TBs e lint PASS na configuração atual, manifesto da sua rodada
-com estado PASS, e distinção entre baseline **41/47** e CRC experimental.
+**Critério:** 32 TBs e lint PASS na configuração atual, manifesto da sua rodada
+com estado PASS e cobertura **44/47**; as três instruções de sistema seguem pendentes.
 
 ## Etapa 5 — Firmware no processador e waveform
 
@@ -123,7 +125,7 @@ captura. O programa oficial ainda depende do material da competição.
 ## Etapa 6 — simple_system, síntese e netlist
 
 Siga a [aula 7](07-sintese.md): `make simple-system`, depois `make simple-synth`.
-Identifique memórias reduzidas, CRC provisório e saídas de resultado. Inspecione
+Identifique memórias reduzidas, Xicrc e saídas de resultado. Inspecione
 a netlist, o resumo Yosys e o teste de dois boots.
 
 **Explique:** qual circuito foi sintetizado? Como o firmware foi incorporado à ROM?

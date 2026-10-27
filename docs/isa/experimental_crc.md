@@ -1,7 +1,17 @@
 # Matriz experimental CRC — contrato CMOS, 2026-10-13
 
+**Histórico substituído em 27/10.** O contrato oficial foi implementado e as três
+instruções agora pertencem ao perfil padrão de [44/47](coverage.md). Veja
+[crc.md](../architecture/crc.md) e a
+[rodada atual](../../results/experiments/crc-official-20261027/README.md).
+O conteúdo abaixo descreve a implementação anterior, sem misturar as evidências.
+
 Esta matriz complementa `coverage.csv`, sem declarar conformidade oficial.
 Baseline: **41/47 (87,23%)**. Perfil experimental: 41 + 3 operações testadas.
+
+**Revisão de 27/10:** o [firmware oficial](../architecture/crc_official_20261027.md)
+demonstrou que operandos e ordem dos bytes do contrato CMOS precisam ser
+corrigidos. Os PASS abaixo são históricos desse contrato e não do oficial.
 
 | Instrução | Opcode / funct3 / funct7 | Módulo | Unitário | Core integrado | Regressão | Firmware próprio |
 |---|---|---|---|---|---|---|
@@ -25,3 +35,4 @@ Os resultados acima continuam históricos do contrato CMOS; esta revisão não
 executou nova regressão nem promoveu as três linhas à matriz oficial.
 Recebimento dos detalhes e promoção do contrato seguem o
 [formulário/checklist CRC](../architecture/crc_official_confirmation.md).
+Esse registro foi preenchido com a fonte de 27/10; falta executar a adequação.

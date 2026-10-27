@@ -11,3 +11,5 @@ results/waveforms/*
 results/logs/*
 !results/logs/README.md
 results/archive/
+# Cópia original do firmware oficial, fixada por revisão/SHA e obtida explicitamente.
+external/championchip-firmware/

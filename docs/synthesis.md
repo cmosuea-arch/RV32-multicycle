@@ -23,7 +23,7 @@ make -n simple-synth
 ## Entrada e implementação
 
 Top: `rtl/simple_system.sv`, clock de subida e reset síncrono ativo alto.
-CRC provisório habilitado, ROM de 2 KiB e RAM de 1 KiB. A imagem `build/simple.hex`
+Xicrc habilitado, ROM de 2 KiB e RAM de 1 KiB. A imagem `build/simple.hex`
 é incorporada na lógica da ROM; a RAM é mapeada em registradores/multiplexadores.
 O software inicializa dados/BSS e escreve a assinatura em 0x100103f0.
 

@@ -90,7 +90,7 @@ exit
 
 ## Do sistema sintetizado ao próximo experimento físico
 
-O sistema mínimo já tem ROM 2 KiB, RAM 1 KiB, CRC provisório, firmware e saídas
+O sistema mínimo já tem ROM 2 KiB, RAM 1 KiB, Xicrc, firmware e saídas
 done/success/fault. Consulte o [contrato](../../docs/modules/simple_system.md):
 
 ```bash

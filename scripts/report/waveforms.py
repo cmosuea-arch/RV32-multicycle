@@ -31,7 +31,7 @@ ROWS = [
 ]
 
 
-def load_vcd(path):
+def load_vcd(path, core=CORE):
     """Lê escala, hierarquia e mudanças das redes selecionadas; preserva X/Z."""
     events, widths, codes, scope = {}, {}, {}, []
     timestamp, last, header = 0, 0, True
@@ -60,8 +60,8 @@ def load_vcd(path):
                 elif line.startswith('$var'):
                     fields = line.split()
                     full = '.'.join([*scope, fields[4]])
-                    if full in {CORE + name for name, _, _ in ROWS}:
-                        name = full.removeprefix(CORE)
+                    if full in {core + name for name, _, _ in ROWS}:
+                        name = full.removeprefix(core)
                         widths[name] = int(fields[2])
                         codes[fields[3]] = name
                         events[name] = []

@@ -99,8 +99,7 @@ make tb TB=tb_crc
 RF, PC, IR e DMEM também exigem observar bordas de clock e retenção de estado.
 Nem todo TB usa arquivos `.vec`: alguns geram estímulos diretamente no SystemVerilog.
 Para repetir os 14 testes de uma vez, use `make unit` (ordem alfabética do executor).
-`tb_crc` usa o contrato CMOS provisório; seu PASS não confirma o algoritmo oficial
-da competição. Os comentários explicam entradas, referência e comparações em cada TB.
+`tb_crc` usa o contrato oficial implementado; verifica dados em rs1, CRC em rs2 e as respostas 29B1/1E82. Dados e acumulador são verificados separadamente. Os comentários explicam entradas, referência e comparações em cada TB.
 
 ## Investigação de falhas
 

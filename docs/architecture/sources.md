@@ -1,5 +1,17 @@
 # Fontes verificadas
 
+## Firmware oficial consultado em 27/10/2026
+
+- [Repositório fornecido pelo usuário](https://github.com/championchip-experience-community/CCX_Brasil_Edition_Firmware_Stage_2),
+  revisão `edc7d5990d2185942081ee8a6899aa603cc91569`.
+- `firmware.s` define os usos de CRCB/CRCH/CRCW; `firmware.txt` fornece palavras
+  e endereços; README descreve integração, x4 de término e mock físico.
+- [Manifesto de origem](../../firmware/official/source.json), com hashes e URLs fixas.
+  [Contrato extraído e diferenças do RTL](crc_official_20261027.md).
+- Consulta de fontes e comparação Python; sem execução do core ou síntese.
+
+## Baseline normativa
+
 - `Champion-chip-guia-fase-2.pdf`, 24 páginas, versão 1.0/2026. Guia de Submissão
   nas páginas físicas 2–4; Block Guide nas páginas 6–23. Todas as referências
   locais usam páginas físicas do PDF combinado.

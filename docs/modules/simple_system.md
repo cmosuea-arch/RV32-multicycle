@@ -1,7 +1,7 @@
 # simple_system — experimento CMOS
 
 ## Objetivo
-Executar firmware próprio com core/CRC provisório num sistema pequeno, verificável
+Executar firmware próprio com core/Xicrc num sistema pequeno, verificável
 por pinos e síntese lógica. Não é o top final da competição.
 
 ## Entradas
@@ -35,12 +35,12 @@ Done não substitui fault: são estados observáveis separados.
 
 ## Dependências
 Core com `EXPERIMENTAL_XICRC=1`, decoder de endereços, IMEM e DMEM.
-Firmware em `firmware/simple/`; [contrato CRC](../architecture/crc_provisional.md).
+Firmware em `firmware/simple/`; [contrato CRC](../architecture/crc.md).
 
 ## Diagrama
 ```mermaid
 flowchart LR
- CLK[clock/reset] --> CORE[core multiciclo + CRC provisório]
+ CLK[clock/reset] --> CORE[core multiciclo + Xicrc]
  CORE --> BUS[decoder de endereços]
  BUS --> ROM[ROM 2 KiB]
  BUS --> RAM[RAM 1 KiB]
@@ -75,7 +75,7 @@ Netlist: dois boots observando somente pinos, sem acesso interno à ROM/RAM.
 [Evidências e limites](../../results/experiments/simple/README.md).
 
 ## Integração
-Parte da regressão, sem ampliar `docs/isa/enabled.json`.
+Parte da regressão de 44 instruções e dos testes de firmware próprio.
 
 ```bash
 make simple-firmware  # compila e gera a ROM
@@ -94,5 +94,6 @@ Commit que inclui este documento e `results/experiments/simple/regression.json`;
 os hashes do manifesto identificam os conteúdos testados.
 
 ## Pendências
-Configuração física experimental, área/timing, revisão das memórias. CRC oficial,
-sistema/sincronização, firmware oficial e interface final continuam pendentes.
+Síntese da versão atual e execução da configuração física preparada, área/timing
+e revisão das memórias. Sistema/sincronização e interface final continuam pendentes.
+A netlist histórica antecede a correção do CRC; não representa a versão atual.

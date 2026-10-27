@@ -1,5 +1,10 @@
 # Esclarecimentos recebidos — 20/10/2026
 
+**Registro histórico.** Em 27/10 o usuário forneceu o repositório do firmware:
+[nova análise](crc_official_20261027.md). Ele resolve operandos/bytes de forma
+diferente do contrato CMOS abaixo. Esta revisão de 20/10 não é a especificação
+final nem um resultado de execução do firmware oficial.
+
 Fonte: mensagens atribuídas à organização e transcritas pelo usuário nesta data.
 São um complemento ao Block Guide local, sem constituir nova edição do PDF.
 O firmware oficial ainda não foi recebido. Esta revisão não altera RTL,

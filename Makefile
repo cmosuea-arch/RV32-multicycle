@@ -12,6 +12,7 @@ PYTHON ?= $(if $(wildcard .venv/bin/python),.venv/bin/python,python3)
 .PHONY: help clean setup update doctor setup-openlane \
         tb unit integration smoke lint test regression \
         firmware run wave simple-firmware simple-system simple-synth \
+        official-fetch official-image official-run official-wave \
         openlane-env-check openlane-env-smoke openlane-shell \
         simple-openlane-synth simple-openlane-floorplan simple-openlane
 
@@ -39,10 +40,10 @@ tb: ## Executa uma bancada: make tb TB=tb_alu
 	$(if $(strip $(TB)),,$(error Informe a bancada: make tb TB=tb_alu))
 	$(PYTHON) scripts/regression/run.py --test "$(TB)"
 
-unit: ## Testa os 14 blocos isolados, incluindo o CRC provisório.
+unit: ## Testa os 14 blocos isolados, incluindo Xicrc.
 	$(PYTHON) scripts/regression/run.py --suite unit
 
-integration: ## Executa as 17 bancadas de integração, incluindo os firmwares.
+integration: ## Executa as 18 bancadas de integração, incluindo firmware oficial.
 	$(PYTHON) scripts/regression/run.py --suite integration
 
 smoke: ## Executa quatro integrações rápidas para conferir o básico.
@@ -51,7 +52,7 @@ smoke: ## Executa quatro integrações rápidas para conferir o básico.
 lint: ## Analisa o RTL com Verilator, sem executar simulação.
 	$(PYTHON) scripts/regression/run.py --lint-only
 
-test: ## Executa todos os 31 testbenches, sem lint; é o comando padrão.
+test: ## Executa todos os 32 testbenches, sem lint; é o comando padrão.
 	$(PYTHON) scripts/regression/run.py
 
 regression: ## Executa todos os testes e lint; use para validar uma alteração.
@@ -70,8 +71,21 @@ run: ## Compila e executa o firmware próprio no processador simulado.
 wave: ## Executa o firmware no RTL e grava a forma de onda VCD.
 	$(PYTHON) scripts/regression/run.py --wave
 
+# Imagem oficial: download explícito e verificado; os testes seguintes funcionam offline.
+official-fetch: ## Obtém a revisão oficial fixada por SHA-256 e gera a imagem IMEM.
+	$(PYTHON) scripts/sim/build_official.py --fetch
 
-# 4. Sistema pequeno com CRC provisório: ROM 2 KiB, RAM 1 KiB e saídas de resultado.
+official-image: ## Converte a cópia oficial em cache, sem acessar a rede.
+	$(PYTHON) scripts/sim/build_official.py
+
+official-run: ## Executa o firmware oficial e verifica término real, CRC e 44 instruções.
+	$(PYTHON) scripts/regression/run.py --test tb_official_firmware
+
+official-wave: ## Executa o firmware oficial e grava results/waveforms/official.vcd.
+	$(PYTHON) scripts/regression/run.py --test tb_official_firmware --with-wave
+
+
+# 4. Sistema pequeno com Xicrc: ROM 2 KiB, RAM 1 KiB e saídas de resultado.
 # A dependência de simple-synth faz simple-firmware rodar antes da síntese.
 simple-firmware: ## Compila o programa experimental e gera build/simple.hex.
 	$(PYTHON) scripts/sim/build_simple.py

@@ -27,7 +27,7 @@ def main():
     # Registra instruções e ocupação para conferir o firmware carregado no teste.
     (LOGS/'simple.disasm').write_text(command([prefix+'objdump','-d','-M','no-aliases','build/simple.elf']))
     (LOGS/'simple_build.log').write_text('$ '+' '.join(args)+'\n'+command([prefix+'size','build/simple.elf'])+f'ROM image: {size}/2048 bytes\n')
-    print(f'PASS simple firmware: {size}/2048 ROM bytes, 1 KiB RAM, provisional CRC enabled')
+    print(f'PASS simple firmware: {size}/2048 ROM bytes, 1 KiB RAM, official Xicrc contract')
 
 
 if __name__=='__main__': main()

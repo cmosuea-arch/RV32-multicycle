@@ -6,6 +6,7 @@ Aprendizado passo a passo: [laboratório RTL → fluxo físico](../labs/rtl-to-g
 
 ```sh
 make unit
+make official-fetch
 make integration
 make smoke
 make regression
@@ -16,7 +17,7 @@ make wave
 O roteiro completo, incluindo execução individual e a ordem incremental, está
 em [testing_roadmap.md](testing_roadmap.md).
 
-`make regression` gera os vetores, compila os firmwares próprios, executa 31 TBs e faz
+`make regression` gera os vetores, compila os firmwares próprios, executa 32 TBs e faz
 lint. Falhas, timeouts (120 s por processo), qualquer diagnóstico de compilação
 e ausência de PASS interrompem o comando com código diferente de zero.
 `results/logs/regression.json` registra estado, testbenches, lint e SHA-256 de
@@ -38,12 +39,13 @@ Uma execução iniciada sem terminar conserva RUNNING; não é evidência PASS.
 | DMEM | 256 combinações posição/máscara, read-first, retenção e limites |
 | Address Decoder | 768 combinações faixa/pedido/máscara; ROM protegida |
 | Multiplicador | 18.304 vetores com signed/mixed/unsigned e partes alta/baixa |
-| ISA integrada | 76.409 aposentadorias comparadas em PC, instrução, rd, dado e RF |
+| ISA integrada | 88.727 aposentadorias comparadas em PC, instrução, rd, dado e RF |
 | Memória integrada | 45 stores, contagem de escritas físicas e 12 bytes finais |
 | Falhas | 12 casos de decode/controle e 12 de memória; efeitos bloqueados e reset |
 | Firmware próprio | RV32I_Zmmul/ILP32; ROM/.data/.bss, pilha, chamadas, loops e multiplicação |
-| CRC provisório | 18304 vetores, 2127 instruções CRC no core; decoder nos dois perfis |
+| Xicrc | 18304 vetores, 2146 instruções CRC no core; decoder nos dois perfis |
 | simple_system | 7 cenários de boot/reset/assinatura/fault; firmware exercita os três CRCs |
+| Firmware oficial | 252 aposentadorias, 1026 ciclos, 16 CRCs e 44 tipos; x4 e três commits do loop final |
 
 `make simple-synth` é uma checagem adicional, fora da regressão RTL: síntese
 genérica Yosys, memória mapeada, ausência de inicialização de registradores e
@@ -64,6 +66,10 @@ UNUSEDSIGNAL/UNUSEDPARAM (interfaces e bits reservados). `riscv_top` e
 de memórias/CRC. Nenhuma supressão de latch, largura ou loop combinacional.
 
 ## Evidências
+
+Rodada atual: [CRC/firmware oficial de 27/10](../results/experiments/crc-official-20261027/README.md).
+Inclui teste negativo com o CRC anterior e a captura oficial reconciliada com o log.
+A síntese genérica de referência abaixo é histórica, anterior à correção do CRC.
 
 Na preparação da prática de 17/10/2026, as saídas correntes foram limpas.
 Os [logs anteriores](../results/history/pre-guided-20261017/README.md) foram
@@ -87,7 +93,7 @@ Logs correntes são locais; rodadas publicadas ficam em `results/experiments/`.
 ## Limitações
 
 São testes funcionais, não prova formal, cobertura de todos os valores de entrada
-ou certificação. Firmware oficial ainda não foi executado. FAULT é diagnóstico
+ou certificação. Firmware oficial PASS em 27/10: 252 aposentadorias, 1026 ciclos, 16 CRCs e 44 tipos de instrução. FAULT é diagnóstico
 CMOS até reset; não implementa ambiente privilegiado/traps/CSRs. Lint não prova
 que as memórias inferidas cabem fisicamente no chip. Nenhum resultado de área,
 timing, OpenLane ou GDSII do processador é alegado nesta versão. A contagem de

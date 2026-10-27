@@ -1,8 +1,8 @@
 `timescale 1ns/1ps
 // Traduz opcode/funct3/funct7 em seletores do datapath e classes para a FSM.
-// A codificação CRC provisória só é aceita quando EXPERIMENTAL_XICRC=1.
+// EXPERIMENTAL_XICRC é o nome histórico do parâmetro; o padrão inclui Xicrc oficial.
 module decoder #(
-    parameter bit EXPERIMENTAL_XICRC=0
+    parameter bit EXPERIMENTAL_XICRC=1
 )(
     input logic [31:0] instr_i,
     output reg [3:0] alu_op_o,
@@ -15,7 +15,7 @@ module decoder #(
         branch_o=0; jal_o=0; jalr_o=0; load_o=0; store_o=0; mul_o=0;
         illegal_o=0; crc_o=0;
         case(instr_i[6:0])
-            // OP: operações entre registradores, Zmmul e CRC experimental.
+            // OP: operações entre registradores, Zmmul e Xicrc.
             7'h33: begin
                 reg_we_o=1;
                 if(instr_i[31:25]==0) begin

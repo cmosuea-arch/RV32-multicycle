@@ -20,7 +20,7 @@ Interfaces abaixo são decisões CMOS onde o guia não especifica portas complet
 | multiplier | a_i/b_i[31:0], op_i[3:0] | result_o[31:0]; tabela 10 |
 | control_unit | clk_i, rst_i, illegal_i, load_i, store_i, fault_i | state_o[2:0] |
 | decoder | instr_i[31:0] | alu_op_o[3:0], a_pc_o, b_imm_o, reg_we_o, branch_o, jal_o, jalr_o, load_o, store_o, mul_o, illegal_o, crc_o |
-| crc | a_i/b_i[31:0], op_i[3:0] | result_o[31:0]; contrato provisório 0x1021 |
+| crc | a_i[31:0]=dados, b_i[15:0]=CRC anterior, op_i[3:0] | result_o[31:0]; CRC16/0x1021, bytes mais significativos primeiro |
 | riscv_core | clk_i, rst_i, data_i[31:0], bus_fault_i | address_o/data_o[31:0], oe_o, we_o, bw_o[3:0], fault_o, commit_valid_o, commit_pc_o/commit_instr_o/commit_data_o[31:0], commit_rd_o[4:0] |
 | riscv_top | clk_i, rst_i | sinais de observação fault_o e commit_*; instancia core, decoder de endereço e memórias |
 | simple_system | clk_i, rst_i | done_o, success_o, fault_o; experimento CRC, ROM 2 KiB/RAM 1 KiB |
@@ -35,7 +35,7 @@ Durante WRITEBACK o endereço efetivo e `oe` do load são mantidos, preservando 
 seleção do dado lido. FAULT retém estado até reset e desativa efeitos colaterais.
 Os operandos são estáveis enquanto IR não muda; RF só escreve em WRITEBACK.
 
-CRC: [contrato interno provisório](crc_provisional.md). A mensagem de 20/10
-identifica CCITT-FALSE; operandos e ordem dos bytes ainda não foram confirmados.
-Decoder/core/top possuem `EXPERIMENTAL_XICRC=0` por padrão; com valor 1, CRC usa
-rs1 como acumulador, rs2 como dados e o resultado de EXECUTE para writeback.
+CRC: [contrato oficial implementado](crc.md), validado com o firmware de 27/10.
+Decoder/core/top possuem `EXPERIMENTAL_XICRC=1` por padrão; o nome histórico foi
+preservado por compatibilidade. Valor 0 rejeita as três instruções. Dados vêm
+de rs1, CRC anterior de rs2 e o resultado passa por EXECUTE/WRITEBACK.

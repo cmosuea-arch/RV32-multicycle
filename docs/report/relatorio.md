@@ -1,9 +1,10 @@
 # CMOS RISC-V — Relatório técnico da Fase 2
 
-**Versão preliminar 0.5 — 20 de outubro de 2026**
+**Versão preliminar 0.6 — 27 de outubro de 2026**
 
 Equipe: CMOS. Integrantes, instituição e orientador: **a preencher**.
-Repositório: cmosuea-arch/RV32-multicycle. RTL da captura: `7ddc6bf`.
+Repositório: cmosuea-arch/RV32-multicycle. Rodada atual: 27/10, hashes em [R4].
+Captura própria histórica: RTL `7ddc6bf`, identificada em [R6].
 Estrutura conforme os tópicos 1–6 do Guia de Submissão [R1].
 
 ## 1. Visão Geral do Projeto
@@ -16,10 +17,9 @@ conforme o Block Guide ChampionCHIP: RV32I, Zmmul e Xicrc, com meta de
 
 `riscv_core` integra PC, IR, banco de registradores, imediatos, decoder, ALU,
 comparador de branch, multiplicador, LSU e controle. `riscv_top` conecta o núcleo
-a IMEM, DMEM e decoder de endereços. A configuração padrão verifica **41/47
-instruções (87,23%)**. CRCB/CRCH/CRCW estão implementadas sob contrato experimental
-CMOS, habilitado por `EXPERIMENTAL_XICRC=1`; CCITT-FALSE foi informado em 20/10,
-mas falta confirmar operandos e ordem dos bytes [R2].
+a IMEM, DMEM e decoder de endereços. A configuração padrão verifica **44/47
+instruções (93,62%)**, incluindo CRCB/CRCH/CRCW conforme o firmware oficial.
+O parâmetro histórico `EXPERIMENTAL_XICRC` vale 1 por padrão [R2, R3].
 
 A execução segue `FETCH → DECODE → EXECUTE → WRITEBACK`. Loads/stores acrescentam
 MEMORY para a DMEM síncrona. O PC atualiza na aposentadoria; reset síncrono ativo
@@ -33,7 +33,7 @@ não suportadas levam a FAULT até reset, sem implementar traps privilegiados.
 
 A organização de bytes é little-endian. A IMEM também fornece constantes;
 a DMEM aceita escrita por byte e não é apagada por reset. `simple_system`
-usa o CRC provisório e saídas done/success/fault para verificar firmware próprio.
+usa Xicrc e saídas done/success/fault para verificar firmware próprio.
 Pinos/periféricos e implementação das memórias do top final seguem pendentes.
 
 ### 1.2 Desenvolvimento e ferramentas
@@ -50,10 +50,10 @@ coordena os comandos. Logs e hashes SHA-256 identificam o conteúdo verificado.
 Os vetores são determinísticos; firmware compilado complementa os programas
 gerados pelo modelo Python [R2, R4].
 
-A rodada completa de 13/10/2026 (Manaus) aprovou 31 TBs e lint. Em 17/10 foi
-reexecutado apenas o firmware próprio para capturar waveform. Síntese genérica
-e simulação de netlist também passaram; firmware oficial e fluxo físico do
-processador ainda aguardam conclusão [R3–R6].
+A rodada de 27/10 aprovou 32 TBs e lint dos dois tops. O firmware oficial
+concluiu a validação e sua captura VCD foi conferida. A síntese genérica
+histórica antecede a correção do CRC; a nova síntese e o fluxo físico ficam
+para execução pelo usuário [R3–R7].
 
 <!-- pagebreak -->
 
@@ -72,12 +72,12 @@ processador ainda aguardam conclusão [R3–R6].
 | Upper Immediate | 2 | 2 | 100% | LUI, AUIPC |
 | Sistema / Sincronização | 3 | 0 | 0% | Definições oficiais pendentes |
 | Multiplication | 4 | 4 | 100% | MUL, MULH, MULHSU, MULHU |
-| CRC | 3 | 0 | 0% | Contrato dos operandos pendente |
-| **Total** | **47** | **41** | **87,23%** | **Baseline integrada e verificada** |
+| CRC | 3 | 3 | 100% | CRCB, CRCH, CRCW |
+| **Total** | **47** | **44** | **93,62%** | **Perfil integrado e verificado** |
 
-**Perfil experimental:** três operações adicionais, CRCB/CRCH/CRCW, passam no
-contrato CMOS. A cobertura de conformidade permanece 41/47 até confirmar
-operandos/bytes das instruções. Nenhuma instrução foi validada pelo firmware oficial.
+**Firmware oficial:** 44 tipos de instrução exercitados, com término real em x4.
+As três instruções de sistema/sincronização não são enumeradas nessa revisão
+do firmware; a meta 47 do guia não foi reduzida por suposição.
 
 A contagem exige decode, execução integrada e regressão, com evidência por
 instrução em [R3]. Os três nomes/códigos de sistema não foram presumidos apenas
@@ -90,7 +90,7 @@ usado como discriminador; seus bits podem fazer parte do imediato. Em shifts
 imediatos, funct7 discrimina a operação e shamt tem cinco bits. PASS_B é uma
 operação interna da ALU, sem acrescentar instrução à cobertura.
 
-As 41 codificações da baseline e as três experimentais foram conferidas com
+As 44 codificações implementadas foram conferidas com
 `docs/isa/coverage.csv`. A matriz contém testes, firmware oficial, marco Git e
 caminho da evidência por instrução; versões Markdown/Excel acompanham o CSV.
 
@@ -153,7 +153,7 @@ LUI forma o imediato U; AUIPC soma esse imediato ao PC da instrução.
 | MULHSU | 0110011 | 010 | 0000001 |
 | MULHU | 0110011 | 011 | 0000001 |
 
-### 2.5 Codificação — CRC experimental
+### 2.5 Codificação — Xicrc
 
 | Instrução | Opcode [6:0] | Funct3 [14:12] | Funct7 [31:25] |
 |---|---|---|---|
@@ -161,12 +161,11 @@ LUI forma o imediato U; AUIPC soma esse imediato ao PC da instrução.
 | CRCH | 0110011 | 001 | 1000000 |
 | CRCW | 0110011 | 010 | 1000000 |
 
-Mensagem atribuída à organização, recebida em 20/10, identifica CCITT-FALSE
-com 8/16/32 bits de dados e resultado de 16 bits. O contrato CMOS usa `0x1021`,
-rs1[15:0] como acumulador, bytes baixos de rs2 primeiro, sem reflexão/XOR final
-e resultado estendido com zeros. Software inicia em `0xffff`; ASCII `123456789`
-produz `0x29b1`. O algoritmo coincide com o informado; operandos, inicialização
-por instrução e ordem dos bytes ainda precisam ser confirmados [R2, R3].
+O firmware oficial define rs1=dados, rs2=CRC anterior e bytes mais significativos
+primeiro dentro dos 8/16/32 bits selecionados. CRC16/CCITT-FALSE usa polinômio
+1021, sem reflexão/XOR final, resultado estendido com zeros e seed FFFF por
+software. A mensagem 12 34 56 78 90 AB CD EF resulta em 1E82 nos três tamanhos;
+ASCII 123456789 resulta em 29B1. RTL/modelo/firmware próprio foram adequados [R3, R7].
 
 <!-- pagebreak -->
 
@@ -174,13 +173,13 @@ por instrução e ordem dos bytes ainda precisam ser confirmados [R2, R3].
 
 ### 3.1 Operandos, execução e writeback
 
-Os três painéis foram conferidos com o RTL em 17/10/2026. Nomes iguais
+Os três painéis foram conferidos com o RTL em 27/10/2026. Nomes iguais
 identificam a mesma rede entre blocos/painéis. Fontes vetoriais: [R2].
 
 ![Figura F01-A: operandos, execução e writeback](../architecture/figures/datapath-execution.png)
 
 **Figura F01-A.** Muxes selecionam operandos e resultado; result_q captura em
-EXECUTE; writeback escolhe resultado ou load. CRC é opcional e experimental.
+EXECUTE; writeback escolhe resultado ou load. CRC é opcional, habilitado por padrão com o contrato oficial.
 
 <!-- pagebreak -->
 
@@ -243,17 +242,17 @@ com pinos e larguras legíveis. Os painéis podem agrupar módulos relacionados.
 | lsu | Seleção/extensão de loads; posicionamento/máscara de stores | tb_lsu | 8.960 vetores; byte/half/word, offsets, sinal e alinhamento |
 | dmem | Leitura/escrita síncronas; preserva bytes não selecionados | tb_dmem | 256 combinações posição/máscara, read-first e limites |
 | address_decoder | Seleção IMEM/DMEM, retorno, controles e proteção da ROM | tb_address_decoder | 768 combinações faixa/pedido/máscara |
-| decoder | Decodifica opcode/funct3/funct7; CRC opt-in | tb_decoder | 131.072 combinações de campos por perfil; válidos e inválidos |
+| decoder | Decodifica opcode/funct3/funct7; Xicrc habilitado | tb_decoder | 131.072 combinações de campos por perfil; válidos e inválidos |
 | control_unit | FSM FETCH / DECODE / EXECUTE / MEMORY / WRITEBACK / FAULT | tb_control_unit | Transições, classes, falhas e reset |
-| crc | CRC-16 combinacional experimental; 1/2/4 bytes | tb_crc | 18.304 vetores e valor conhecido 29b1 |
+| crc | CRC-16 Xicrc combinacional; 1/2/4 bytes | tb_crc | 18.304 vetores e respostas 29B1/1E82 |
 | riscv_core | Integra execução, controle e barramento compartilhado | tb_core_smoke; tb_isa | PC, instrução, destino, dado e RF por aposentadoria |
-| riscv_top | Liga core, decoder de endereços e memórias | tb_firmware; tb_memory_faults | Firmware, acessos e bloqueio de efeitos inválidos |
+| riscv_top | Liga core, decoder de endereços e memórias | tb_official_firmware; tb_memory_faults | Firmware, acessos e bloqueio de efeitos inválidos |
 | simple_system | Sistema pequeno com CRC e saídas de término/sucesso/falha | tb_simple_system | Sete cenários de boot/reset/assinatura/falha |
 
-**Resultado agregado:** 14 TBs unitários + 17 de integração e lint PASS em
-13/10/2026 (Manaus). `tb_isa`: 76.409 aposentadorias, 45 stores e 12 bytes finais
-comparados. CRC integrado: 2.127 instruções CRC em 32.147 aposentadorias.
-A simulação da netlist é adicional às 31 bancadas RTL [R4, R5].
+**Resultado agregado:** 14 TBs unitários + 18 de integração e lint PASS em
+27/10/2026. `tb_isa`: 88.727 aposentadorias, 45 stores e 12 bytes finais.
+CRC integrado: 2.146 CRCs em 32.930 aposentadorias. O teste negativo com o
+CRC anterior produz a falha oficial esperada. Síntese atual não executada [R4, R7].
 
 Python gera referências determinísticas; o TB encerra com erro em divergência.
 O executor rejeita falha, timeout, diagnóstico de compilação ou ausência de PASS.
@@ -262,7 +261,7 @@ identificam cada rodada por SHA-256. São testes funcionais, sem prova formal
 ou alegação de cobertura exaustiva de código/operandos.
 
 **Diagramas a inserir:** F09–F13 e F15–F18. O diagrama CRC deve indicar o contrato
-provisório e o simple_system deve ser identificado como experimento.
+oficial de dados/acumulador e o simple_system deve ser identificado como experimento.
 
 <!-- pagebreak -->
 
@@ -280,7 +279,7 @@ o CMOS RISC-V [R5]. Preencher a tabela com uma única execução final identific
 | Timing, DRC/LVS e antena | Não avaliados |
 | GDSII, GL, config.json e imagem F19 | Pendentes |
 
-**Síntese preparatória:** simple_system passou no Yosys 0.39+124 (`d73f71e81`),
+**Síntese preparatória histórica (CRC anterior):** simple_system passou no Yosys 0.39+124 (`d73f71e81`),
 com 32.922 células genéricas e dois boots simulados na netlist. ROM virou
 constantes; RAM, registradores/muxes. A inicialização da IMEM foi corrigida para
 selecionar arquivo OU zeros após detectar ROM zerada na síntese. O teste da
@@ -302,34 +301,36 @@ PASS firmware: signature 600dc0de, 598 retirements, 2579 cycles
 ```
 
 O experimento simple_system também executa firmware próprio com os três CRCs;
-usa assinatura em `0x100103f0`, ROM 2 KiB e RAM 1 KiB, e passou em RTL/netlist [R5].
+usa assinatura em `0x100103f0`, ROM 2 KiB e RAM 1 KiB, e passou nos sete cenários RTL atuais. A netlist de referência é histórica [R4, R5].
 
 ### 6.2 Firmware oficial
 
-**Pendente de recebimento e execução.** Registrar versão/hash do programa,
-commit RTL, protocolo de sucesso, etapa atingida, log sem erros e waveform F21.
-Mensagem de 19/10, encaminhada em 20/10, informa testes assembly para a IMEM,
-com publicação após autorização. O fluxo próprio já gera palavras para a ROM.
-Os resultados próprios são evidência complementar. Pendências de Xicrc,
-sistema/sincronização e interface final estão registradas em [R2].
+**PASS na simulação RTL**, revisão upstream edc7d599. Imagem publicada de
+259 palavras, incluindo constantes, carregada na IMEM sem remontagem. O TB
+exige a escrita final de x4=0 e três commits no loop; o zero do reset não aprova.
+Resumo do log completo e hashes em [R7]:
+
+```text
+PASS official_firmware: x4=00000000, 252 retirements, 1026 cycles,
+CRC=16, ISA=44, terminal loop verified
+```
 
 <!-- pagebreak -->
 
-### 6.3 Waveform do firmware próprio
+### 6.3 Waveform do firmware oficial
 
-![Figura F20-B: waveform real da escrita final da assinatura](../../results/experiments/firmware-wave/firmware-signature.png)
+![Figura F21: término real do firmware oficial](../../results/experiments/crc-official-20261027/official-success.png)
 
-**Figura F20-B — Janela de 25.710–25.796 ns da captura de 17/10/2026.**
-SW `0x00a2a023`, no PC `0x00400068`, grava `0x600dc0de` em `0x10011ff0`.
-Na borda de **25.795 ns**, MEMORY tem `we=1` e `bw=0xf`; fault permanece zero.
-O TB confirma a RAM e termina 1 ns depois. As 598 aposentadorias precedem a
-escrita; o SW final ainda não foi aposentado quando a simulação encerra.
+**Figura F21 — Janela de 10.090–10.266 ns da captura de 27/10/2026.**
+Na borda de **10.145 ns**, WRITEBACK conclui a instrução no PC 004003E8,
+escrevendo x4=0. O TB confirma o RF e observa três commits do loop em 004003EC;
+fault permanece zero. A execução total tem 252 commits, 1026 ciclos e 16 CRCs.
 
-O traçado vem das mudanças reais do VCD, com buses em hexadecimal e escala
-1 ps/tick; clock do TB de 10 ns. A verificação usa os valores anteriores à
-borda, antes das atualizações NBA. Isso não mede frequência máxima física.
-A imagem de boot F20-A, o VCD completo e as instruções de reprodução estão em
-[R6], preservados como apoio; o PDF mantém a janela de término.
+O traçado vem das mudanças reais do VCD, com escala 1 ps/tick e clock do TB de
+10 ns. A conferência usa valores anteriores à borda, antes dos NBAs, e reconcilia
+VCD/log em ciclos, commits, CRCs e término. Não mede frequência máxima física.
+Captura, logs e verificação estão em [R7]. As figuras e o VCD do firmware próprio
+continuam preservados em [R6] como apoio ao vídeo, fora deste PDF.
 
 <!-- pagebreak -->
 
@@ -348,12 +349,12 @@ requisitos: [conformidade.md](conformidade.md).
 [fontes das figuras](../architecture/figures/README.md).
 
 **[R3] ISA.** [Matriz CSV](../isa/coverage.csv), [versão legível](../isa/coverage.md),
-[contrato CRC](../architecture/crc_provisional.md) e
+[contrato CRC](../architecture/crc.md) e
 [matriz experimental](../isa/experimental_crc.md).
 
 **[R4] Verificação.** [Alcance dos testes](../verification.md),
-[manifesto da rodada completa](../../results/experiments/simple/regression.json),
-[evidências CRC](../../results/experiments/crc/README.md),
+[manifesto da rodada completa](../../results/experiments/crc-official-20261027/logs/regression.json),
+[evidências CRC atuais](../../results/experiments/crc-official-20261027/README.md),
 [Makefile](../../Makefile), [roteiro](../testing_roadmap.md) e
 [laboratório](../../labs/rtl-to-gds/README.md).
 
@@ -373,3 +374,10 @@ Os manifestos comprovam os conteúdos das respectivas rodadas. O fechamento da
 entrega deve vincular código, testes, firmware e resultados físicos ao commit
 final. Autoria, diagramas ChipInventor, resultados físicos e validação oficial
 ainda devem ser incorporados e revisados antes da submissão.
+
+**[R7] Firmware oficial e validação, 27/10/2026.**
+[Origem/revisão/hashes](../../firmware/official/source.json),
+[registro da rodada](../../results/experiments/crc-official-20261027/README.md),
+[log oficial](../../results/experiments/crc-official-20261027/logs/tb_official_firmware.log),
+[verificação do VCD](../../results/experiments/crc-official-20261027/waveform.json) e
+[VCD comprimido](../../results/experiments/crc-official-20261027/official.vcd.gz).

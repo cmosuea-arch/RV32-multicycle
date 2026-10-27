@@ -2,7 +2,7 @@
 // Datapath multiciclo sem memórias internas: usa um barramento para fetch e dados.
 // Os sinais commit permitem ao TB comparar cada instrução concluída com o modelo.
 module riscv_core #(
-    parameter bit EXPERIMENTAL_XICRC=0
+    parameter bit EXPERIMENTAL_XICRC=1
 )(
     input logic clk_i,rst_i,
     input logic [31:0] data_i,
@@ -52,7 +52,7 @@ module riscv_core #(
     branch_comp branch_compare(a,b,instruction[14:12],branch_taken);
     lsu load_store(result_q,b,data_i,instruction[14:12],store_op,load_data,store_data,store_bw,misaligned,lsu_invalid);
     multiplier multiply(a,b,{1'b0,instruction[14:12]},product);
-    // generate decide na elaboração se o hardware CRC provisório será incluído.
+    // Nome de parâmetro preservado por compatibilidade; 0 seleciona o subconjunto sem CRC.
     generate if(EXPERIMENTAL_XICRC) begin : gen_crc
         crc checksum(a,b,{1'b0,instruction[14:12]},crc_result);
     end else begin : gen_no_crc

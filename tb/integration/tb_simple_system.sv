@@ -84,7 +84,7 @@ module tb_simple_system;
         $readmemh("build/simple.hex",dut.instruction_memory.mem);
         // Restaura o programa original e confirma recuperação completa após reset.
         run_to_done(1);
-        $display("PASS simple_system: %0d boot/reset/signature/fault checks, provisional CRC firmware",checks);
+        $display("PASS simple_system: %0d boot/reset/signature/fault checks, Xicrc firmware",checks);
         $finish;
     end
 endmodule

@@ -1,0 +1,3 @@
+$ vvp /tmp/cmos-crc-official-validation-ddy3vfjx/build/tb_firmware
+PASS firmware: signature 600dc0de, 598 retirements, 2579 cycles
+/tmp/cmos-crc-official-validation-ddy3vfjx/tb/integration/tb_firmware.sv:30: $finish called at 25796000 (1ps)

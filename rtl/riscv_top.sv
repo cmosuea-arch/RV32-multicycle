@@ -4,7 +4,7 @@
 module riscv_top #(
     parameter integer IMEM_WORDS=1048576,DMEM_WORDS=2048,
     parameter IMEM_FILE="",
-    parameter bit EXPERIMENTAL_XICRC=0
+    parameter bit EXPERIMENTAL_XICRC=1
 )(input logic clk_i,rst_i,
   output wire fault_o,commit_valid_o,
   output wire [31:0] commit_pc_o,commit_instr_o,commit_data_o,

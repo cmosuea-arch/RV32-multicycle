@@ -2,13 +2,13 @@
 ## Objetivo
 Gerar controles a partir da instrução (RISC-V oficial e guia).
 ## Entradas
-instr_i[31:0]; parâmetro EXPERIMENTAL_XICRC=0 por padrão.
+instr_i[31:0]; parâmetro EXPERIMENTAL_XICRC=1 por padrão (nome histórico preservado).
 ## Saídas
 alu_op_o e seletores/enables descritos na baseline, incluindo crc_o.
 ## Comportamento
 Reconhece as instruções de docs/isa/enabled.json; demais palavras ilegais.
-Com EXPERIMENTAL_XICRC=1, também reconhece CRCB/CRCH/CRCW sob o
-[contrato provisório](../architecture/crc_provisional.md).
+Com EXPERIMENTAL_XICRC=1, reconhece CRCB/CRCH/CRCW sob o
+[contrato oficial implementado](../architecture/crc.md). Valor 0 desabilita as três.
 ## Dependências
 ALU e FSM.
 ## Casos especiais
@@ -33,4 +33,4 @@ Decoder → muxes de operandos / RF / FSM.
 ## Commit validado
 Tags core-smoke-v1, isa-rtype-v1 e marcos seguintes em git log.
 ## Pendências
-Confirmação oficial do CRC provisório, definição de sistema e ChipInventor para submissão.
+Definição de sistema e diagramas ChipInventor para submissão.

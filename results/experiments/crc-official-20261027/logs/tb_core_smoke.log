@@ -1,0 +1,3 @@
+$ vvp /tmp/cmos-crc-official-validation-ddy3vfjx/build/tb_core_smoke
+PASS core_smoke: ADD SUB ADDI, dependencies and x0 through FSM
+/tmp/cmos-crc-official-validation-ddy3vfjx/tb/integration/tb_core_smoke.sv:39: $finish called at 206000 (1ps)

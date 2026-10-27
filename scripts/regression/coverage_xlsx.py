@@ -112,7 +112,7 @@ def generate_xlsx(csv_path, output_path):
     summary += [
         ([], {}, set(), None),
         (['Estado geral', f'{total_passed}/{len(data)} instruções'], {1: 3, 2: 3}, set(), None),
-        (['Firmware oficial', 'PENDENTE'], {1: 3, 2: 7}, set(), None),
+        (['Firmware oficial', 'PASS' if any(item['Regressão']=='PASS' for item in data) and all(item['Firmware oficial']=='PASS' for item in data if item['Regressão']=='PASS') else 'PENDENTE'], {1: 3}, set(), None),
         (['Observação', 'O firmware próprio não substitui a validação oficial.'], {1: 3}, set(), 30),
     ]
 

@@ -1,23 +1,48 @@
-# Firmware oficial — PENDENTE
+# Firmware oficial — execução RTL PASS em 27/10/2026
 
-O PDF p.4 informa distribuição na plataforma ChampionCHIP. Nenhum arquivo
-oficial está presente neste repositório. Não atribuir PASS ao firmware oficial
-com base no demo próprio. Quando disponível, conferir mapa, inicialização de
-memórias e protocolo de término antes de integrar o testbench.
+Recebido para análise em **27/10/2026** pelo link fornecido pelo usuário:
+[CCX_Brasil_Edition_Firmware_Stage_2](https://github.com/championchip-experience-community/CCX_Brasil_Edition_Firmware_Stage_2).
+Revisão consultada: `edc7d5990d2185942081ee8a6899aa603cc91569`.
 
-Atualização de **20/10/2026**: segundo mensagem de 19/10 encaminhada pelo usuário,
-será um programa assembly de testes de todas as instruções, a ser convertido
-em código de máquina para a IMEM. A publicação depende de autorização; não há
-data nem formato de arquivo confirmados. A equipe pode usar programas próprios
-até o recebimento, sem substituir a validação oficial.
+- [source.json](source.json) registra URLs fixas, SHA-256 e características da imagem.
+- [receipt.md](receipt.md) registra formato, entrada e protocolo de término conhecidos.
+- [Análise do CRC](../../docs/architecture/crc_official_20261027.md) registra as
+  diferenças que precisam ser corrigidas no projeto antes da validação.
 
-O caminho próprio já existe: fonte → GCC/assembler/linker → ELF → binário →
-`build/smoke.hex` → `$readmemh` da IMEM. `programs.py` também gera diretamente
-palavras para `build/isa.hex`, verificadas por trace no TB. Ao receber o oficial,
-conferir se vem como fonte, ELF ou imagem, a ordem/quantidade de palavras, ponto
-de entrada, memória de dados e critério de sucesso antes de adaptar esse caminho.
-Detalhes: [registro dos esclarecimentos](../../docs/architecture/clarifications_20261020.md).
+O repositório upstream contém `firmware.s`, `firmware.txt` e o README de integração.
+O README recomenda usar a imagem completa de `firmware.txt` na validação funcional;
+para teste físico rápido, apresenta um mock pequeno, sem exigir embutir o programa
+completo na síntese. Os arquivos originais permanecem identificados pelas URLs e
+hashes; não foram incorporados integralmente a este diretório.
 
-Quando os arquivos chegarem, preencher o [checklist de recebimento](receipt.md)
-antes de adaptar o carregamento da IMEM e o testbench. Ele não pressupõe formato
-de imagem, instruções de término ou assinatura do programa oficial.
+A imagem inicia em `0x00400000` e contém 259 palavras consecutivas, incluindo
+cinco constantes usadas por loads. É necessário converter os pares endereço/palavra
+para o formato de carga da nossa IMEM, preservando esses valores.
+
+No término, o programa escreve x4=0 (sucesso) ou x4=FFFFFFFF (falha) e entra em
+loop. O zero inicial de x4 após reset não é sucesso: o TB deve observar a escrita
+de término/loop final. Isso substitui a hipótese anterior de reutilizar uma
+assinatura na DMEM; a assinatura CMOS continua exclusiva dos programas próprios.
+
+O CRC foi adequado, a imagem foi integrada e o teste completo passou:
+
+```text
+PASS official_firmware: x4=00000000, 252 retirements, 1026 cycles,
+CRC=16, ISA=44, terminal loop verified
+```
+
+[Logs, VCD e figura real](../../results/experiments/crc-official-20261027/README.md).
+A cobertura é 44/47; as três instruções de sistema da tabela do guia continuam
+sem definição. Esse PASS não constitui síntese ou signoff físico.
+
+```bash
+make official-fetch  # primeira preparação: download explícito com revisão/SHA
+make official-run
+make official-wave
+```
+
+O cache original é ignorado pelo Git e sobrevive a make clean. O converter
+`build_official.py` também aceita `--source firmware.txt`; sem --fetch não acessa
+a rede. A regressão inclui o teste oficial e verifica 44 tipos em execução,
+16 CRCs, a escrita de término e três commits no loop. O CRC anterior foi usado
+como teste negativo e o firmware detectou a falha. Síntese reservada ao usuário.

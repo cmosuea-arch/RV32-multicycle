@@ -19,6 +19,7 @@ git clone https://github.com/cmosuea-arch/RV32-multicycle.git
 cd RV32-multicycle
 bash scripts/setup/install.sh
 make doctor
+make official-fetch
 make regression
 ```
 
@@ -67,7 +68,7 @@ make simple-synth
 ```
 
 `run` usa o firmware baseline; `simple-system` usa o programa experimental com
-CRC provisório. `simple-synth` requer Yosys e verifica uma netlist genérica;
+contrato oficial Xicrc. `simple-synth` requer Yosys e verifica uma netlist genérica;
 não precisa de Docker. Veja [a aula de síntese](../labs/rtl-to-gds/07-sintese.md).
 
 Para incluir GTKWave:

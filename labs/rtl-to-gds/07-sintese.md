@@ -60,10 +60,10 @@ make simple-system
 Se faltar uma ferramenta, siga [a instalação](../../docs/setup.md).
 O teste RTL deve terminar com `PASS simple_system`, cobrindo boot, reset,
 assinatura incorreta e instrução inválida. O CRC usado aqui segue o
-[contrato provisório CMOS](../../docs/architecture/crc_provisional.md).
+[contrato oficial Xicrc](../../docs/architecture/crc.md).
 
 Para fechar uma alteração funcional antes de sintetizar, use também
-`make regression`: são 31 TBs e lint. Fazer esta aula não exige reescrever os módulos.
+`make regression`: são 32 TBs e lint. Fazer esta aula não exige reescrever os módulos.
 
 ## Execução automática
 

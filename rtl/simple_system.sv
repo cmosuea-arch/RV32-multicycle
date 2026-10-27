@@ -14,7 +14,7 @@ module simple_system #(
     wire commit_valid;
     wire [31:0] commit_pc,commit_instr,commit_data;
     wire [4:0] commit_rd;
-    // Reutiliza o mesmo core com CRC provisório habilitado; não certifica Xicrc oficial.
+    // Usa o mesmo contrato Xicrc do top de validação, com firmware próprio reduzido.
     riscv_core #(.EXPERIMENTAL_XICRC(1)) core(
         clk_i,rst_i,rdata,bus_fault,address,wdata,oe,we,bw,
         fault_o,commit_valid,commit_pc,commit_instr,commit_data,commit_rd);

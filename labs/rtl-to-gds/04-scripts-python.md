@@ -14,7 +14,7 @@ vira circuito; eles executam no computador de desenvolvimento.
 | [programs.py](../../scripts/sim/programs.py) | `enabled.json`, modelos e seed | `isa.hex`, `isa.trace`, `isa_counts.json`, `isa_memory.vec`, `decoder.vec` |
 | [build_firmware.py](../../scripts/sim/build_firmware.py) | C, startup e linker script | ELF, binário, ROM hex e disassembly |
 | [crc_model.py](../../scripts/sim/crc_model.py) | acumulador, dados e tamanho | referência CRC usando binascii, sem copiar o RTL |
-| [crc_vectors.py](../../scripts/sim/crc_vectors.py) | contrato CRC provisório e seed | `crc.vec`, ROM/trace/contagens CRC separados da baseline |
+| [crc_vectors.py](../../scripts/sim/crc_vectors.py) | contrato Xicrc oficial e acumulador | `crc.vec`, ROM/trace/contagens CRC separados da baseline |
 | [build_simple.py](../../scripts/sim/build_simple.py) | firmware/simple | `simple.elf`, `simple.hex`, mapa e disassembly |
 | [run.py](../../scripts/regression/run.py) | modo solicitado e arquivos do projeto | chamadas às ferramentas, logs e manifesto |
 | [coverage.py](../../scripts/regression/coverage.py) | instruções habilitadas e contagens | CSV e Markdown; chama o gerador Excel |

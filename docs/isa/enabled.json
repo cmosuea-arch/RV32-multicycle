@@ -39,5 +39,8 @@
   "MUL",
   "MULH",
   "MULHSU",
-  "MULHU"
+  "MULHU",
+  "CRCB",
+  "CRCH",
+  "CRCW"
 ]

@@ -1,0 +1,2 @@
+$ /usr/bin/python3 /tmp/cmos-crc-official-validation-ddy3vfjx/scripts/sim/build_simple.py
+PASS simple firmware: 608/2048 ROM bytes, 1 KiB RAM, official Xicrc contract

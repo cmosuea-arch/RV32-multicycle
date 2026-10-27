@@ -1,7 +1,7 @@
 # Firmware do simple_system
 
 Programa próprio RV32I_Zmmul com CRCB/CRCH/CRCW sob o
-[contrato provisório CMOS](../../docs/architecture/crc_provisional.md).
+[contrato oficial Xicrc](../../docs/architecture/crc.md).
 
 `start.S` configura pilha, copia `.data`, limpa `.bss`, chama `main` e escreve
 seu retorno em `_signature`, definido no linker. Depois permanece em loop.

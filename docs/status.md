@@ -1,101 +1,76 @@
-# Estado do projeto — 2026-10-20
+# Estado do projeto — 2026-10-27
 
-Versão parcial de entrega: `rtl-subset-v0.1`. **41/47 instruções (87,23%)**.
-Matriz por instrução e categoria: [isa/coverage.md](isa/coverage.md).
-Fonte RTL validada: tag `isa-41-v1` (`ea6bccd`); a tag da entrega também inclui
-firmware, automação, documentação e evidências finais.
+**44/47 instruções (93,62%)**, com Xicrc habilitado por padrão. Matriz:
+[coverage.md](isa/coverage.md) / [Excel](isa/coverage.xlsx).
+[Rodada identificada de 27/10](../results/experiments/crc-official-20261027/README.md).
+O projeto completo permanece NOT DONE: sistema/sincronização, interface final,
+resultados físicos e fechamento da entrega ainda faltam.
 
-As tags acima identificam a baseline histórica. A versão atual acrescenta CRC
-provisório (opt-in) e `simple_system`, conforme evidências em
-[`results/experiments/`](../results/experiments/simple/README.md).
+## Resultado atual
 
-**Atualização da organização, recebida em 20/10:** CRCB/CRCH/CRCW usam
-CRC-16-CCITT-FALSE, com 8/16/32 bits de dados e resultado de 16 bits. O algoritmo
-coincide com o atual usando seed `0xFFFF`; falta confirmar o contrato dos
-operandos e a ordem dos bytes. O firmware será um teste assembly para a IMEM,
-com publicação prevista após autorização, ainda sem arquivo recebido. O usuário
-informou não ter pseudocódigo/vetores adicionais. Veja o
-[registro e comparação](architecture/clarifications_20261020.md).
+O firmware oficial, revisão edc7d5990d2185942081ee8a6899aa603cc91569, definiu
+rs1=dados, rs2=CRC anterior e bytes mais significativos primeiro. RTL, modelo,
+vetores e firmware próprio foram corrigidos. O parâmetro histórico
+EXPERIMENTAL_XICRC agora vale 1 por padrão; 0 preserva o subconjunto sem CRC.
+[Contrato implementado](architecture/crc.md).
 
 | Marco | Estado | Evidência / limite |
 |---|---|---|
-| M0 — baseline | Parcial | Contratos dos blocos confirmados congelados; CRC/pinagem pendentes |
-| M1 — datapath básico | PASS | PC + IMEM + IR e demais blocos básicos integrados |
-| M2 — primeira instrução | PASS | ADD/SUB/ADDI, tag core-smoke-v1 |
-| M3 — operações básicas | PASS | 21/47, tag isa-21-v1 |
-| M4 — controle de fluxo | PASS | 29/47, tag isa-29-v1 |
-| M5 — memória | PASS | 37/47, tag isa-37-v1 |
-| M6 — Zmmul | PASS | 41/47, tag isa-41-v1 |
-| M7/M8 — Xicrc e ISA completa | NOT DONE | Algoritmo CRC identificado; faltam contrato dos operandos e 3 instruções de sistema |
-| Firmware próprio | PASS | C/assembly, assinatura 600dc0de; 598 aposentadorias, 2579 ciclos |
-| M9 — firmware oficial | NOT DONE | Arquivo/protocolo de validação oficial ausentes |
-| M10 — RTL final | NOT DONE | Faltam M7–M9 e interface final |
-| M11/M12 — OpenLane/GDSII | Não iniciados | Pré-requisitos AGENTS.md §33 não atendidos |
-| Ambiente físico | PASS | LibreLane/OpenROAD/SKY130A e smoke test 80/80 até GDSII |
-| CRC experimental | PASS no contrato CMOS | 3 instruções; M7 oficial continua pendente |
-| simple_system | PASS em RTL e netlist genérica | ROM 2 KiB/RAM 1 KiB, firmware próprio com CRC; sem fluxo físico |
+| M0 — contratos | Parcial | Blocos implementados; interface final/sistema pendentes |
+| M1/M2 — datapath e primeira instrução | PASS | Regressão preserva os blocos e o primeiro programa |
+| M3–M6 — RV32I/Zmmul | PASS | Tags históricas isa-21-v1 até isa-41-v1; nova regressão preservada |
+| M7 — Xicrc | PASS funcional | Unidade, decoder, core, ISA e firmware oficial na revisão de 27/10 |
+| M8 — ISA completa | NOT DONE | Faltam 3 instruções de sistema/sincronização ainda não enumeradas |
+| M9 — firmware oficial publicado | PASS na simulação RTL | 252 aposentadorias, 1026 ciclos, 16 CRCs, 44 tipos exercitados |
+| M10 — RTL final | NOT DONE | Faltam M8, interface final e tag da entrega |
+| M11/M12 — fluxo físico/GDSII | NOT DONE | Síntese da versão atual reservada ao usuário |
+| Ambiente físico | PASS histórico | Smoke LibreLane do circuito de exemplo, sem validar o processador |
+| simple_system | PASS em RTL | 7 cenários, firmware próprio ajustado; netlist anterior é histórica |
 
-Blocos ALU, Register File, Immediate, PC, IR, IMEM, Branch Comparator, LSU, DMEM,
-Address Decoder e Multiplicador têm RTL, TB unitário, integração, diagrama Mermaid,
-documentação, evidências PASS e commits identificados. Decoder, FSM e core estão
-funcionais para as 41 instruções. Top de integração executável, top físico pendente.
+Regressão atual: **32 TBs PASS (14 unitários + 18 integrações) e lint dos dois tops PASS**.
+ISA: 88.727 aposentadorias, 45 stores físicos e 12 bytes finais comparados.
+CRC: 18.304 vetores e 2.146 operações em 32.930 aposentadorias no teste dedicado.
+O decoder varre 131.072 combinações com CRC habilitado e desabilitado.
+Firmware próprio baseline: 598 aposentadorias/2579 ciclos e assinatura 600dc0de.
 
-Rodada funcional registrada em 2026-10-13: **31 testbenches PASS + lint Verilator PASS**, sem diagnósticos
-de compilação Icarus. Teste ISA: **76.409 aposentadorias**, 45 stores físicos e
-12 bytes finais comparados ao modelo Python. Decoder: 131.072 combinações de
-opcode/funct3/funct7. Detalhes em [verification.md](verification.md).
+O programa oficial foi carregado a partir de firmware.txt, sem remontagem,
+preservando 259 palavras e constantes da IMEM. A bancada exige a escrita de
+x4=0 no término e três aposentadorias do loop final: o zero do reset não aprova.
+O CRC anterior foi usado em teste negativo e terminou em x4=FFFFFFFF como esperado.
+VCD, figura real e logs estão na rodada identificada; a escrita final ocorreu
+em 10145 ns. Esse tempo é de simulação, sem caracterizar timing físico.
 
-O perfil experimental acrescenta CRCB/CRCH/CRCW às 41 instruções, mas não muda
-a cobertura de conformidade: **41/47 (87,23%)**. A variante CRC escolhida inicialmente
-coincide com CCITT-FALSE, identificada na mensagem de 20/10; o contrato de
-operandos/bytes ainda exige confirmação antes de homologar as instruções.
-O sistema mínimo passou também por síntese lógica e dois boots na netlist.
+## Reproduzir e continuar
 
-Para reproduzir: `make run` executa o firmware baseline, `make simple-system`
-verifica o sistema experimental e `make simple-synth` gera/testa sua netlist.
-O [laboratório](../labs/rtl-to-gds/README.md) possui oito aulas, com
-[síntese na aula 7](../labs/rtl-to-gds/07-sintese.md) e preparação física na aula 8.
-Consulte [synthesis.md](synthesis.md) para saídas e limites.
+No WSL, um comando por vez:
 
-Pendências para retomar: [architecture/official_questions.md](architecture/official_questions.md).
-O [relatório da Fase 2](report/README.md) possui versão preliminar v0.5 em Markdown/PDF,
-com 12 páginas (antes 19), figuras do datapath/controle e waveform próprio de
-término. O boot e demais logs/VCD/hashes continuam arquivados; há oito páginas
-disponíveis para diagramas e resultados finais.
-Os requisitos foram conferidos no guia. Os diagramas ChipInventor estão com
-outro colaborador; as figuras,
-resultados físicos, evidência do firmware oficial e vídeo ainda faltam para
-fechar a submissão. Em 17/10 apenas o firmware próprio foi reexecutado para captura;
-a regressão completa continua referida à rodada histórica identificada acima.
-**O projeto completo e a parte RTL da competição permanecem NOT DONE.**
+```bash
+make official-fetch   # obtém e verifica a revisão fixada; necessário uma vez por clone
+make regression       # simulação e lint, sem síntese
+make official-run     # somente o teste oficial
+make official-wave    # nova captura do firmware oficial
+```
 
-Ordem de execução e progresso: [roteiro de conclusão](completion_roadmap.md).
-Em 17/10 o usuário confirmou que os esclarecimentos e o firmware ainda não
-foram enviados pela organização. Esse é o registro histórico anterior às
-mensagens de 19–20/10. As pendências restantes estão discriminadas acima;
-a revisão atual concluiu as figuras do datapath e as evidências visuais próprias,
-sem alterar RTL. Registro: [firmware-wave](../results/experiments/firmware-wave/README.md).
+O cache original é ignorado pelo Git e sobrevive a make clean. Os resultados
+atuais foram obtidos em cópia isolada; os logs da prática foram preservados.
+As evidências e tags anteriores continuam históricas e não substituem essa rodada.
 
-Revisão editorial v0.4 (histórico): descrições/testes consolidados em tabelas, sem reduzir
-fontes ou executar novos testes. A execução do projeto fica para a etapa
-posterior acordada com o usuário.
+A síntese genérica antiga (32922 células/dois boots) é da versão anterior do CRC.
+Não foi repetida, conforme orientação do usuário. Para a nova versão, o usuário
+poderá executar make simple-synth e depois as etapas de exploração preparadas em
+[openlane/simple_system](../openlane/simple_system/README.md). O experimento não
+fecha automaticamente os requisitos físicos da competição.
 
-Preparação da prática em 17/10/2026: mesmo workspace/branch, build/logs/ondas
-arquivados, sem nova simulação. [Histórico dos logs](../results/history/pre-guided-20261017/README.md)
-e [percurso para o vídeo](../labs/rtl-to-gds/00-pratica-para-video.md).
-As evidências do relatório permanecem intactas; a matriz publicada aponta aos
-logs preservados até a próxima regressão completa.
+## Pendências da entrega
 
-Revisão de 20/10: comparação do CRC e da carga de firmware com as mensagens
-recebidas; documentação/relatório atualizados. Modelo Python conferido para
-CCITT-FALSE com agrupamentos de 1/2/4 bytes. Sem alteração RTL, nova regressão
-ou execução física nesta revisão; as evidências PASS continuam nas rodadas
-identificadas, sem antecipar M7, M9 ou 47/47.
+1. Confirmar nomes/códigos/comportamento das três instruções de sistema/sincronização.
+2. Fechar interface do top final, pinos/periféricos e estratégia física das memórias.
+3. Incorporar os diagramas ChipInventor, a cargo do outro colaborador.
+4. Executar/revisar síntese e fluxo físico da versão escolhida; obter área/densidade,
+   timing, DRC/LVS/antena e GDSII identificados.
+5. Fechar relatório, autoria, vídeo de 5–7 minutos, pacote e tag final.
 
-Preparação posterior de 20/10, com síntese reservada ao usuário: contrato CRC
-e [formulário do retorno oficial](architecture/crc_official_confirmation.md)
-organizados, [recebimento do firmware](../firmware/official/receipt.md) preparado
-e [configuração física experimental](../openlane/simple_system/README.md) disponível.
-Os scripts de execução tiveram verificações estáticas e testes de barreiras de
-entrada; a tentativa inicial de síntese SKY130A ficou sem resultado final e não
-é PASS. Nenhuma nova rodada será iniciada automaticamente nesta preparação.
+O relatório preliminar v0.6 incorpora CRC e execução oficial, preservando espaço
+para diagramas e resultados físicos. Fontes e lacunas:
+[questões oficiais](architecture/official_questions.md) e
+[roteiro de conclusão](completion_roadmap.md).

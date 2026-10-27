@@ -1,0 +1,3 @@
+EXPECTED FAILURE: official firmware must reject the pre-fix CRC
+FATAL: tb/integration/tb_official_firmware.sv:40: official FAIL x4=ffffffff pc=004003f0
+       Time: 7045000  Scope: tb_official_firmware

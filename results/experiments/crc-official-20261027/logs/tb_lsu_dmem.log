@@ -1,0 +1,3 @@
+$ vvp /tmp/cmos-crc-official-validation-ddy3vfjx/build/tb_lsu_dmem
+PASS lsu_dmem: SW/SB/SH, byte preservation and load formatting
+/tmp/cmos-crc-official-validation-ddy3vfjx/tb/integration/tb_lsu_dmem.sv:33: $finish called at 96000 (1ps)

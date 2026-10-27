@@ -1,0 +1,2 @@
+$ /usr/bin/python3 /tmp/cmos-crc-official-validation-ddy3vfjx/scripts/sim/build_official.py
+READY official image: 259/512 words, 44 instruction types, commit edc7d599

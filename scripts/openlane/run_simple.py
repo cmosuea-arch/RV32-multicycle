@@ -79,7 +79,7 @@ def main():
     logs = ROOT / 'results/logs'
     logs.mkdir(parents=True, exist_ok=True)
     report_path = logs / 'simple_openlane.json'
-    summary = {'status': 'RUNNING', 'scope': 'experimental simple_system; own firmware; provisional CRC',
+    summary = {'status': 'RUNNING', 'scope': 'experimental simple_system; own firmware; official Xicrc contract',
                'stage_requested': args.stage, 'stop_after': STAGES[args.stage],
                'utc': datetime.now(timezone.utc).isoformat(),
                'responsible': os.environ.get('USER', 'unknown'),

@@ -4,6 +4,8 @@
 import csv
 import argparse
 import json
+import hashlib
+import subprocess
 from pathlib import Path
 import sys
 
@@ -17,6 +19,19 @@ def write_coverage():
     # Chamado pelo executor após sucesso; sozinho não executa nem certifica os TBs.
     enabled=set(json.loads((ROOT/'docs/isa/enabled.json').read_text()))
     counts=json.loads((ROOT/'build/isa_counts.json').read_text())
+    official=json.loads((ROOT/'results/logs/official_firmware.json').read_text())
+    revision=subprocess.run(['git','rev-parse','--short','HEAD'],cwd=ROOT,capture_output=True,text=True)
+    commit='worktree / SHA-256 regression.json'
+    if revision.returncode==0:
+        changes=subprocess.run(['git','status','--porcelain','--','rtl','tb','scripts',
+                                'firmware','Makefile','docs/isa/enabled.json'],
+                               cwd=ROOT,capture_output=True,text=True,check=True)
+        commit=revision.stdout.strip()+(' + worktree' if changes.stdout.strip() else '')
+    if official.get('status')!='PASS' or not enabled.issubset(official.get('instructions',[])):
+        raise RuntimeError('official firmware execution does not cover enabled ISA')
+    for name,expected in official['sha256'].items():
+        if hashlib.sha256((ROOT/name).read_bytes()).hexdigest()!=expected:
+            raise RuntimeError(f'stale official evidence: {name}')
     if not enabled.issubset(counts):
         # Exige presença no trace modelado; a comparação desse trace é feita em tb_isa.
         raise RuntimeError('coverage includes instructions absent from trace')
@@ -26,24 +41,24 @@ def write_coverage():
              'Commit','Evidência','Observação']
     modules={'Register':'alu','Immediate':'alu/imm_ext','Upper':'alu/pc/imm_ext',
              'Branch':'branch_comp','Jump':'pc/alu','Load':'lsu/dmem','Store':'lsu/dmem',
-             'Multiplication':'multiplier','CRC':'PENDENTE','Sistema/Sincronização':'PENDENTE'}
+             'Multiplication':'multiplier','CRC':'crc','Sistema/Sincronização':'PENDENTE'}
     unit_logs={'Register':'tb_alu','Immediate':'tb_imm_ext; tb_alu','Upper':'tb_imm_ext; tb_pc',
                'Branch':'tb_branch_comp','Jump':'tb_pc; tb_imm_ext','Load':'tb_lsu; tb_dmem',
-               'Store':'tb_lsu; tb_dmem','Multiplication':'tb_multiplier'}
+               'Store':'tb_lsu; tb_dmem','Multiplication':'tb_multiplier','CRC':'tb_crc'}
     with (ROOT/'docs/isa/coverage.csv').open('w',newline='') as f:
         writer=csv.writer(f,lineterminator='\n'); writer.writerow(headers)
         for category,names in CATEGORIES.items():
             for name in names:
                 op,f3,f7=fields(name)
-                # CRC provisório e slots de sistema não entram como cobertura oficial.
+                # Só instruções habilitadas, presentes no trace e no firmware entram no PASS.
                 passed=name in enabled
                 state='PASS' if passed else 'PENDENTE'
                 writer.writerow([category,name,f'{op:07b}' if op is not None else '',
                                  f'{f3:03b}' if f3 is not None else '',f'{f7:07b}' if f7 is not None else '',
-                                 modules[category],state,state,state,'PENDENTE',
-                                 'isa-41-v1' if passed else '',
+                                 modules[category],state,state,state,state,
+                                 commit if passed else '',
                                  ('; '.join('results/logs/'+test+'.log' for test in
-                                            ['tb_decoder',*unit_logs[category].split('; '),'tb_isa'])) if passed else '',
+                                            ['tb_decoder',*unit_logs[category].split('; '),'tb_isa','tb_official_firmware'])) if passed else '',
                                  f'{counts.get(name,0)} aposentadorias no teste próprio' if passed else 'Definição oficial pendente'])
     render_coverage()
 
@@ -89,7 +104,7 @@ def render_coverage():
         lines.append(f'| {labels.get(category,category)} | {count}/{len(items)} | {percent(count,len(items))} |')
     lines.append(f'| **Total** | **{n}/{total}** | **{percent(n,total)}** |')
     firmware=', '.join(dict.fromkeys(row['Firmware oficial'] for row in rows))
-    lines += ['',f'**Firmware oficial:** {firmware}. O firmware próprio não substitui essa validação.',
+    lines += ['',f'**Firmware oficial:** {firmware}. A evidência da execução fica em `official_firmware.json` junto aos logs.',
               'Slots de sistema são pendências, não nomes oficiais de instruções.']
     for category,items in groups.items():
         lines += ['',f'## {labels.get(category,category)}','']

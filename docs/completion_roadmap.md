@@ -1,21 +1,21 @@
 # Roteiro de conclusão e submissão
 
-Atualizado em **2026-10-20**. Acompanhamento da ordem acordada com a equipe.
-Baseline: **41/47 (87,23%)**. CRC experimental: três operações adicionais.
+Atualizado em **2026-10-27**. Acompanhamento da ordem acordada com a equipe.
+Perfil atual: **44/47 (93,62%)**, CRC oficial e firmware publicado PASS em RTL.
 O fechamento oficial depende das definições registradas em
 [official_questions.md](architecture/official_questions.md).
 
 | Ordem | Entrega | Estado / próximo resultado verificável |
 |---|---|---|
-| 1 | Definições oficiais | Mensagens recebidas: CCITT-FALSE e testes assembly para IMEM; faltam operandos/ordem dos bytes CRC, sistema/top e arquivo do firmware |
-| 2 | CRC oficial, até 44/47 | Algoritmo atual coincide com o informado usando seed FFFF; confirmar exemplos de rs1/rs2/rd antes de homologar o contrato |
+| 1 | Definições oficiais | Firmware recebido: CRC e término identificados; sistema/sincronização e top final ainda carecem de definição |
+| 2 | CRC oficial, 44/47 | Concluído funcionalmente: unidade/core/ISA/firmware e regressão PASS |
 | 3 | Sistema/sincronização, até 47/47 | Aguardando nomes, códigos e semântica oficiais |
 | 4 | Top final | Integração atual funcional; fechar pinos/periféricos/capacidades e implementação das memórias |
-| 5 | Firmware oficial | Testes assembly para IMEM, publicação prevista após autorização; falta arquivo/protocolo, execução e logs/waveforms |
+| 5 | Firmware oficial | PASS na revisão edc7d59: 252 aposentadorias/1026 ciclos, x4 e loop final; log/VCD/figura arquivados |
 | 6 | Congelamento RTL | Regressão final, evidências, cobertura e tag da versão de entrega |
 | 7 | Desenhos | Datapath+controle atuais prontos no relatório; diagramas ChipInventor com outro colaborador |
 | 8 | Fluxo físico | Configuração experimental preparada para execução manual; faltam rodada concluída, revisão e resultados finais |
-| 9 | Relatório final | v0.5 com esclarecimentos de 20/10; manter reserva de diagramas/resultados e completar autoria e resultados oficiais/físicos |
+| 9 | Relatório final | v0.6 com execução oficial de 27/10; manter reserva de diagramas/resultados e completar autoria e resultados oficiais/físicos |
 | 10 | Vídeo | Produzir 5–7 minutos, disponibilizar no YouTube e conferir os seis temas do guia |
 | 11 | Submissão | Conferir regras atuais e reunir PDF, GDSII, GL, config.json, código/TBs e link do vídeo |
 
@@ -49,6 +49,8 @@ Situação técnica e evidências: [status.md](status.md).
 
 ## Esclarecimentos de 20/10
 
+Registro histórico anterior à [fonte recebida em 27/10](architecture/crc_official_20261027.md).
+
 O [registro recebido](architecture/clarifications_20261020.md) reduz P01: o
 algoritmo é CCITT-FALSE, mas ainda não há vetores/pseudocódigo dos operandos.
 O usuário confirmou não dispor desses detalhes. O firmware próprio já é
@@ -62,6 +64,13 @@ preparados o [formulário CRC](architecture/crc_official_confirmation.md), o
 [roteiro de síntese física experimental](../openlane/simple_system/README.md).
 Uma tentativa automatizada anterior não produziu resultado final; não há nova
 síntese SKY130A aprovada nesta preparação.
+
+## Revisão do firmware em 27/10
+
+O CRC foi corrigido e a imagem publicada passou no core. A regressão atual
+aprova 32 TBs/lint, o teste negativo rejeita o CRC anterior e o VCD oficial foi
+conferido com o log. Não houve síntese, conforme orientação do usuário. A imagem
+contém 44 tipos; sistema/sincronização e a interface final continuam pendentes.
 
 ## Prática guiada no workspace atual
 

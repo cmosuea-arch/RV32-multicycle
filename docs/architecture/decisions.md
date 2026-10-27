@@ -42,9 +42,9 @@ O experimento não encerra requisitos do top final nem do firmware oficial.
 
 | ID | Lacuna | Evidência | Impacto |
 |---|---|---|---|
-| P01 | CRC: papel de rs1/rs2, aplicação da seed, ordem dos bytes e bits altos de rd | Mensagem de 20/10 confirma CCITT-FALSE e tamanhos; PDF pp.12,14–15 não fecha operandos | bloqueia homologação das 3 Xicrc |
+| P01 | Resolvida para a revisão publicada | Contrato implementado; unidade, core e firmware oficial PASS | Perfil padrão ampliado para 44/47 |
 | P02 | nomes e comportamento das 3 instruções sistema/sincronização | PDF p.2: apenas quantidade | bloqueia categoria; não presumir nomes pela contagem |
-| P03 | arquivo do firmware oficial e critérios de término | Mensagem de 19/10: testes assembly para IMEM, publicação prevista após autorização | bloqueia M9+ |
+| P03 | Resolvida para a revisão publicada | Imagem completa, x4 final e loop verificados; log/VCD arquivados | Firmware oficial PASS em RTL; sem declaração de signoff |
 | P04 | pinos UART/GPIO e interface final de submissão | PDF pp.9–10: figura 12 pinos, tabela apenas clk/rst | top físico pendente |
 
 A especificação RISC-V oficial complementa semântica e codificação das instruções
@@ -55,3 +55,15 @@ Mantemos o RTL e os parâmetros atuais: o algoritmo CRC foi identificado, mas
 faltam exemplos/pseudocódigo dos operandos. Não fixar `0xFFFF` em toda instrução
 sem confirmar se a inicialização é por mensagem ou por operação. Os programas
 próprios já são convertidos em palavras carregadas na IMEM; o oficial não chegou.
+
+Revisão de 27/10/2026: [contrato extraído do firmware](crc_official_20261027.md).
+A fonte agora está disponível; usa seed inicial por software e resultados
+encadeados em rs2. A escolha CMOS anterior de rs1 como CRC e bytes baixos
+primeiro deve ser substituída, com atualização de testes e evidências. Nesta
+análise o RTL foi preservado; as decisões anteriores são histórico da implementação.
+
+Adequação posterior em 27/10: CRC corrigido, perfil padrão habilitado e 44/47
+verificadas. O nome EXPERIMENTAL_XICRC foi preservado para não quebrar configurações;
+seu valor padrão agora é 1, e valor 0 mantém o subconjunto sem CRC. O firmware
+oficial passa no RTL. A simulação usa a imagem publicada sem remontar assembly,
+e só aceita x4 após a escrita final e três commits no loop. Síntese reservada ao usuário.

@@ -1,0 +1,2 @@
+$ /usr/bin/python3 /tmp/cmos-crc-official-validation-ddy3vfjx/scripts/sim/crc_vectors.py
+PASS Xicrc: 18304 vectors, 2146 CRC retirements expected

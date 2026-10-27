@@ -4,18 +4,18 @@ Processador RISC-V de 32 bits, multiciclo, desenvolvido incrementalmente para a
 Fase 2 da ChampionCHIP. Este repositório reúne RTL, testbenches autoverificáveis,
 firmware próprio, automação Python/Make e documentação arquitetural.
 
-**Baseline: 41/47 instruções (87,23%)**, com 14 testbenches unitários e 17 de
-integração na regressão atual. Há também três instruções CRC sob um
-[contrato provisório CMOS](docs/architecture/crc_provisional.md), habilitado
-no `simple_system`, com firmware próprio e síntese lógica genérica. A mensagem
-recebida em 20/10 identifica CRC-16-CCITT-FALSE, usado no algoritmo atual;
-contrato dos operandos CRC, sistema/sincronização, firmware oficial e interface física final
-continuam pendentes. O projeto completo ainda
-não está concluído. Consulte [o estado detalhado](docs/status.md) e
-[as definições oficiais necessárias](docs/architecture/official_questions.md).
-O [registro de 20/10](docs/architecture/clarifications_20261020.md) também informa
-que o firmware oficial será um teste assembly para a IMEM, ainda não recebido.
-Nosso fluxo próprio já converte programas em palavras carregadas nessa memória.
+**Perfil atual: 44/47 instruções (93,62%)**, com 14 testbenches unitários,
+18 de integração e lint dos dois tops PASS. O CRC foi adequado ao
+[contrato oficial](docs/architecture/crc.md): rs1=dados, rs2=CRC anterior e bytes
+mais significativos primeiro. O firmware oficial concluiu em RTL, com 252
+aposentadorias e 1026 ciclos; [logs/VCD e figura](results/experiments/crc-official-20261027/README.md)
+estão arquivados com hashes. O zero inicial de x4 não é aceito como sucesso.
+
+As três instruções de sistema/sincronização, a interface final e os resultados
+físicos continuam pendentes. O projeto completo ainda não está concluído.
+Consulte [o estado detalhado](docs/status.md) e
+[as definições restantes](docs/architecture/official_questions.md).
+A origem do firmware está fixada por [revisão e SHA-256](firmware/official/source.json).
 
 O [relatório técnico da Fase 2](docs/report/README.md) já possui redação inicial
 e prévia PDF, organizadas conforme o guia da competição. A
@@ -87,6 +87,7 @@ git clone https://github.com/cmosuea-arch/RV32-multicycle.git
 cd RV32-multicycle
 bash scripts/setup/install.sh
 make doctor
+make official-fetch
 make regression
 ```
 
@@ -109,8 +110,8 @@ veja [os requisitos e caminhos](docs/openlane/environment.md).
 make help              # lista comandos e suas finalidades
 make clean             # arquiva build/logs/ondas para reiniciar uma prática
 make tb TB=tb_alu       # uma bancada, com preparação das entradas
-make unit              # 14 testbenches unitários, incluindo CRC provisório
-make integration       # 17 integrações, incluindo CRC e simple_system
+make unit              # 14 testbenches unitários, incluindo Xicrc
+make integration       # 18 integrações, incluindo o firmware oficial
 make smoke             # quatro integrações rápidas, sem GCC RISC-V
 make lint              # análise estática com Verilator
 make test              # todos os TBs; manifesto registra lint NOT_RUN
@@ -118,7 +119,10 @@ make regression        # todos os TBs + lint + cobertura + manifesto
 make firmware          # somente compila o firmware próprio e gera a ROM
 make run               # compila e executa o firmware próprio no processador simulado
 make wave              # executa firmware no RTL e gera VCD
-make simple-system     # sistema experimental com firmware e CRC provisório
+make official-fetch    # obtém uma vez a imagem oficial, fixada por SHA-256
+make official-run      # executa e verifica o firmware oficial no RTL
+make official-wave     # gera VCD do firmware oficial
+make simple-system     # sistema experimental com firmware próprio e Xicrc
 make simple-synth      # síntese Yosys e teste da netlist genérica
 ```
 
@@ -139,8 +143,8 @@ RTL com referências e produz PASS ou erro; o Python registra e propaga esse res
 
 ## Verificação e firmware
 
-Uma regressão completa deve terminar com **31 TBs PASS e lint PASS** na versão
-atual. O teste ISA compara 76.409 aposentadorias, 45 stores e 12 bytes finais com
+Uma regressão completa deve terminar com **32 TBs PASS e lint PASS** na versão
+atual. O teste ISA compara 88.727 aposentadorias, 45 stores e 12 bytes finais com
 o modelo Python. O firmware próprio escreve `0x600dc0de` em `0x10011ff0`; sua
 baseline executa 598 aposentadorias em 2.579 ciclos.
 
@@ -151,7 +155,7 @@ o entregável do [firmware oficial](firmware/official/README.md).
 | Evidência | Onde consultar |
 |---|---|
 | Comandos e resultados de cada TB | `results/logs/tb_*.compile.log` e `tb_*.log` |
-| Resultado agregado e hashes da rodada | [regression.json da rodada identificada](results/experiments/simple/regression.json) |
+| Resultado agregado e hashes da rodada | [regression.json da rodada identificada](results/experiments/crc-official-20261027/logs/regression.json) |
 | Matriz por instrução | [Markdown](docs/isa/coverage.md), [CSV](docs/isa/coverage.csv), [Excel](docs/isa/coverage.xlsx) |
 | Alcance e limitações dos testes | [verification.md](docs/verification.md) |
 | Forma de onda do firmware | `results/waveforms/smoke.vcd`, gerada por `make wave` |
@@ -207,9 +211,9 @@ para execução manual, ainda sem rodada mapeada concluída.
 ## Próximos passos
 
 O [simple_system](docs/modules/simple_system.md) executa firmware próprio em ROM
-de 2 KiB e RAM de 1 KiB, com saídas done/success/fault. O CRC provisório é opt-in
-no core e ativo nesse experimento. Consulte a [matriz experimental](docs/isa/experimental_crc.md)
-e as [evidências](results/experiments/simple/README.md).
+de 2 KiB e RAM de 1 KiB, com saídas done/success/fault. O contrato Xicrc oficial é habilitado por padrão no core. Consulte a
+[matriz atual](docs/isa/coverage.md) e as
+[evidências](results/experiments/crc-official-20261027/README.md).
 
 O próximo passo experimental é o usuário executar a configuração preparada,
 avaliar área/timing e a estratégia de memórias em SKY130A. A síntese genérica
@@ -217,13 +221,19 @@ e seu teste não substituem essas etapas. Veja o percurso na
 [aula 8](labs/rtl-to-gds/08-introducao-openlane.md).
 
 A conclusão do processador da competição mantém outra lista de requisitos:
-confirmar o contrato dos operandos/bytes Xicrc e adaptar a implementação, se necessário, até
-44/47 oficiais; confirmar as três instruções de sistema/sincronização até 47/47; validar
-o firmware oficial; fechar interface e top físico; congelar/taguear RTL e executar
+confirmar as três instruções de sistema/sincronização até 47/47; fechar interface
+e top físico; congelar/taguear RTL e executar
 o fluxo final conforme [AGENTS.md](AGENTS.md). Diagramas ChipInventor, fechamento
 do relatório preliminar e vídeo também permanecem entregáveis pendentes.
 
 Para receber as definições restantes, use o
 [formulário CRC](docs/architecture/crc_official_confirmation.md) e o
-[checklist do firmware oficial](firmware/official/receipt.md). O RTL mantém o
-contrato atual enquanto a equipe obtém o retorno dos responsáveis.
+[checklist do firmware oficial](firmware/official/receipt.md). A fonte foi recebida
+em 27/10, o RTL foi adequado e o firmware oficial passou na simulação.
+
+O cache original de firmware fica em `external/championchip-firmware/`, ignorado pelo
+Git e preservado por `make clean`. Depois do primeiro `make official-fetch`, os
+testes funcionam offline. Para importar uma cópia local idêntica: `python3
+scripts/sim/build_official.py --source /caminho/firmware.txt`. A netlist genérica
+antiga antecede a correção do CRC: execute novamente a síntese quando decidir
+validar a versão atual. Nenhuma síntese foi executada nesta revisão.

@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 module tb_core_crc;
-    // Verifica CRC provisório no core: decode, execução, writeback, dependências e memória.
+    // Verifica Xicrc no core: decode, execução, writeback, dependências e memória.
     reg clk=0; always #5 clk=~clk;
     reg rst=1;
     wire fault,valid;
@@ -8,7 +8,7 @@ module tb_core_crc;
     wire [4:0] rd;
     reg [31:0] epc,ei,ed;
     reg [4:0] erd;
-    integer fd,status,n,cycles,crc_count;
+    integer fd,status,n,cycles,crc_count,i;
     riscv_top #(.IMEM_WORDS(65536),.IMEM_FILE("build/crc.hex"),.EXPERIMENTAL_XICRC(1))
         dut(clk,rst,fault,valid,cpc,ci,cd,rd);
     initial begin
@@ -40,10 +40,11 @@ module tb_core_crc;
             end
             n=n+1;
         end
-        if(crc_count!=2127) $fatal(1,"incomplete CRC trace: %0d",crc_count);
-        // Streams processados byte a byte e por palavras devem gravar o mesmo CRC 29b1.
-        if(dut.data_memory.mem[0]!==32'h29b1 || dut.data_memory.mem[1]!==32'h29b1)
-            $fatal(1,"CRC stream packing/store failed");
+        if(crc_count!=2146) $fatal(1,"incomplete CRC trace: %0d",crc_count);
+        // Cada mensagem é gravada três vezes, agrupada por byte/halfword/word.
+        for(i=0;i<6;i=i+1)
+            if(dut.data_memory.mem[i]!==((i<3)?32'h29b1:32'h1e82))
+                $fatal(1,"CRC stream packing/store failed slot=%0d",i);
         // Reset após uso da extensão limpa estado arquitetural e reinicia o fetch.
         @(negedge clk); rst=1; @(posedge clk); #1;
         if(valid || fault || dut.core.register_file.regs[1]!==0 || dut.core.current_pc!==32'h00400000)
